@@ -26,6 +26,7 @@ class WP {
 		global $wp_rewrite;
 
 		$this->query_vars = array();
+		$taxonomy_query_vars = array();
 
 		if ( is_array($extra_query_vars) )
 			$this->extra_query_vars = & $extra_query_vars;
@@ -90,6 +91,10 @@ class WP {
 			// Look for matches.
 			$request_match = $request;
 			foreach ($rewrite as $match => $query) {
+				// Don't try to match against AtomPub calls
+				if ( $req_uri == 'wp-app.php' )
+					break;
+
 				// If the requesting file is the anchor of the match, prepend it
 				// to the path info.
 				if ((! empty($req_uri)) && (strpos($match, $req_uri) === 0) && ($req_uri != $request)) {
@@ -105,7 +110,7 @@ class WP {
 					$query = preg_replace("!^.+\?!", '', $query);
 
 					// Substitute the substring matches into the query.
-					eval("\$query = \"$query\";");
+					eval("\$query = \"" . addslashes($query) . "\";");
 					$this->matched_query = $query;
 
 					// Parse the query.
@@ -140,6 +145,10 @@ class WP {
 
 		$this->public_query_vars = apply_filters('query_vars', $this->public_query_vars);
 
+		foreach ( $GLOBALS['wp_taxonomies'] as $taxonomy => $t )
+			if ( isset($t->query_var) )
+				$taxonomy_query_vars[$t->query_var] = $taxonomy;
+
 		for ($i=0; $i<count($this->public_query_vars); $i += 1) {
 			$wpvar = $this->public_query_vars[$i];
 			if (isset($this->extra_query_vars[$wpvar]))
@@ -153,8 +162,13 @@ class WP {
 			elseif (!empty($perma_query_vars[$wpvar]))
 				$this->query_vars[$wpvar] = $perma_query_vars[$wpvar];
 
-			if ( !empty( $this->query_vars[$wpvar] ) )
+			if ( !empty( $this->query_vars[$wpvar] ) ) {
 				$this->query_vars[$wpvar] = (string) $this->query_vars[$wpvar];
+				if ( in_array( $wpvar, $taxonomy_query_vars ) ) {
+					$this->query_vars['taxonomy'] = $taxonomy_query_vars[$wpvar];
+					$this->query_vars['term'] = $this->query_vars[$wpvar];
+				}
+			}
 		}
 
 		foreach ($this->private_query_vars as $var) {
@@ -395,31 +409,32 @@ class Walker {
 	var $db_fields;
 
 	//abstract callbacks
-	function start_lvl($output) { return $output; }
-	function end_lvl($output)   { return $output; }
-	function start_el($output)  { return $output; }
-	function end_el($output)    { return $output; }
+	function start_lvl(&$output) {}
+	function end_lvl(&$output)   {}
+	function start_el(&$output)  {}
+	function end_el(&$output)    {}
 
 	/*
  	 * display one element if the element doesn't have any children
  	 * otherwise, display the element and its children
  	 */
-	function display_element( $element, &$children_elements, $max_depth, $depth=0, $args, $output ) {
+	function display_element( $element, &$children_elements, $max_depth, $depth=0, $args, &$output ) {
 
-		if ( !$element)
-			return $output;
+		if ( !$element )
+			return;
 
 		$id_field = $this->db_fields['id'];
 		$parent_field = $this->db_fields['parent'];
 
 		//display this element
-		$cb_args = array_merge( array($output, $element, $depth), $args);
-		$output = call_user_func_array(array(&$this, 'start_el'), $cb_args);
+		$cb_args = array_merge( array(&$output, $element, $depth), $args);
+		call_user_func_array(array(&$this, 'start_el'), $cb_args);
 
 		if ( $max_depth == 0 ||
 		     ($max_depth != 0 &&  $max_depth > $depth+1 )) { //whether to descend
 
-			for ( $i = 0; $i < sizeof( $children_elements ); $i++ ) {
+			$num_elements = sizeof( $children_elements );
+			for ( $i = 0; $i < $num_elements; $i++ ) {
 
 				$child = $children_elements[$i];
 				if ( $child->$parent_field == $element->$id_field ) {
@@ -427,12 +442,13 @@ class Walker {
 					if ( !isset($newlevel) ) {
 						$newlevel = true;
 						//start the child delimiter
-						$cb_args = array_merge( array($output, $depth), $args);
-						$output = call_user_func_array(array(&$this, 'start_lvl'), $cb_args);
+						$cb_args = array_merge( array(&$output, $depth), $args);
+						call_user_func_array(array(&$this, 'start_lvl'), $cb_args);
 					}
 
 					array_splice( $children_elements, $i, 1 );
-					$output = $this->display_element( $child, $children_elements, $max_depth, $depth + 1, $args, $output );
+					$num_elements--;
+					$this->display_element( $child, $children_elements, $max_depth, $depth + 1, $args, $output );
 					$i = -1;
 				}
 			}
@@ -440,15 +456,13 @@ class Walker {
 
 		if ( isset($newlevel) && $newlevel ){
 			//end the child delimiter
-			$cb_args = array_merge( array($output, $depth), $args);
-			$output = call_user_func_array(array(&$this, 'end_lvl'), $cb_args);
+			$cb_args = array_merge( array(&$output, $depth), $args);
+			call_user_func_array(array(&$this, 'end_lvl'), $cb_args);
 		}
 
 		//end this element
-		$cb_args = array_merge( array($output, $element, $depth), $args);
-		$output = call_user_func_array(array(&$this, 'end_el'), $cb_args);
-
-		return $output;
+		$cb_args = array_merge( array(&$output, $element, $depth), $args);
+		call_user_func_array(array(&$this, 'end_el'), $cb_args);
 	}
 
 	/*
@@ -476,7 +490,7 @@ class Walker {
 		if ( -1 == $max_depth ) {
 			$empty_array = array();
 			foreach ( $elements as $e )
-				$output = $this->display_element( $e, $empty_array, 1, 0, $args, $output );
+				$this->display_element( $e, $empty_array, 1, 0, $args, $output );
 			return $output;
 		}
 
@@ -500,19 +514,21 @@ class Walker {
 		if ( !$top_level_elements ) {
 
 			$root = $children_elements[0];
-			for ( $i = 0; $i < sizeof( $children_elements ); $i++ ) {
+			$num_elements = sizeof($children_elements);
+			for ( $i = 0; $i < $num_elements; $i++ ) {
 
 				$child = $children_elements[$i];
 				if ($root->$parent_field == $child->$parent_field ) {
 					$top_level_elements[] = $child;
 					array_splice( $children_elements, $i, 1 );
+					$num_elements--;
 					$i--;
 				}
 			}
 		}
 
 		foreach ( $top_level_elements as $e )
-			$output = $this->display_element( $e, $children_elements, $max_depth, 0, $args, $output );
+			$this->display_element( $e, $children_elements, $max_depth, 0, $args, $output );
 
 		/*
 		* if we are displaying all levels, and remaining children_elements is not empty,
@@ -521,7 +537,7 @@ class Walker {
 		if ( ( $max_depth == 0 ) && sizeof( $children_elements ) > 0 ) {
 			$empty_array = array();
 			foreach ( $children_elements as $orphan_e )
-				$output = $this->display_element( $orphan_e, $empty_array, 1, 0, $args, $output );
+				$this->display_element( $orphan_e, $empty_array, 1, 0, $args, $output );
 		 }
 		 return $output;
 	}
@@ -531,19 +547,17 @@ class Walker_Page extends Walker {
 	var $tree_type = 'page';
 	var $db_fields = array ('parent' => 'post_parent', 'id' => 'ID'); //TODO: decouple this
 
-	function start_lvl($output, $depth) {
+	function start_lvl(&$output, $depth) {
 		$indent = str_repeat("\t", $depth);
 		$output .= "\n$indent<ul>\n";
-		return $output;
 	}
 
-	function end_lvl($output, $depth) {
+	function end_lvl(&$output, $depth) {
 		$indent = str_repeat("\t", $depth);
 		$output .= "$indent</ul>\n";
-		return $output;
 	}
 
-	function start_el($output, $page, $depth, $current_page, $args) {
+	function start_el(&$output, $page, $depth, $current_page, $args) {
 		if ( $depth )
 			$indent = str_repeat("\t", $depth);
 		else
@@ -571,14 +585,10 @@ class Walker_Page extends Walker {
 
 			$output .= " " . mysql2date($date_format, $time);
 		}
-
-		return $output;
 	}
 
-	function end_el($output, $page, $depth) {
+	function end_el(&$output, $page, $depth) {
 		$output .= "</li>\n";
-
-		return $output;
 	}
 
 }
@@ -587,18 +597,16 @@ class Walker_PageDropdown extends Walker {
 	var $tree_type = 'page';
 	var $db_fields = array ('parent' => 'post_parent', 'id' => 'ID'); //TODO: decouple this
 
-	function start_el($output, $page, $depth, $args) {
-				$pad = str_repeat('&nbsp;', $depth * 3);
+	function start_el(&$output, $page, $depth, $args) {
+		$pad = str_repeat('&nbsp;', $depth * 3);
 
-				$output .= "\t<option value=\"$page->ID\"";
-				if ( $page->ID == $args['selected'] )
-								$output .= ' selected="selected"';
-				$output .= '>';
-				$title = wp_specialchars($page->post_title);
-				$output .= "$pad$title";
-				$output .= "</option>\n";
-
-				return $output;
+		$output .= "\t<option value=\"$page->ID\"";
+		if ( $page->ID == $args['selected'] )
+			$output .= ' selected="selected"';
+		$output .= '>';
+		$title = wp_specialchars($page->post_title);
+		$output .= "$pad$title";
+		$output .= "</option>\n";
 	}
 }
 
@@ -606,25 +614,23 @@ class Walker_Category extends Walker {
 	var $tree_type = 'category';
 	var $db_fields = array ('parent' => 'parent', 'id' => 'term_id'); //TODO: decouple this
 
-	function start_lvl($output, $depth, $args) {
+	function start_lvl(&$output, $depth, $args) {
 		if ( 'list' != $args['style'] )
-			return $output;
+			return;
 
 		$indent = str_repeat("\t", $depth);
 		$output .= "$indent<ul class='children'>\n";
-		return $output;
 	}
 
-	function end_lvl($output, $depth, $args) {
+	function end_lvl(&$output, $depth, $args) {
 		if ( 'list' != $args['style'] )
-			return $output;
+			return;
 
 		$indent = str_repeat("\t", $depth);
 		$output .= "$indent</ul>\n";
-		return $output;
 	}
 
-	function start_el($output, $category, $depth, $args) {
+	function start_el(&$output, $category, $depth, $args) {
 		extract($args);
 
 		$cat_name = attribute_escape( $category->name);
@@ -687,16 +693,13 @@ class Walker_Category extends Walker {
 		} else {
 			$output .= "\t$link<br />\n";
 		}
-
-		return $output;
 	}
 
-	function end_el($output, $page, $depth, $args) {
+	function end_el(&$output, $page, $depth, $args) {
 		if ( 'list' != $args['style'] )
-			return $output;
+			return;
 
 		$output .= "</li>\n";
-		return $output;
 	}
 
 }
@@ -705,7 +708,7 @@ class Walker_CategoryDropdown extends Walker {
 	var $tree_type = 'category';
 	var $db_fields = array ('parent' => 'parent', 'id' => 'term_id'); //TODO: decouple this
 
-	function start_el($output, $category, $depth, $args) {
+	function start_el(&$output, $category, $depth, $args) {
 		$pad = str_repeat('&nbsp;', $depth * 3);
 
 		$cat_name = apply_filters('list_cats', $category->name, $category);
@@ -721,8 +724,6 @@ class Walker_CategoryDropdown extends Walker {
 			$output .= '&nbsp;&nbsp;' . gmdate($format, $category->last_update_timestamp);
 		}
 		$output .= "</option>\n";
-
-		return $output;
 	}
 }
 

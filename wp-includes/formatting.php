@@ -3,9 +3,10 @@
 function wptexturize($text) {
 	global $wp_cockneyreplace;
 	$next = true;
+	$has_pre_parent = false;
 	$output = '';
 	$curl = '';
-	$textarr = preg_split('/(<.*>)/Us', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+	$textarr = preg_split('/(<.*>|\[.*\])/Us', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
 	$stop = count($textarr);
 
 	// if a plugin has provided an autocorrect array, use it
@@ -26,13 +27,17 @@ function wptexturize($text) {
 	for ( $i = 0; $i < $stop; $i++ ) {
  		$curl = $textarr[$i];
 
-		if (isset($curl{0}) && '<' != $curl{0} && $next) { // If it's not a tag
+		if (isset($curl{0}) && '<' != $curl{0} && '[' != $curl{0} && $next && !$has_pre_parent) { // If it's not a tag
 			// static strings
 			$curl = str_replace($static_characters, $static_replacements, $curl);
 			// regular expressions
 			$curl = preg_replace($dynamic_characters, $dynamic_replacements, $curl);
-		} elseif (strpos($curl, '<code') !== false || strpos($curl, '<pre') !== false || strpos($curl, '<kbd') !== false || strpos($curl, '<style') !== false || strpos($curl, '<script') !== false) {
+		} elseif (strpos($curl, '<code') !== false || strpos($curl, '<kbd') !== false || strpos($curl, '<style') !== false || strpos($curl, '<script') !== false) {
 			$next = false;
+		} elseif (strpos($curl, '<pre') !== false) {
+			$has_pre_parent = true;
+		} elseif (strpos($curl, '</pre>') !== false) {
+			$has_pre_parent = false;
 		} else {
 			$next = true;
 		}
@@ -92,6 +97,7 @@ function wpautop($pee, $br = 1) {
 	if (strpos($pee, '<pre') !== false)
 		$pee = preg_replace_callback('!(<pre.*?>)(.*?)</pre>!is', 'clean_pre', $pee );
 	$pee = preg_replace( "|\n</p>$|", '</p>', $pee );
+	$pee = preg_replace('/<p>\s*?(' . get_shortcode_regex() . ')\s*<\/p>/s', '$1', $pee); // don't auto-p wrap shortcodes that stand alone
 
 	return $pee;
 }
@@ -364,6 +370,15 @@ function sanitize_title_with_dashes($title) {
 	$title = trim($title, '-');
 
 	return $title;
+}
+
+// ensures a string is a valid SQL order by clause like: post_name ASC, ID DESC
+// accepts one or more columns, with or without ASC/DESC, and also accepts RAND()
+function sanitize_sql_orderby( $orderby ){
+	preg_match('/^\s*([a-z0-9_]+(\s+(ASC|DESC))?(\s*,\s*|\s*$))+|^\s*RAND\(\s*\)\s*$/i', $orderby, $obmatches);
+	if ( !$obmatches )
+		return false;
+	return $orderby;
 }
 
 function convert_chars($content, $deprecated = '') {
@@ -829,6 +844,9 @@ function human_time_diff( $from, $to = '' ) {
 function wp_trim_excerpt($text) { // Fakes an excerpt if needed
 	if ( '' == $text ) {
 		$text = get_the_content('');
+		
+		$text = strip_shortcodes( $text ); 
+		
 		$text = apply_filters('the_content', $text);
 		$text = str_replace(']]>', ']]&gt;', $text);
 		$text = strip_tags($text);
@@ -1111,13 +1129,9 @@ function wp_richedit_pre($text) {
 	// Filtering a blank results in an annoying <br />\n
 	if ( empty($text) ) return apply_filters('richedit_pre', '');
 
-	$output = $text;
-	$output = convert_chars($output);
+	$output = convert_chars($text);
 	$output = wpautop($output);
-
-	// These must be double-escaped or planets will collide.
-	$output = str_replace('&lt;', '&amp;lt;', $output);
-	$output = str_replace('&gt;', '&amp;gt;', $output);
+	$output = htmlspecialchars($output, ENT_NOQUOTES);
 
 	return apply_filters('richedit_pre', $output);
 }

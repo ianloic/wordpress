@@ -1,6 +1,8 @@
 var autosaveLast = '';
 var autosavePeriodical;
 var autosaveOldMessage = '';
+var autosaveDelayURL = null;
+var previewwin;
 
 jQuery(function($) {
 	autosaveLast = $('#post #title').val()+$('#post #content').val();
@@ -8,10 +10,19 @@ jQuery(function($) {
 
 	//Disable autosave after the form has been submitted
 	$("#post").submit(function() { $.cancel(autosavePeriodical); });
+	
+	// Autosave when the preview button is clicked. 
+	$('#previewview a').click(function(e) {
+		autosave();
+		autosaveDelayURL = this.href;
+		previewwin = window.open('','_blank');
+
+		e.preventDefault();
+		return false;
+	});
 });
 
-// called when autosaving pre-existing post
-function autosave_saved(response) {
+function autosave_parse_response(response) {
 	var res = wpAjax.parseAjaxResponse(response, 'autosave'); // parse the ajax response
 	var message = '';
 
@@ -41,22 +52,29 @@ function autosave_saved(response) {
 	}
 	if ( message ) { jQuery('#autosave').html(message); } // update autosave message
 	else if ( autosaveOldMessage && res ) { jQuery('#autosave').html( autosaveOldMessage ); }
-	autosave_enable_buttons(); // re-enable disabled form buttons
 	return res;
+}
+
+// called when autosaving pre-existing post
+function autosave_saved(response) {
+	autosave_parse_response(response); // parse the ajax response
+	autosave_enable_buttons(); // re-enable disabled form buttons
 }
 
 // called when autosaving new post
 function autosave_saved_new(response) {
-	var res = autosave_saved(response); // parse the ajax response do the above
+	var res = autosave_parse_response(response); // parse the ajax response
 	// if no errors: update post_ID from the temporary value, grab new save-nonce for that new ID
 	if ( res && res.responses.length && !res.errors ) {
 		var tempID = jQuery('#post_ID').val();
 		var postID = parseInt( res.responses[0].id );
-		autosave_update_post_ID( postID );
+		autosave_update_post_ID( postID ); // disabled form buttons are re-enabled here
 		if ( tempID < 0 && postID > 0) // update media buttons
 			jQuery('#media-buttons a').each(function(){
 				this.href = this.href.replace(tempID, postID);
 			});
+	} else {
+		autosave_enable_buttons(); // re-enable disabled form buttons
 	}
 }
 
@@ -73,6 +91,7 @@ function autosave_update_post_ID( postID ) {
 			post_type: jQuery('#post_type').val()
 		}, function(html) {
 			jQuery('#_wpnonce').val(html);
+			autosave_enable_buttons(); // re-enable disabled form buttons
 		});
 		jQuery('#hiddenaction').val('editpost');
 	}
@@ -89,6 +108,16 @@ function autosave_update_preview_link(post_id) {
 			getpermalinknonce: jQuery('#getpermalinknonce').val()
 		}, function(permalink) {
 			jQuery('#previewview').html('<a target="_blank" href="'+permalink+'" tabindex="4">'+previewText+'</a>');
+
+			// Autosave when the preview button is clicked.  
+			jQuery('#previewview a').click(function(e) {
+				autosave();
+				autosaveDelayURL = this.href;
+				previewwin = window.open('','_blank');
+
+				e.preventDefault();
+				return false;
+			});
 		});
 	}
 }
@@ -118,11 +147,15 @@ function autosave_loading() {
 
 function autosave_enable_buttons() {
 	jQuery("#submitpost :button:disabled, #submitpost :submit:disabled").attr('disabled', '');
+	if ( autosaveDelayURL ) {
+		previewwin.location = autosaveDelayURL;
+		autosaveDelayURL = null;
+	}
 }
 
 function autosave_disable_buttons() {
 	jQuery("#submitpost :button:enabled, #submitpost :submit:enabled").attr('disabled', 'disabled');
-	setTimeout(autosave_enable_buttons, 1000); // Re-enable 1 sec later.  Just gives autosave a head start to avoid collisions.
+	setTimeout(autosave_enable_buttons, 5000); // Re-enable 5 sec later.  Just gives autosave a head start to avoid collisions.
 }
 
 var autosave = function() {
@@ -147,8 +180,13 @@ var autosave = function() {
 		doAutoSave = false;
 
 	/* Gotta do this up here so we can check the length when tinyMCE is in use */
-	if ( rich ) { tinyMCE.triggerSave(); }
-
+	if ( rich ) {		
+		var ed = tinyMCE.activeEditor;
+		if ( 'mce_fullscreen' == ed.id )
+			tinyMCE.get('content').setContent(ed.getContent({format : 'raw'}), {format : 'raw'});
+		tinyMCE.get('content').save();
+	}
+	
 	post_data["content"] = jQuery("#content").val();
 	if ( jQuery('#post_name').val() )
 		post_data["post_name"] = jQuery('#post_name').val();
@@ -161,8 +199,6 @@ var autosave = function() {
 	autosave_disable_buttons();
 
 	var origStatus = jQuery('#original_post_status').val();
-	if ( 'draft' != origStatus ) // autosave currently only turned on for drafts
-		doAutoSave = false;
 
 	autosaveLast = jQuery("#title").val()+jQuery("#content").val();
 	goodcats = ([]);
@@ -175,8 +211,10 @@ var autosave = function() {
 		post_data["comment_status"] = 'open';
 	if ( jQuery("#ping_status").attr("checked") )
 		post_data["ping_status"] = 'open';
-	if( jQuery("#excerpt"))
+	if ( jQuery("#excerpt").size() )
 		post_data["excerpt"] = jQuery("#excerpt").val();
+	if ( jQuery("#post_author").size() )
+		post_data["post_author"] = jQuery("#post_author").val();
 
 	// Don't run while the TinyMCE spellcheck is on.  Why?  Who knows.
 	if ( rich && tinyMCE.activeEditor.plugins.spellchecker && tinyMCE.activeEditor.plugins.spellchecker.active ) {

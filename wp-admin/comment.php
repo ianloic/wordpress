@@ -21,7 +21,7 @@ case 'editcomment' :
 	$title = __('Edit Comment');
 
 	wp_enqueue_script('comment');
-	//wp_enqueue_script('thickbox');
+
 	require_once('admin-header.php');
 
 	$comment_id = absint( $_GET['c'] );
@@ -78,7 +78,7 @@ if ( 'spam' == $_GET['dt'] ) {
 
 <table width="100%">
 <tr>
-<td><input type='button' class="button" value='<?php _e('No'); ?>' onclick="self.location='<?php echo get_option('siteurl'); ?>/wp-admin/edit-comments.php';" /></td>
+<td><input type='button' class="button" value='<?php _e('No'); ?>' onclick="self.location='<?php echo admin_url('edit-comments.php'); ?>" /></td>
 <td class="textright"><input type='submit' class="button" value='<?php echo $button; ?>' /></td>
 </tr>
 </table>
@@ -141,10 +141,12 @@ case 'deletecomment' :
 	else
 		wp_delete_comment( $comment->comment_ID );
 
-	if ( '' != wp_get_referer() && false == $noredir )
+	if ( '' != wp_get_referer() && false == $noredir && false === strpos(wp_get_referer(), 'comment.php' ) )
 		wp_redirect( wp_get_referer() );
+	else if ( '' != wp_get_original_referer() && false == $noredir )
+		wp_redirect( wp_get_original_referer() );
 	else
-		wp_redirect( get_option('siteurl') . '/wp-admin/edit-comments.php' );
+		wp_redirect( admin_url('edit-comments.php') );
 
 	die;
 	break;
@@ -169,7 +171,7 @@ case 'unapprovecomment' :
 	if ( '' != wp_get_referer() && false == $noredir )
 		wp_redirect( wp_get_referer() );
 	else
-		wp_redirect( get_option('siteurl') . '/wp-admin/edit.php?p=' . absint( $comment->comment_post_ID ) . '#comments' );
+		wp_redirect( admin_url('edit.php?p=' . absint( $comment->comment_post_ID ) . '#comments') );
 
 	exit();
 	break;
@@ -191,14 +193,10 @@ case 'approvecomment' :
 
 	wp_set_comment_status( $comment->comment_ID, 'approve' );
 
-	if ( true == get_option('comments_notify') )
-		wp_notify_postauthor( $comment->comment_ID );
-
-
 	if ( '' != wp_get_referer() && false == $noredir )
 		wp_redirect( wp_get_referer() );
 	else
-		wp_redirect( get_option('siteurl') . '/wp-admin/edit.php?p=' . absint( $comment->comment_post_ID ) . '#comments' );
+		wp_redirect( admin_url('edit.php?p=' . absint( $comment->comment_post_ID ) . '#comments') );
 
 	exit();
 	break;
