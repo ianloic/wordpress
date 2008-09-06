@@ -1,0 +1,631 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: sitemap 3.0b8\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2007-08-01 16:07+0800\n"
+"Last-Translator: Kirin Lin <kirin.lin@gmail.com>\n"
+"Language-Team: Kirin Lin <kirin.lin@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Chinese\n"
+"X-Poedit-Country: TAIWAN\n"
+"Plural-Forms: nplurals=2; plural=n == 1 ? 0 : 1;\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: sitemap.php:827
+msgid "Comment Count"
+msgstr "迴響數目"
+
+#: sitemap.php:839
+msgid "Uses the number of comments of the post to calculate the priority"
+msgstr "使用迴響的數量來計算優先權"
+
+#: sitemap.php:899
+msgid "Comment Average"
+msgstr "迴響平均值"
+
+#: sitemap.php:911
+msgid "Uses the average comment count to calculate the priority"
+msgstr "使用迴響數量平均值來計算優先權"
+
+#: sitemap.php:974
+msgid "Popularity Contest"
+msgstr "Popularity Contest"
+
+#: sitemap.php:986
+msgid "Uses the activated <a href=\"%1\">Popularity Contest Plugin</a> from <a href=\"%2\">Alex King</a>. See <a href=\"%3\">Settings</a> and <a href=\"%4\">Most Popular Posts</a>"
+msgstr "使用 <a href=\"%2\">Alex King</a> 提供的 <a href=\"%1\">Popularity Contest 外掛</a>(需啟用)。詳見 <a href=\"%3\">選項</a> 以及<a href=\"%4\">Most Popular Posts</a>"
+
+#: sitemap.php:2293
+msgid "XML-Sitemap Generator"
+msgstr "XML 網站地圖產生器"
+
+#: sitemap.php:2293
+msgid "XML-Sitemap"
+msgstr "XML 網站地圖"
+
+#: sitemap.php:2478
+msgid "Thank you very much for your donation. You help me to continue support and development of this plugin and other free software!"
+msgstr "非常感謝您的贊助。由於您的幫助，讓我能夠繼續支援開發這個外掛以及其他免費軟體！"
+
+#: sitemap.php:2478
+msgid "Hide this notice"
+msgstr "隱藏這個通知"
+
+#: sitemap.php:2489
+#: sitemap.php:2655
+msgid "XML Sitemap Generator for WordPress"
+msgstr "WordPress 專用 XML 網站地圖產生器"
+
+#: sitemap.php:2560
+msgid "Configuration updated"
+msgstr "設定已更新"
+
+#: sitemap.php:2561
+msgid "Error while saving options"
+msgstr "儲存選項時產生錯誤"
+
+#: sitemap.php:2563
+msgid "Pages saved"
+msgstr "頁面已儲存"
+
+#: sitemap.php:2564
+msgid "Error while saving pages"
+msgstr "儲存頁面時產生錯誤"
+
+#: sitemap.php:2568
+#, php-format
+msgid "<a href=\"%s\">Robots.txt</a> file saved"
+msgstr "<a href=\"%s\">Robots.txt</a> 檔案已儲存"
+
+#: sitemap.php:2570
+msgid "Error while saving Robots.txt file"
+msgstr "儲存 Robots.txt 檔案時產生錯誤"
+
+#: sitemap.php:2578
+msgid "The default configuration was restored."
+msgstr "設定已重置為預設值。"
+
+#: sitemap.php:2671
+#: sitemap.php:2688
+msgid "open"
+msgstr "打開"
+
+#: sitemap.php:2672
+#: sitemap.php:2689
+msgid "close"
+msgstr "關閉"
+
+#: sitemap.php:2673
+#: sitemap.php:2690
+msgid "click-down and drag to move this box"
+msgstr "按下並拖曳這個矩形"
+
+#: sitemap.php:2674
+#: sitemap.php:2691
+msgid "click to %toggle% this box"
+msgstr "按了「%toggle%」這個矩形"
+
+#: sitemap.php:2675
+#: sitemap.php:2692
+msgid "use the arrow keys to move this box"
+msgstr "使用方向鍵移動這個矩形"
+
+#: sitemap.php:2676
+#: sitemap.php:2693
+msgid ", or press the enter key to %toggle% it"
+msgstr "，或者按下 Enter 鍵來「%toggle%」它"
+
+#: sitemap.php:2704
+msgid "About this Plugin:"
+msgstr "關於這個外掛："
+
+#: sitemap.php:2706
+msgid "Plugin Homepage"
+msgstr "外掛首頁"
+
+#: sitemap.php:2707
+msgid "Notify List"
+msgstr "郵件通知"
+
+#: sitemap.php:2708
+msgid "Support Forum"
+msgstr "支援論壇"
+
+#: sitemap.php:2709
+msgid "Donate with PayPal"
+msgstr "PayPal 贊助"
+
+#: sitemap.php:2710
+msgid "My Amazon Wish List"
+msgstr "我的 Amazon 願望清單"
+
+#: sitemap.php:2711
+msgid "translator_name"
+msgstr "Kirin Lin"
+
+#: sitemap.php:2711
+msgid "translator_url"
+msgstr "http://kirin-lin.idv.tw/"
+
+#: sitemap.php:2715
+msgid "Sitemap Resources:"
+msgstr "網站地圖資源："
+
+#: sitemap.php:2717
+msgid "Webmaster Tools"
+msgstr "網站管理員工具"
+
+#: sitemap.php:2718
+msgid "Webmaster Blog"
+msgstr "網站管理員網誌"
+
+#: sitemap.php:2720
+msgid "Site Explorer"
+msgstr "Site Explorer"
+
+#: sitemap.php:2721
+msgid "Search Blog"
+msgstr "Search Blog"
+
+#: sitemap.php:2723
+msgid "Sitemaps Protocol"
+msgstr "網站地圖通訊協定"
+
+#: sitemap.php:2724
+msgid "Official Sitemaps FAQ"
+msgstr "官方版網站地圖答客問"
+
+#: sitemap.php:2725
+msgid "My Sitemaps FAQ"
+msgstr "網站地圖答客問"
+
+#: sitemap.php:2730
+msgid "Recent Donations:"
+msgstr "近期贊助清單："
+
+#: sitemap.php:2734
+msgid "List of the donors"
+msgstr "贊助者清單"
+
+#: sitemap.php:2736
+msgid "Hide this list"
+msgstr "隱藏本清單"
+
+#: sitemap.php:2739
+msgid "Thanks for your support!"
+msgstr "感謝您的贊助！"
+
+#: sitemap.php:2751
+msgid "Status"
+msgstr "狀態"
+
+#: sitemap.php:2761
+#, php-format
+msgid "The sitemap wasn't built yet. <a href=\"%s\">Click here</a> to build it the first time."
+msgstr "您的網站地圖還沒產生過。<a href=\"%s\">點這裡</a>來產生它吧。"
+
+#: sitemap.php:2767
+msgid "Your <a href=\"%url%\">sitemap</a> was last built on <b>%date%</b>."
+msgstr "您的<a href=\"%url%\">網站地圖</a>上次發佈時間為：<b>%date%</b>。"
+
+#: sitemap.php:2769
+msgid "There was a problem writing your sitemap file. Make sure the file exists and is writable. <a href=\"%url%\">Learn more</a"
+msgstr "寫入網站地圖檔案時發生錯誤。請確定該檔案存在並可被寫入。<a href=\"%url%\">更多資訊</a>"
+
+#: sitemap.php:2776
+msgid "Your sitemap (<a href=\"%url%\">zipped</a>) was last built on <b>%date%</b>."
+msgstr "網站地圖（<a href=\"%url%\">壓縮檔</a>）上回產生於：<b>%date%</b>。"
+
+#: sitemap.php:2778
+msgid "There was a problem writing your zipped sitemap file. Make sure the file exists and is writable. <a href=\"%url%\">Learn more</a"
+msgstr "寫入網站地圖壓縮檔案時發生錯誤。請確定該檔案存在並可被寫入。<a href=\"%url%\">更多資訊</a>"
+
+#: sitemap.php:2784
+msgid "Google was <b>successfully notified</b> about changes."
+msgstr "已經<b>成功地通知</b> Google 您網站的更新。"
+
+#: sitemap.php:2787
+msgid "It took %time% seconds to notify Google, maybe you want to disable this feature to reduce the building time."
+msgstr "花了 %time% 秒來通知 Google，或許您想要關閉這個功能來增加效能。"
+
+#: sitemap.php:2790
+msgid "There was a problem while notifying Google."
+msgstr "通知 Google 時發生了問題。"
+
+#: sitemap.php:2796
+msgid "YAHOO was <b>successfully notified</b> about changes."
+msgstr "已經<b>成功地通知</b> YAHOO 您網站的更新。"
+
+#: sitemap.php:2799
+msgid "It took %time% seconds to notify YAHOO, maybe you want to disable this feature to reduce the building time."
+msgstr "花了 %time% 秒來通知 YAHOO，或許您想要關閉這個功能來增加效能。"
+
+#: sitemap.php:2802
+msgid "There was a problem while notifying YAHOO"
+msgstr "通知 YAHOO 時發生了問題。"
+
+#: sitemap.php:2808
+msgid "Ask.com was <b>successfully notified</b> about changes."
+msgstr "已經<b>成功地通知</b> Ask.com 您網站的更新。"
+
+#: sitemap.php:2811
+msgid "It took %time% seconds to notify Ask.com, maybe you want to disable this feature to reduce the building time."
+msgstr "花了 %time% 秒來通知 Ask.com，或許您想要關閉這個功能來增加效能。"
+
+#: sitemap.php:2814
+msgid "There was a problem while notifying Ask.com"
+msgstr "通知 Ask.com 時發生了問題。"
+
+#: sitemap.php:2822
+msgid "The building process took about <b>%time% seconds</b> to complete and used %memory% MB of memory."
+msgstr "整個建置過程大約花費 <b>%time% 秒</b>來完成，使用 %memory% MB 的記憶體。"
+
+#: sitemap.php:2824
+msgid "The building process took about <b>%time% seconds</b> to complete."
+msgstr "整個建置過程大約花費 <b>%time% 秒</b>來完成。"
+
+#: sitemap.php:2828
+msgid "The content of your sitemap <strong>didn't change</strong> since the last time so the files were not written and no search engine was pinged."
+msgstr "您的網站地圖內容與上次比較<strong>並沒有變更</strong>，所以沒有產生新檔案，而且搜尋引擎也沒有被通知。"
+
+#: sitemap.php:2832
+msgid "The last run didn't finish! Maybe you can raise the memory or time limit for PHP scripts. <a href=\"%url%\">Learn more</a>"
+msgstr "上次的執行並未結束！也許您需要替 PHP 增加記憶體或者時間限制。<a href=\"%url%\">更多資訊</a>"
+
+#: sitemap.php:2834
+msgid "The last known memory usage of the script was %memused%MB, the limit of your server is %memlimit%."
+msgstr "最後一次執行本程式使用 %memused% MB 記憶體，您伺服器的限制為 %memlimit%。"
+
+#: sitemap.php:2838
+msgid "The last known execution time of the script was %timeused% seconds, the limit of your server is %timelimit% seconds."
+msgstr "最後一次執行本程式的時間花 %timeused% 秒，您伺服器的限制為 %timelimit% 秒。"
+
+#: sitemap.php:2842
+msgid "The script stopped around post number %lastpost% (+/- 100)"
+msgstr "這支程式大約停在第 %lastpost% （+/- 100）篇文章"
+
+#: sitemap.php:2845
+#, php-format
+msgid "If you changed something on your server or blog, you should <a href=\"%s\">rebuild the sitemap</a> manually."
+msgstr "若是您對伺服器或者網誌做了某些更動，您應該手動<a href=\"%s\">重新產生網站地圖</a>。"
+
+# msgid "Rebuild Sitemap"
+# msgstr ""
+#: sitemap.php:2859
+msgid "Basic Options"
+msgstr "基本選項"
+
+#: sitemap.php:2863
+msgid "Sitemap files:"
+msgstr "網站地圖檔案："
+
+#: sitemap.php:2863
+#: sitemap.php:2878
+#: sitemap.php:2898
+#: sitemap.php:2923
+#: sitemap.php:2940
+msgid "Learn more"
+msgstr "更多資訊"
+
+#: sitemap.php:2868
+msgid "Write a normal XML file (your filename)"
+msgstr "寫入 XML 檔案（檔案名稱）"
+
+#: sitemap.php:2874
+msgid "Write a gzipped file (your filename + .gz)"
+msgstr "寫入壓縮檔（檔案名稱 + .gz）"
+
+#: sitemap.php:2878
+msgid "Building mode:"
+msgstr "產生模式："
+
+#: sitemap.php:2883
+msgid "Rebuild sitemap if you change the content of your blog"
+msgstr "當修改網誌內容時重新建立網站地圖。"
+
+#: sitemap.php:2890
+msgid "Enable manual sitemap building via GET Request"
+msgstr "啟用透過發送 GET 要求手動建立網站地圖。"
+
+#: sitemap.php:2894
+msgid "This will allow you to refresh your sitemap if an external tool wrote into the WordPress database without using the WordPress API. Use the following URL to start the process: <a href=\"%1\">%1</a> Please check the logfile above to see if sitemap was successfully built."
+msgstr "本選項允許您刷新您的網站地圖。當您使用外部工具直接將文章寫入 WordPress 資料庫，而非透過 WordPress API 時，使用以下網址啟動這個作業: <a href=\"%1\">%1</a> 若是要知道是否成功請檢查紀錄檔案。"
+
+#: sitemap.php:2898
+msgid "Update notification:"
+msgstr "更新通知："
+
+#: sitemap.php:2902
+msgid "Notify Google about updates of your Blog"
+msgstr "通知 Google 關於您網站的更新"
+
+#: sitemap.php:2903
+#, php-format
+msgid "No registration required, but you can join the <a href=\"%s\">Google Webmaster Tools</a> to check crawling statistics."
+msgstr "不需要註冊，但您可加入 <a href=\"%s\">Google 網站管理員工具</a>來檢查搜索統計。"
+
+#: sitemap.php:2907
+msgid "Notify Ask.com about updates of your Blog"
+msgstr "通知 Ask.com 關於您網站的更新"
+
+#: sitemap.php:2908
+msgid "No registration required."
+msgstr "不需要註冊。"
+
+#: sitemap.php:2912
+msgid "Notify YAHOO about updates of your Blog"
+msgstr "通知 YAHOO 關於您網站的更新"
+
+#: sitemap.php:2913
+#, php-format
+msgid "No registration required, but you can sign up for the <a href=\"%s\">YAHOO Site Explorer</a> to view the crawling progress."
+msgstr "不需要註冊，但您可加入 <a href=\"%s\">YAHOO Site Explorer</a> 來檢查搜索統計。"
+
+#: sitemap.php:2918
+#, php-format
+msgid "Modify or create %s file in blog root which contains the sitemap location."
+msgstr "於網誌根目錄修改或者產生 %s 檔案，該檔案包含網站地圖的位置資訊。"
+
+#: sitemap.php:2921
+msgid "File permissions: "
+msgstr "檔案權限："
+
+#: sitemap.php:2926
+msgid "OK, robots.txt is writable."
+msgstr "OK，可寫入 robots.txt。"
+
+#: sitemap.php:2928
+msgid "Error, robots.txt is not writable."
+msgstr "錯誤，不可寫入 robots.txt。"
+
+#: sitemap.php:2932
+msgid "OK, robots.txt doesn't exist but the directory is writable."
+msgstr "OK，robots.txt 並不存在但該目錄可寫入。"
+
+#: sitemap.php:2934
+msgid "Error, robots.txt doesn't exist and the directory is not writable"
+msgstr "錯誤，robots.txt 並不存在且該目錄不可寫入。"
+
+# msgid "Rebuild Sitemap"
+# msgstr ""
+#: sitemap.php:2940
+msgid "Advanced options:"
+msgstr "進階選項："
+
+#: sitemap.php:2943
+msgid "Try to increase the memory limit to:"
+msgstr "試著將記憶體限制增加至："
+
+#: sitemap.php:2943
+msgid "e.g. \"4M\", \"16M\""
+msgstr "例如：「4M」，「16M」"
+
+#: sitemap.php:2946
+msgid "Try to increase the execution time limit to:"
+msgstr "試著將執行時間限制增加至："
+
+#: sitemap.php:2946
+msgid "in seconds, e.g. \"60\" or \"0\" for unlimited"
+msgstr "以秒為單位，例如：「60」或者「0」則不限制"
+
+#: sitemap.php:2949
+msgid "Include a XSLT stylesheet:"
+msgstr "包含 XSLT 樣式："
+
+#: sitemap.php:2949
+msgid "Use Default"
+msgstr "使用預設值"
+
+#: sitemap.php:2949
+msgid "Full or relative URL to your .xsl file"
+msgstr "您 .xsl 檔案的絕對或者相對路徑"
+
+#: sitemap.php:2960
+msgid "Additional pages"
+msgstr "其他的頁面"
+
+#: sitemap.php:2965
+msgid "Here you can specify files or URLs which should be included in the sitemap, but do not belong to your Blog/WordPress.<br />For example, if your domain is www.foo.com and your blog is located on www.foo.com/blog you might want to include your homepage at www.foo.com"
+msgstr "您可以在此指定那些應被納入網站地圖的檔案或者網址，但是不屬於您的部落格(Blog/WordPress)。<br />舉例來說，若是您的部落格是 www.foo.com/blog，而您想要將您 www.foo.com 下的網頁納入此網站地圖。"
+
+#: sitemap.php:2967
+#: sitemap.php:3270
+msgid "Note"
+msgstr "注意"
+
+#: sitemap.php:2968
+msgid "If your blog is in a subdirectory and you want to add pages which are NOT in the blog directory or beneath, you MUST place your sitemap file in the root directory (Look at the &quot;Location of your sitemap file&quot; section on this page)!"
+msgstr "若是您的部落格是在子目錄下而您想要增加的頁面並<strong>不在</strong>部落格的目錄下面，您<strong>必須</strong>將您的網站地圖置於網站的根目錄下。(請見本頁「網站地圖的位置」小節)！"
+
+#: sitemap.php:2970
+#: sitemap.php:3116
+msgid "URL to the page"
+msgstr "頁面<abbr title=\"URL\">網址</attr>"
+
+#: sitemap.php:2971
+msgid "Enter the URL to the page. Examples: http://www.foo.com/index.html or www.foo.com/home "
+msgstr "輸入頁面的網址。例如：http://www.foo.com/index.html 或者 www.foo.com/home "
+
+#: sitemap.php:2973
+#: sitemap.php:3117
+msgid "Priority"
+msgstr "優先權 "
+
+#: sitemap.php:2974
+msgid "Choose the priority of the page relative to the other pages. For example, your homepage might have a higher priority than your imprint."
+msgstr "選擇該頁面的優先權（相較於其他頁面而言）。例如：您的首頁或許會比版權說明頁的優先權來得高。"
+
+#: sitemap.php:2976
+#: sitemap.php:3119
+msgid "Last Changed"
+msgstr "最近更動"
+
+#: sitemap.php:2977
+msgid "Enter the date of the last change as YYYY-MM-DD (2005-12-31 for example) (optional)."
+msgstr "輸入最近更動的日期，格式為 YYYY-MM-DD（例如：2005-12-31）（非必要）"
+
+#: sitemap.php:3118
+msgid "Change Frequency"
+msgstr "設定更新頻率"
+
+#: sitemap.php:3120
+msgid "#"
+msgstr "#"
+
+#: sitemap.php:3125
+msgid "No pages defined."
+msgstr "還沒有頁面已被設定"
+
+#: sitemap.php:3130
+msgid "Add new page"
+msgstr "新增頁面"
+
+#: sitemap.php:3141
+msgid "Post Priority"
+msgstr "文章優先權 "
+
+#: sitemap.php:3145
+msgid "Please select how the priority of each post should be calculated:"
+msgstr "請選擇每篇文章應該用多少優先權來計算:"
+
+#: sitemap.php:3147
+msgid "Do not use automatic priority calculation"
+msgstr "不使用自動優先權計算"
+
+#: sitemap.php:3147
+msgid "All posts will have the same priority which is defined in &quot;Priorities&quot;"
+msgstr "所有的文章使用相同定義在&quot;優先權&quot;內的優先權。"
+
+#: sitemap.php:3164
+msgid "Location of your sitemap file"
+msgstr "網站地圖的位置"
+
+#: sitemap.php:3169
+msgid "Automatic detection"
+msgstr "自動位置"
+
+#: sitemap.php:3173
+msgid "Filename of the sitemap file"
+msgstr "網站地圖的檔名"
+
+#: sitemap.php:3176
+msgid "Detected Path"
+msgstr "偵測到的路徑"
+
+#: sitemap.php:3176
+msgid "Detected URL"
+msgstr "偵測到的網址"
+
+#: sitemap.php:3181
+msgid "Custom location"
+msgstr "自定位置"
+
+#: sitemap.php:3185
+msgid "Absolute or relative path to the sitemap file, including name."
+msgstr "網站地圖的絕對或相對路徑，包括檔名。"
+
+#: sitemap.php:3187
+#: sitemap.php:3196
+msgid "Example"
+msgstr "範例"
+
+#: sitemap.php:3194
+msgid "Complete URL to the sitemap file, including name."
+msgstr "網站地圖的完整網址，包括檔名。"
+
+#: sitemap.php:3213
+msgid "Sitemap Content"
+msgstr "網站地圖內容"
+
+#: sitemap.php:3221
+msgid "Include homepage"
+msgstr "包含首頁"
+
+#: sitemap.php:3227
+msgid "Include posts"
+msgstr "包含文章"
+
+#: sitemap.php:3233
+msgid "Include static pages"
+msgstr "包含網誌分頁"
+
+#: sitemap.php:3239
+msgid "Include categories"
+msgstr "包含分類"
+
+#: sitemap.php:3245
+msgid "Include archives"
+msgstr "包含匯整"
+
+#: sitemap.php:3251
+msgid "Include author pages"
+msgstr "包含作者頁面"
+
+#: sitemap.php:3265
+msgid "Change frequencies"
+msgstr "更新頻率設定"
+
+#: sitemap.php:3271
+msgid "Please note that the value of this tag is considered a hint and not a command. Even though search engine crawlers consider this information when making decisions, they may crawl pages marked \"hourly\" less frequently than that, and they may crawl pages marked \"yearly\" more frequently than that. It is also likely that crawlers will periodically crawl pages marked \"never\" so that they can handle unexpected changes to those pages."
+msgstr "請注意下列各設定值僅被視為提示而非命令。雖然搜尋引擎漫遊器會考慮這資訊做出決定，他們也許會較少漫遊被標記為「Hourly」的頁面，或者更加頻繁地漫遊被標記為「Yearly」的頁面。搜尋引擎漫遊機制會週期性地漫遊被標記為「Never」的頁面，以便他們能處理對那些頁面的變動。"
+
+#: sitemap.php:3277
+#: sitemap.php:3335
+msgid "Homepage"
+msgstr "首頁"
+
+#: sitemap.php:3283
+msgid "Posts"
+msgstr "文章"
+
+#: sitemap.php:3289
+#: sitemap.php:3353
+msgid "Static pages"
+msgstr "網誌分頁"
+
+#: sitemap.php:3295
+#: sitemap.php:3359
+msgid "Categories"
+msgstr "分類"
+
+#: sitemap.php:3301
+msgid "The current archive of this month (Should be the same like your homepage)"
+msgstr "現有的每月彙整（應該與您的首頁相同）"
+
+#: sitemap.php:3307
+msgid "Older archives (Changes only if you edit an old post)"
+msgstr "較舊的彙整（只有在您修改舊文章的時候才會改變）"
+
+#: sitemap.php:3313
+#: sitemap.php:3371
+msgid "Author pages"
+msgstr "作者頁面"
+
+#: sitemap.php:3327
+msgid "Priorities"
+msgstr "優先權"
+
+#: sitemap.php:3341
+msgid "Posts (If auto calculation is disabled)"
+msgstr "文章（如果自動計算沒有打開）"
+
+#: sitemap.php:3347
+msgid "Minimum post priority (Even if auto calculation is enabled)"
+msgstr "優先權最小值（即使自動計算有打開）"
+
+#: sitemap.php:3365
+msgid "Archives"
+msgstr "彙整"
+
+#: sitemap.php:3382
+msgid "Update options"
+msgstr "更新選項"
+
+#: sitemap.php:3383
+msgid "Reset options"
+msgstr "重置選項"
+
