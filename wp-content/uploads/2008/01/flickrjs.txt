@@ -1,0 +1,56 @@
+// dojo toolkit based flickr support
+// (C) Copyright Ian Mckellar 2007, All Rights Reseved
+// Contact ian@mckellar.org for licensing.
+
+dojo.require('dojo.crypto.MD5');
+var flickr = {};
+flickr.debug = false;
+flickr._api_key = null;
+flickr._secret_key = null;
+flickr._url = function flickr_url (args, type) {
+    if (!type) { type = 'rest'; }
+    var url = 'http://api.flickr.com/services/'+type+'/?'
+    var signature = flickr._secret_key;
+    var keys = new Array ();
+    for (var k in args) { keys.push (k); }
+    keys.sort ();
+    for (var i=0; i<keys.length; i++) {
+        var k = keys[i];
+        var v = args[k];
+        signature = signature + k + v;
+        url = url + (i>0?'&':'') + escape(k) + '=' + escape(v);
+    }
+    signature = dojo.crypto.MD5.compute(signature, dojo.crypto.outputTypes.Hex);
+    url = url + '&api_sig='+signature;
+    return url;
+}
+flickr._callbacks = {},
+flickr._callback_number = 1,
+flickr.keys = function flickr_keys (api_key, secret_key) {
+    flickr._api_key = api_key;
+    flickr._secret_key = secret_key;
+}
+flickr.call = function flickr_call (args, callback) {
+    args.api_key = flickr._api_key;
+    args.format = 'json';
+    if (callback) {
+        var cb_id = 'cb'+flickr._callback_number;
+        flickr._callbacks[cb_id] = function (rsp) { 
+            delete (flickr._callbacks[cb_id]);
+            callback (rsp);
+        }
+        args.jsoncallback = 'flickr._callbacks.'+cb_id;
+        flickr._callback_number++;
+    } else {
+        args.nojsoncallback=1;
+    }
+    if (flickr._auto_token) { args.auth_token = token; }
+    // FIXME: does this work in IE?
+    // FIXME: onerror or timeout for the script load?
+    // FIXME: look at ScriptSrcTransport?
+    var script = document.createElement ('script');
+    script.setAttribute ('type', 'text/javascript');
+    flickr.debug && dojo.debug ('flickr.call: '+args.toSource());
+    script.setAttribute ('src', flickr._url (args));
+    document.body.appendChild (script);
+}

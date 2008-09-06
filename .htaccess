@@ -1,0 +1,60 @@
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+# feedburner can get to the feeds
+RewriteCond %{HTTP_USER_AGENT} FeedBurner
+RewriteRule ^feed/?([_0-9a-z-]+)?/?$ /wp-feed.php?feed=$1 [QSA] 
+# but everyone else gets feedburner, ok
+RewriteCond %{HTTP_USER_AGENT} !FeedBurner
+RewriteRule ^feed/?([_0-9a-z-]+)?/?$ http://feeds.feedburner.com/ianloic [R,L] 
+RewriteRule ^rss.xml$ http://feeds.feedburner.com/ianloic [R,L] 
+# make our permalinks work again
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^rules_rdf$ /index.php?p=2 [R,L]
+RewriteRule ^flickr_authentication_security$ /index.php?p=3 [R,L]
+RewriteRule ^projects$ /index.php?p=4 [R,L]
+RewriteRule ^drupal_modules$ /index.php?p=5 [R,L]
+RewriteRule ^about$ /index.php?p=6 [R,L]
+RewriteRule ^flickr_for_dojo$ /index.php?p=7 [R,L]
+RewriteRule ^gtd_operating_system$ /index.php?p=8 [R,L]
+RewriteRule ^gtd_a_multitasking_operating_system_for_your_life$ /index.php?p=8 [R,L]
+RewriteRule ^syntax_highlighting_for_drupal$ /index.php?p=9 [R,L]
+RewriteRule ^tag_clouds_two_point_oh$ /index.php?p=10 [R,L]
+RewriteRule ^drupal_feedburner$ /index.php?p=11 [R,L]
+RewriteRule ^burning_your_drupal_feed_in_two_easy_steps$ /index.php?p=11 [R,L]
+RewriteRule ^making_dynamic_static_pages$ /index.php?p=12 [R,L]
+RewriteRule ^a_networked_mirrorball$ /index.php?p=13 [R,L]
+RewriteRule ^messina$ /index.php?p=14 [R,L]
+RewriteRule ^messina_messina$ /index.php?p=14 [R,L]
+RewriteRule ^the_sidekick_id_and_the_iphone$ /index.php?p=15 [R,L]
+RewriteRule ^state_of_drupal$ /index.php?p=16 [R,L]
+RewriteRule ^what_about_thunderbird$ /index.php?p=17 [R,L]
+RewriteRule ^openid_for_the_mathematically_challenged$ /index.php?p=18 [R,L]
+RewriteRule ^insecurity_is_ruby_on_rails_best_practice$ /index.php?p=19 [R,L]
+RewriteRule ^out_with_the_old_in_with_the_google$ /index.php?p=20 [R,L]
+RewriteRule ^the_making_of_lol_feeds$ /index.php?p=21 [R,L]
+RewriteRule ^testing$ /index.php?p=22 [R,L]
+RewriteRule ^mozillas_missed_opportunities$ /index.php?p=23 [R,L]
+RewriteRule ^inbox_diet$ /index.php?p=24 [R,L]
+RewriteRule ^installing_ruby_gems_in_your_home_directory$ /index.php?p=25 [R,L]
+RewriteRule ^scale_web_apps_through_client_side_javascript$ /index.php?p=26 [R,L]
+RewriteRule ^implement_couchdb_on_top_of_s3$ /index.php?p=27 [R,L]
+RewriteRule ^client_side_web_services$ /index.php?p=28 [R,L]
+RewriteRule ^gitweb_setup$ /index.php?p=29 [R,L]
+RewriteRule ^how_i_set_up_gitweb$ /index.php?p=29 [R,L]
+RewriteRule ^flock_1_0$ /index.php?p=30 [R,L]
+RewriteRule ^songbird_0_3$ /index.php?p=31 [R,L]
+
+</IfModule>
+
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+
+# END WordPress
