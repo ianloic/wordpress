@@ -1,0 +1,61 @@
+<script type="text/javascript">
+function showFlickrPreview() {
+    var nsid = "<?php echo $user['user']['nsid'];?>";
+    var tags = document.getElementById('tantan-flickr-tags');
+    var w = window.open('http://flickr.com/photos/'+nsid+'/search/tags:'+escape(tags.value)+'/');
+}
+</script>
+<p>
+<label for="tantan-flickr-title">Title:
+<input type="text" id="tantan-flickr-title" class="widefat" name="tantan-flickr-title" value="<?php echo htmlspecialchars($options['title']); ?>" />
+</label>
+</p>
+<p>
+<label for="tantan-flickr-tags">
+Tags:
+<input type="text" id="tantan-flickr-tags" class="widefat" name="tantan-flickr-tags" value="<?php echo htmlspecialchars($options['tags']); ?>" /> 
+</label>
+</p>
+
+<p>
+<label for="tantan-flickr-count">Number of Photos:
+<input type="text" id="tantan-flickr-count" class="" name="tantan-flickr-count" size="4" value="<?php echo htmlspecialchars($options['count']); ?>" style="width:25px;text-align:center;" />
+<input type="button" value="preview" onclick="showFlickrPreview()" />
+</label>
+</p>
+<p>
+<label for="tantan-flickr-randomize">
+Randomize: <input type="checkbox" id="tantan-flickr-randomize" name="tantan-flickr-randomize" size="4" value="1" <?php echo (htmlspecialchars($options['randomize']) ? 'checked="checked"' : ''); ?>/>
+</label>
+</p>
+<!--
+&nbsp;&nbsp;
+Enable Animation: <input type="checkbox" id="tantan-flickr-animate" name="tantan-flickr-animate" size="4" value="1" <?php echo (htmlspecialchars($options['animate']) ? 'checked="checked"' : ''); ?>/> *<br />
+<br>
+<br>
+-->
+<p>
+<small>This widget displays your recent photos. Photos refresh automatically every hour. Don't forget to save your settings.</small>
+</p>
+<!--
+	<br>
+<br>
+* This feature is a bit buggy. Try disabling this if you experience weirdness on your site.
+-->
+<!--
+<fieldset>
+<legend>Search for these photos</legend>
+Your Photos:<br />
+Album: <select name="tantan-flickr-album" id="tantan-flickr-album" size="1">
+<option value="">My most recent photos</option>
+<option value="">Album 1</option>
+<option value="">Album 2</option>
+<option value="">Album 3</option>
+</select><br />
+
+Everyone's Photos:<br />
+</fieldset>
+-->
+
+                
+<input type="hidden" name="tantan-flickr-submit" id="tantan-flickr-submit" value="1" />

@@ -1,0 +1,40 @@
+<?php
+/*
+Copy this file into your current active theme's directory to customize this template
+
+This template lists out your older albums
+*/
+
+if (count($albums) > 0): ?>
+<div class="tt-older-posts albums">
+<h4>Other Albums</h4>
+<?php 
+foreach (array_slice($albums, 0, $TanTanFlickrPlugin->config['numAlbumPreviews']) as $album): /*if (!in_array($album['id'], array('','',''))):*/?>
+    <?php  $primaryPhoto = $flickr->getPhotoSizes($album['primary']); ?>
+    <div class="album">
+    <a href="album/<?php echo $album['id']?>/<?php echo $album['pagename']?>"><img class="highlight" src="<?php echo $primaryPhoto['Square']['source']?>" width="<?php echo $primaryPhoto['Square']['width']?>" height="<?php echo $primaryPhoto['Square']['height']?>" alt="" /></a>
+    <h2><a href="album/<?php echo $album['id']?>/<?php echo $album['pagename']?>"><?php echo $album['title']?></a></h2>
+    <p><?php echo html_entity_decode($album['description'])?></p>
+    <p class="meta"><?php echo $album['photos']?> Photos
+    | <a href="album/<?php echo $album['id']?>/<?php echo $album['pagename']?>" onclick="return openSlideShow('<?php echo $album['id']?>')">View as slideshow &gt;</a>
+    </p>
+    </div>
+
+<?php 
+endforeach?>
+</div>
+
+<div class="tt-older-posts albums albums-small">
+<?php
+foreach (array_slice($albums, $TanTanFlickrPlugin->config['numAlbumPreviews']) as $album): /*if (!in_array($album['id'], array('','',''))):*/?>
+    <?php  $primaryPhoto = $flickr->getPhotoSizes($album['primary']); ?>
+    <div class="album">
+    <a href="album/<?php echo $album['id']?>/<?php echo $album['pagename']?>"><img class="highlight" 
+        src="<?php echo $primaryPhoto['Square']['source']?>" width="<?php echo $primaryPhoto['Square']['width']?>" height="<?php echo $primaryPhoto['Square']['height']?>" alt="" /></a><br />
+    <strong><?php echo $album['title'];?></strong>
+    </div>
+<?php endforeach; ?>
+</div>
+
+
+<?php endif; /*albums*/ ?>

@@ -1,0 +1,29 @@
+<?php 
+/*
+Copy this file into your current active theme's directory to customize this template
+
+This template displays one photo, along with comments, meta data, and links to the next and previous photo (if available)
+*/
+global $TanTanFlickrPlugin;
+?>
+
+<?php include($TanTanFlickrPlugin->getDisplayTemplate('/photoalbum-nav.html'));?>
+
+
+<h2><?php echo $photo['title']?></h2>
+
+<div id="photo">
+	<?php echo TanTanFlickrDisplay::video($sizes['Video Player']);?>
+</div>
+<p><?php echo apply_filters('the_content', $photo['description']);?></p>
+
+<?php include($TanTanFlickrPlugin->getDisplayTemplate('/photoalbum-photometa.html'));?>
+
+<?php include($TanTanFlickrPlugin->getDisplayTemplate('/photoalbum-comments.html')); ?>
+
+<?php include($TanTanFlickrPlugin->getDisplayTemplate('/photoalbum-context.html')); ?>
+
+
+<div class="flickr-meta-links">
+<a href="http://www.flickr.com/photos/<?php echo $photo['owner']['nsid'];?>/<?php echo $photo['id'];?>/" target="_blank">View this video on Flickr</a>
+</div>

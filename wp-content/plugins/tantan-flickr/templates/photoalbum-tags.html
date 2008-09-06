@@ -1,0 +1,27 @@
+<?php
+/*
+Copy this file into your current active theme's directory to customize this template
+
+This template displays Flickr photos based on a tag
+*/
+global $TanTanFlickrPlugin;
+?>
+
+<?php include($TanTanFlickrPlugin->getDisplayTemplate('photoalbum-nav.html'));?>
+
+<h2>Tag: <?php echo htmlentities($request['tags'], ENT_COMPAT, 'UTF-8')?></h2>
+<?php
+?>
+
+<div id="photos" class="photos">
+
+<?php 
+$tpl = $TanTanFlickrPlugin->getDisplayTemplate('photoalbum-photo-link.html');
+foreach ($photos as $photo)
+	echo TanTanFlickrDisplay::photo($photo, array(
+		'size' => 'Square'));
+?>
+</div>
+<div class="flickr-meta-links">
+<a href="http://www.flickr.com/photos/tags/<?php echo urlencode($request['tags']);?>/" target="_blank">View this tag on Flickr</a>
+</div>

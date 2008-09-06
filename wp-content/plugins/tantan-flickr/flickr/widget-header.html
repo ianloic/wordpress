@@ -1,0 +1,69 @@
+<style>
+/*
+You may need to adjust these styles to match your blog
+*/
+div#flickr-widget {
+}
+div.flickr-widget-photo {
+    width:75px; /* default flickr width & height for square thumbs */
+    height:75px;
+    margin:0 2px 2px 0;
+    float:left;
+    position:relative;
+}
+div.flickr-widget-photo a {
+    position:absolute;
+}
+</style>
+<script type="text/javascript">
+var TanTanFlickrWidget = {
+    widget: null,
+    imgs: null,
+    imgsAlt: null,
+    timer: null,
+    randOld : 0,
+    randNew: 0,
+    delay: 2000,
+    
+    initialize: function() {
+        this.widget = document.getElementById('flickr-widget-photos');
+        this.imgs = this.widget.getElementsByTagName('div');
+
+        this.widgetAlt = document.getElementById('flickr-widget-photos-alt');
+        this.imgsAlt = this.widgetAlt.getElementsByTagName('div');
+        for (var i=0; i<this.imgs.length; i++) {
+            new Effect.Appear('photo-'+this.imgs[i].id, {
+                delay: 0.2*i,
+                afterFinish: function() {
+                    if (TanTanFlickrWidget.timer) clearTimeout(TanTanFlickrWidget.timer)
+                    TanTanFlickrWidget.timer = setTimeout("TanTanFlickrWidget.animate()", TanTanFlickrWidget.delay*2);
+                }
+            });
+        }
+        
+    },
+    animate: function() {
+        this.randOld = Math.floor(Math.random()*this.imgs.length);
+        this.randNew = Math.floor(Math.random()*this.imgsAlt.length);
+        var imgOld = document.getElementById('photo-'+this.imgs[this.randOld].id);
+        var imgNew = this.imgsAlt[this.randNew].removeChild(document.getElementById('photo-'+this.imgsAlt[this.randNew].id));
+        this.imgs[this.randOld].appendChild(imgNew);
+        new Effect.Fade(imgOld, {
+            afterFinish: function(obj) {
+                var tmp = TanTanFlickrWidget.imgs[TanTanFlickrWidget.randOld].removeChild(obj.element)
+                TanTanFlickrWidget.imgsAlt[TanTanFlickrWidget.randNew].appendChild(tmp)
+            }
+        });
+        new Effect.Appear(imgNew, {
+            afterFinish: function() {
+                var tmp = TanTanFlickrWidget.imgs[TanTanFlickrWidget.randOld].id
+                TanTanFlickrWidget.imgs[TanTanFlickrWidget.randOld].id = TanTanFlickrWidget.imgsAlt[TanTanFlickrWidget.randNew].id
+                TanTanFlickrWidget.imgsAlt[TanTanFlickrWidget.randNew].id = tmp
+                if (TanTanFlickrWidget.timer) clearTimeout(TanTanFlickrWidget.timer);
+                TanTanFlickrWidget.timer = setTimeout("TanTanFlickrWidget.animate()", TanTanFlickrWidget.delay);
+            }
+        });
+    }
+    
+}
+</script>

@@ -1,0 +1,21 @@
+<?php
+$groups = $flickr->manualSort($flickr->getGroupsActual(), $groupOrder);
+
+foreach ($groups as $group):
+?>
+<div class="group album <?php echo (in_array($group['id'], $hideGroups) ? 'album-hidden"' : '') ?>" id="group-<?php echo $group['id']?>">
+<table cellpadding="5">
+    <tr valign="top">
+    <td><a href="<?php echo $baseurl?>group/<?php echo $group['id']?>/<?php echo $group['pagename']?>"><img src="<?php echo $group['iconurl']?>" /></a></td>
+    <td width="100%">
+    <strong><a href="<?php echo $baseurl?>group/<?php echo $group['id']?>/<?php echo $group['pagename']?>"><?php echo $group['name']?></a></strong><br>
+    <?php echo $group['photos'];?> photos<br>
+    <input type="checkbox" name="hideGroup[]" <?php echo (in_array($group['id'], $hideGroups) ? 'checked="checked"' : '') ?> value="<?php echo $group['id']?>" id="group-hide-<?php echo $group['id']?>" /><label for="group-hide-<?php echo $group['id']?>">hide group</label><br>
+    <input type="checkbox" name="clearGroup[]" value="<?php echo $group['id']?>" id="group-cache-<?php echo $group['id']?>" /><label for="group-cache-<?php echo $group['id']?>">clear cache</label><br>
+    order: <input type="text" size="2" name="groupOrder[<?php echo $group['id']?>]" value="<?php echo $groupOrder[$group['id']] ? $groupOrder[$group['id']] : '0'?>" />
+    </td></tr>
+</table>
+
+</div>
+
+<?php endforeach;?>

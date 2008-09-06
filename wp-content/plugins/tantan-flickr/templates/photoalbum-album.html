@@ -1,0 +1,45 @@
+<?php
+/*
+Copy this file into your current active theme's directory to customize this template
+
+This template displays one Flickr photo set
+*/
+global $TanTanFlickrPlugin;
+$hasPrev = $page > 1;
+$hasNext = ($page * $per_page) < $album['photos'];
+$count = count($photos);
+?>
+
+<?php include($TanTanFlickrPlugin->getDisplayTemplate('/photoalbum-nav.html'));?>
+
+<h2><?php echo $album['title']?></h2>
+
+<div id="highlight">
+<?php if ($page <= 1):?>
+	<?php echo TanTanFlickrDisplay::photo($primary, array('size' => 'Small', 'album' => $album));?>
+<?php endif; ?>
+
+<p><?php echo html_entity_decode($album['description'])?></p>
+<p class="meta">
+<?php if ($hasPrev || $hasNext):?>
+<?php echo ((($page-1) * $per_page) + 1);?> -
+<?php echo ((($page-1) * $per_page) + $count);?> of
+<?php endif;?>
+<?php echo $album['photos'];?> Photos | <a href="album/<?php echo $album['id']?>/<?php echo $album['pagename']?>" onclick="return openSlideShow('<?php echo $album['id']?>')">View as slideshow &gt;</a>
+</p>
+<br clear="all" />
+</div>
+
+
+<div id="photos" class="photos">
+<?php foreach ($photos as $photo)
+	echo TanTanFlickrDisplay::photo($photo, array(
+		'size' => 'Square',
+		'album' => $album));
+?>
+</div>
+<?php include($TanTanFlickrPlugin->getDisplayTemplate('/photoalbum-paging.html'));?>
+
+<div class="flickr-meta-links">
+<a href="http://www.flickr.com/photos/<?php echo $album['owner'];?>/sets/<?php echo $album['id'];?>/" target="_blank">View this album on Flickr</a>
+</div>

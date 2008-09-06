@@ -1,0 +1,40 @@
+<?php
+/*
+Copy this file into your current active theme's directory to customize this template
+
+This template displays Flickr photos based on a tag
+*/
+global $TanTanFlickrPlugin;
+$count = count($photos);
+$hasPrev = $page > 1;
+$hasNext = ($count > 0) && ($page * $per_page) < $group['photos'];
+?>
+
+<?php include($TanTanFlickrPlugin->getDisplayTemplate('/photoalbum-nav.html'));?>
+
+<h2><?php echo $group['name']?> : <?php echo htmlentities($request['tags'], ENT_COMPAT, 'UTF-8')?></h2>
+<p><?php echo $group['description']?></p>
+<p class="meta">
+Photos 
+<?php if ($hasPrev || $hasNext):?>
+<?php echo ((($page-1) * $per_page) + 1);?> -
+<?php echo ((($page-1) * $per_page) + $count);?>
+<?php endif;?> 
+tagged with <strong><?php echo htmlentities($request['tags'], ENT_COMPAT, 'UTF-8')?></strong>
+</p>
+<div id="photos">
+<?php if ($count > 0): foreach ($photos as $photo)
+echo TanTanFlickrDisplay::photo($photo, array(
+	'size' => 'Square',
+	'prefix' => '../../'));
+?>
+<?php else:?>
+Sorry, no photos found!
+<?php endif;?>
+</div>
+
+<?php include($TanTanFlickrPlugin->getDisplayTemplate('/photoalbum-paging.html'));?>
+
+<div class="flickr-meta-links">
+<a href="http://www.flickr.com/photos/tags/<?php echo urlencode($request['tags']);?>/" target="_blank">View this tag on Flickr</a>
+</div>

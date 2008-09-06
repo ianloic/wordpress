@@ -1,0 +1,37 @@
+<?php
+/*
+Copy this file into your current active theme's directory to customize this template
+
+This template displays photos from a Flickr group
+*/
+global $TanTanFlickrPlugin;
+$hasPrev = $page > 1;
+$hasNext = ($page * $per_page) < $group['photos'];
+$count = count($photos);
+?>
+
+<?php include($TanTanFlickrPlugin->getDisplayTemplate('/photoalbum-nav.html'));?>
+
+<h2><?php echo $group['name']?></h2>
+<p><?php echo $group['description']?></p>
+
+<p class="meta">
+<?php if ($hasPrev || $hasNext):?>
+<?php echo ((($page-1) * $per_page) + 1);?> -
+<?php echo ((($page-1) * $per_page) + $count);?> of
+<?php endif;?>
+<?php echo $group['photos'];?> Photos
+</p>
+
+<div id="photos" class="photos">
+<?php foreach ($photos as $photo)
+echo TanTanFlickrDisplay::photo($photo, array(
+	'size' => 'Square'));
+?>
+</div>
+
+<?php include($TanTanFlickrPlugin->getDisplayTemplate('/photoalbum-paging.html'));?>
+
+<div class="flickr-meta-links">
+<a href="<?php echo $group['flickrURL']?>" target="_blank">View this group on Flickr</a>
+</div>

@@ -1,0 +1,48 @@
+
+<?php
+    $redirect = $_SERVER['SCRIPT_URI'] . '?' . $_SERVER['QUERY_STRING'];
+    $perms = "read";
+    $api_sig = md5($flickr->getSharedSecret() . 
+        "api_key" . $flickr->getAPIKey() . 
+        "frob"  . $frob .
+        "perms" . $perms);
+?>
+<fieldset class="options">
+<legend>Flickr Settings</legend>
+<p>
+Your Photo Album is not currently linked to a Flickr account. 
+</p>
+<h3>Step 1:</h3>
+<p>Login to Flickr and grant <em>read only</em> permissions to this photo album.
+Once you are done, close the popup window and click the button in Step 2.
+</p>
+    <form method="get" action="http://flickr.com/services/auth/" target="_blank">
+    <input type="hidden" name="api_key" value="<?php echo $flickr->getAPIKey()?>" />
+    <input type="hidden" name="frob" value="<?php echo $frob?>" />
+    <input type="hidden" name="perms" value="<?php echo $perms?>" />
+    <input type="hidden" name="api_sig" value="<?php echo $api_sig?>" />
+    
+    <input type="submit" value="Retrieve Flickr Permissions &gt;" ?>
+    </form>
+
+<h3>Step 2:</h3>    
+<p>Apply the permissions granted in Step 1 to this photo album. This step may take a couple minutes to complete (depending on how many albums you have),
+since it's also going to pull down your Flickr information.</p>
+    <form method="post" id="flickr">
+    <input type="hidden" name="action" value="save" />
+    <input type="hidden" name="frob" value="<?php echo $frob?>" />
+    <input type="submit" value="Apply Permissions &gt;" />
+    
+    </form>
+
+<p>
+<strong>Note:</strong> You can revoke the permissions granted here in <a href="http://flickr.com/services/auth/list.gne">your Flickr access control panel</a>.
+</p>
+
+<form method="post">
+<hr />
+<input type="hidden" name="action" value="resetkey" />
+<input type="submit" value="&lt; Reset API Key" />
+</form>
+
+</fieldset>

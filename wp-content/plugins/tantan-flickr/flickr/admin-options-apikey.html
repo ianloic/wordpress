@@ -1,0 +1,41 @@
+<fieldset class="options">
+<legend>Flickr API Key</legend>
+<p>
+Before you can setup your blog to pull in your Flickr photos, you need to get your own Flickr API key. 
+</p>
+<ol>
+    <li>Apply for your own <a href="http://www.flickr.com/services/api/key.gne" target="_blank">Flickr API key</a>.
+    If you already have an API key setup, <a href="http://www.flickr.com/services/api/keys/" target="_blank">you can use that instead</a>.
+    </li>
+    <li>After you have your key, click the configuration link to view the details for your new key</li>
+    <li>Enter your blog's title and a short description.</li>
+    <li>Change the authentication type to <b>Desktop Application</b></li>
+    <li>Save</li>
+    <li>Now click "edit configuration" again to view the details for newly configured API key and copy and paste
+    the <b>key</b> and <b>shared secret</b> fields into the form below.<br>
+    <br>
+    Note that it may take a minute or two to get your key fully activated.
+    </li>
+    
+</ol>
+
+<table width="100%" cellspacing="2" cellpadding="5" class="editform"> 
+<form method="post">
+<input type="hidden" name="action" value="savekey" />
+<tr valign="top">
+<th width="33%" scope="row">Flickr API Key:</th> 
+<td><input type="text" name="flickr_apikey" value="<?php echo $flickr_apikey ?>" size="40" /></td> 
+</tr>
+
+<tr valign="top">
+<th width="33%" scope="row">Shared Secret:</th> 
+<td><input type="text" name="flickr_sharedsecret" value="<?php echo $flickr_sharedsecret ?>" /></td> 
+</tr>
+<tr><td colspan="2">
+<p class="submit">
+<input type="submit" value="next &gt;" />
+</p>
+</td></tr>
+</form>
+</table>
+</fieldset>

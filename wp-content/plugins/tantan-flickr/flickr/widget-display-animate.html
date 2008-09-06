@@ -1,0 +1,39 @@
+<div id="flickr-widget">
+<?php echo $before_title . $options['title'] . $after_title; ?>
+<?php
+$baseurl = get_option('silas_flickr_baseurl');
+$linkoptions = get_option('silas_flickr_linkoptions');
+?>
+<div id="flickr-widget-photos">
+    <?php 
+    if (is_array($photos)) foreach($photos as $photo):
+    if ($linkoptions == 'flickr') {
+        $photoURL = array_pop($photo['info']['urls']);
+    } else {
+        $photoURL = $baseurl.'photo/'.$photo['id'].'/'.$photo['pagename'];
+    }
+    ?>
+    <div class="flickr-widget-photo" id="id-<?php echo $photo['id']?>"><a href="<?php echo $photoURL ?>"  id="photo-id-<?php echo $photo['id']?>" style="display:none"><img src="<?php echo $photo['sizes']['Square']['source']?>" width="<?php echo $photo['sizes']['Square']['width']?>" height="<?php echo $photo['sizes']['Square']['height']?>" alt="<?php echo htmlentities($photo['title'], ENT_QUOTES, 'UTF-8')?>" /></a></div>
+    <?php endforeach;?>
+    
+</div>
+<div id="flickr-widget-photos-alt" style="display:none">
+    <?php
+    if (is_array($altPhotos)) foreach($altPhotos as $photo):
+    if ($linkoptions == 'flickr') {
+        $photoURL = array_pop($photo['info']['urls']);
+    } else {
+        $photoURL = $baseurl.'photo/'.$photo['id'].'/'.$photo['pagename'];
+    }
+    ?>
+    <div class="flickr-widget-photo" id="id-<?php echo $photo['id']?>"><a href="<?php echo $photoURL ?>"  id="photo-id-<?php echo $photo['id']?>"style="display:none"><img src="<?php echo $photo['sizes']['Square']['source']?>" width="<?php echo $photo['sizes']['Square']['width']?>" height="<?php echo $photo['sizes']['Square']['height']?>" alt="<?php echo htmlentities($photo['title'], ENT_QUOTES, 'UTF-8')?>" /></a></div>
+    <?php endforeach;?>
+    
+</div>
+<?php if ($linkoptions != 'flickr'): ?>
+    <br style="clear:both;" /><a href="<?php echo $baseurl?>" class="more-photos">View more photos &gt;</a>
+<?php endif; ?>
+</div>
+<script type="text/javascript">
+if (TanTanFlickrWidget) TanTanFlickrWidget.initialize();
+</script>

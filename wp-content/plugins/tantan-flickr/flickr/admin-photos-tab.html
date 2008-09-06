@@ -1,0 +1,116 @@
+<div class="tablenav">
+<?php if ( $page_links ) echo "<div class='tablenav-pages'>$page_links</div>"; ?>
+
+<form method="get" id="photos" action="<?php echo (ereg('media-upload.php', $_SERVER['REQUEST_URI']) ? 'media-upload.php' : 'upload.php');?>">
+<input type="hidden" name="tab" value="<?php echo $_GET['tab'];?>" />
+<input type="hidden" name="post_id" value="<?php echo $_GET['post_id'];?>" />
+<input type="hidden" name="action" value="<?php echo $_GET['action'];?>" />
+<input type="hidden" name="style" value="<?php echo $_GET['style'];?>" />
+<input type="hidden" name="_wpnonce" value="<?php echo $_GET['_wpnonce'];?>" />
+<input type="hidden" name="ID" value="<?php echo $_GET['ID'];?>" />
+
+<?php if (!$interesting):?>
+Tags: <input type="text" name="tags" value="<?php echo $tags?>" size="15" />
+<?php if (!ereg('media-upload.php', $_SERVER['REQUEST_URI'])):?>
+<input type="radio" name="everyone" value="" <?php echo (!$everyone ? 'checked="checked"' : '')?> id="showmine" /><label for="showmine"> My Photos </label> &nbsp;
+<input type="radio" name="everyone" value="1" <?php echo ($everyone ? 'checked="checked"' : '')?> id="showeveryone" /><label for="showeveryone"> Everyone </label>
+<?php endif;?>
+
+&nbsp; &nbsp; 
+<input type="submit" name="refresh" value="search" />
+<?php endif;?>
+
+<?php if (ereg('media-upload.php', $_SERVER['REQUEST_URI'])):?>
+<label for="closewindowcheck" id="closewin"><input type="checkbox" id="closewindowcheck" name="closewindowcheck" value="1" checked="checked" /> Close after inserting photo</label> 
+<?php endif;?>
+<?php if ($everyone):
+switch((int) constant('TANTAN_FLICKR_PUBLIC_LICENSE')) {
+case 6:
+    $name="Attribution-NoDerivs License";
+    $url="http://creativecommons.org/licenses/by-nd/2.0/";
+    break;
+case 5:
+    $name="Attribution-ShareAlike License";
+    $url="http://creativecommons.org/licenses/by-sa/2.0/";
+    break;
+case 4:
+    $name="Attribution License";
+    $url="http://creativecommons.org/licenses/by/2.0/";
+    break;
+case 3:
+    $name="Attribution-NonCommercial-NoDerivs License";
+    $url="http://creativecommons.org/licenses/by-nc-nd/2.0/";
+    break;
+case 2:
+    $name="Attribution-NonCommercial License";
+    $url="http://creativecommons.org/licenses/by-nc/2.0/";
+    break;
+case 1:
+    $name="Attribution-NonCommercial-ShareAlike License";
+    $url="http://creativecommons.org/licenses/by-nc-sa/2.0/";
+    break;
+default:
+    $name = false;
+    $url = false;
+}
+?>
+<div class="license">
+<?php if ($name):?>
+All photos are licensed as <a href="<?php echo $url;?>">Creative Commons <?php echo $name;?></a>
+<?php else:?>
+Make sure you have proper permissions before using any photos.
+<?php endif; /* licensed */ ?>
+</div>
+<?php elseif ($interesting):?>
+<div class="license">
+Make sure you have proper permissions before using any photos.
+</div>
+<?php endif; /* everyone */ ?>
+
+
+</form>
+</div>
+
+<?php if (count($photos) == 0):?>
+Sorry, no photos found!
+<?php elseif (is_array($photos)):
+$baseurl = get_option('silas_flickr_baseurl');
+$linkoptions = get_option('silas_flickr_linkoptions');
+$parts = parse_url(get_bloginfo('home'));
+$home = 'http://'.$parts['host'];
+$json = new Services_JSON();
+$photoJSONs = array();
+?>
+<ul id='upload-files'>
+<?php
+$id = 0;
+foreach ($photos as $photo):
+if ($baseurl && !$everyone && !$interesting && ($linkoptions != 'flickr')) {
+    $photo['targetURL'] = $home.$baseurl.'photo/'.$photo['id'].'/'.$photo['pagename'];
+} else {
+    if (is_array($photo['info']['urls'])) $photo['targetURL'] = array_pop($photo['info']['urls']);
+}
+unset($photo['info']);
+$photoJSONs[] = $json->encode($photo);
+?>
+<li id='flickr-photo-<?php echo $id?>' class='alignleft'>
+<a id='file-link-3' href='<?php echo $photoURL?>' title='<?php echo htmlentities($photo['title'], ENT_QUOTES, 'UTF-8');?>' class='file-link image' onclick="return tantan_showOptions(<?php echo $id?>);"><img 
+    id="image<?php echo $photo['id']?>" src="<?php echo $photo['sizes']['Square']['source']?>" alt="<?php echo htmlentities($photo['title'], ENT_QUOTES, 'UTF-8');?>" height="<?php echo $photo['sizes']['Square']['height']?>" width="<?php echo $photo['sizes']['Square']['width']?>" border="0" /></a>
+    <div class="photo-options" id="options-<?php echo $id?>">
+    <strong>Insert Photo:</strong><br />
+    <?php foreach ($photo['sizes'] as $k => $size):?>
+        <a href="<?php echo $size['source']?>" onclick='return tantan_addPhoto(<?php echo $id;?>, "<?php echo $k?>");return false;' title="<?php echo $size['width']?>x<?php echo $size['height']?>"><?php echo $k?></a>
+    <?php endforeach;?>
+    <div class="close"><a href="#" onclick="return tantan_hideOptions(<?php echo $id?>);">close</a></div>
+    </div>
+
+</li>
+<?php 
+$id++;
+endforeach;
+?>
+</ul>
+<script type="text/javascript">
+var photos = [<?php echo implode(',', $photoJSONs);?>];
+</script>
+<?php endif; /* has photos */ ?>

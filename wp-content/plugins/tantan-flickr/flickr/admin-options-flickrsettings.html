@@ -1,0 +1,100 @@
+
+<fieldset class="options">
+<legend>Flickr Settings</legend>
+
+<table width="100%" cellspacing="2" cellpadding="5" class="editform"> 
+<form method="post">
+<input type="hidden" name="action" value="logout" />
+<tr valign="top">
+<th width="33%" scope="row">Flickr Account:</th> 
+<td><a href="http://flickr.com/photos/<?php echo $user['user']['nsid']?>/"><strong><?php echo $user['user']['username']?></strong></a> &nbsp; <input type="submit" value="Remove Link &gt;" />
+<br><small>Your Photo Album has been granted <em>read only</em> permissions to this Flickr account</small>
+</td> 
+</tr>
+</form>
+
+<form method="post">
+<input type="hidden" name="action" value="savebase" />
+<tr> 
+<th width="33%" scope="row" valign="top">Photo Album Syndication:</th> 
+<td>
+<input type="radio" name="synidcateoff" value="" <?php echo ($baseurl ? 'checked="checked"' : '')?> id="synidcate" onclick="document.getElementById('baseurldiv').style.display='block';"> <strong>Yes</strong>, display my Flickr Albums on this blog<br>
+    <div style="margin:0 0 0 40px;<?php echo (!$baseurl ? 'display:none;' : '')?>" id="baseurldiv" >
+    <?php bloginfo('siteurl')?>/<input type="text" name="baseurl" id="baseurl" value="<?php echo substr($baseurl, strlen($baseurl_pre))?>" /><br>
+
+    <small>Enter the path where you want your photo album to be shown. 
+    <?php if ($baseurl):?>
+    <br />View your album: <a href="<?php echo $baseurl?>"><?php echo $baseurl?></a>
+    <?php endif; ?>
+    </small>
+
+<br>
+<br>
+    
+    </div>
+    
+<input type="radio" name="synidcateoff" id="synidcateoff" value="1"  <?php echo (!$baseurl ? 'checked="checked"' : '')?> onclick="document.getElementById('baseurldiv').style.display='none';"> <strong>No</strong>, don't display my Flickr Albums on this blog<br>
+
+</td> 
+</tr> 
+
+<tr><th width="33%" scope="row">Media Bar:</th> 
+    <td><input type="checkbox" checked="checked" disabled="disabled" /> Add Flickr to the <a href="post-new.php">write post</a> screen.
+    </td></tr>
+
+<tr><th width="33%" scope="row">Photos should link to:</th>
+    <td><input type="radio" name="linkoptions" value="flickr" <?php echo ($linkoptions ? 'checked="checked"' : '')?> id="linkoptions1" /><label for="linkoptions1"> Flickr.com</label> &nbsp;
+    <input type="radio" name="linkoptions" value="" <?php echo (!$linkoptions ? 'checked="checked"' : '')?> id="linkoptions2" /><label for="linkoptions2"> The URL specified above</label>
+    <br /><small>Where you want your photos to link to, when inserted into a blog post or from the sidebar</small></td></tr>
+
+
+
+<tr>
+<th width="33%" scope="row">Flickr Sidebar Widget:</th> 
+<td>
+<?php if (function_exists('register_sidebar_widget')):?>
+
+<input type="checkbox" name="showbadge" value="1" <?php echo ($showbadge ? 'checked="checked"' : '')?> id="showbadge" /><label for="showbadge"> Enable the Flickr Widget for your sidebar.</label><br>
+<small>This will show your recent photos in your site's sidebar. 
+<?php
+global $registered_sidebars;
+if (count($registered_sidebars) <= 0):?>
+<br /><strong>Note:</strong> Your theme is not configured for WordPress Widgets. Here are instructions on <a href="http://automattic.com/code/widgets/themes/">how to add WordPress Widgets</a> to your existing theme.
+<?php else:?>
+<a href="themes.php?page=widgets/widgets.php">Configure your sidebar &gt;</a></small>
+<?php endif;?>
+
+<?php else:?>
+Install the <a href="http://automattic.com/code/widgets/">WordPress Widgets plugin</a> if you want to show your recent Flickr photos in your WordPress sidebar.
+
+<?php endif;?>
+
+</td>
+</tr>
+
+
+<tr>
+<th width="33%" scope="row">Private Photos:</th> 
+<td>
+<input type="checkbox" name="hideprivate" value="1" <?php echo ($hideprivate ? 'checked="checked"' : '')?> id="hideprivate" /><label for="hideprivate"> Hide photos that have been marked <em>Private</em>.</label>
+</td>
+</tr>
+
+
+
+
+<tr><td colspan="2">
+<p class="submit">
+<input type="submit" value="save settings &gt;" />
+</p>
+</td></tr>
+
+
+</form>
+
+<tr>
+
+</table>
+
+
+</fieldset>

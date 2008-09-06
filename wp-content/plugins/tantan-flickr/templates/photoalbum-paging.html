@@ -1,0 +1,24 @@
+<?php
+/*
+Copy this file into your current active theme's directory to customize this template
+
+This template displays paging links for screens have next / previous page links
+
+PHP variable requirements:
+
+$hasPrev - display a link to previous page
+$hasNext - display a link to the next page
+$page    - current page number we're on
+*/
+?>
+<div class="navigation">
+<?php if ($hasPrev):?>
+<div class="alignleft"><a href="?page=<?php echo ($page-1);?>">&lt; Previous</a></div>
+<?php endif;?>
+<?php if ($hasNext):?>
+<div class="alignright"><a href="?page=<?php echo ($page+1);?>">Next Page &gt;</a></div>
+<?php endif;?>
+<?php if ($hasPrev || $hasNext):?>
+	<br clear="all" />
+<?php endif;?>
+</div>

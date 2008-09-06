@@ -1,0 +1,41 @@
+<?php
+$albums = $flickr->manualSort($flickr->getAlbumsActual(), $albumOrder);
+if (count($albums) <= 0):?>
+<p>
+    <strong>Error</strong>: Please create at least one Flickr photo set, and then click the "Refresh" button above
+    to see your photos.
+</p>
+<?php endif; ?>
+
+<?php
+$baseurl = get_option('silas_flickr_baseurl');
+$i=1;
+if (is_array($albums)) foreach ($albums as $id => $album) {
+    if (false && $i == 1 ) { 
+        $flickr->startClearCache();
+        $photos = $flickr->getPhotos($id);
+        $flickr->doneClearCache();
+    } else {
+        //$photos = $flickr->getPhotos($id);
+        $primaryPhoto = $flickr->getPhotoSizes($album['primary']);
+    }
+    ?>
+    <div class="album <?php echo (in_array($album['id'], $hideAlbums) ? 'album-hidden"' : '') ?>" id="album-<?php echo $album['id']?>">
+    <table cellpadding="5">
+    <tr valign="top">
+    <td><a href="<?php echo $baseurl?>album/<?php echo $album['id']?>/<?php echo $album['pagename']?>"><img src="<?php echo $primaryPhoto['Square']['source'];?>" border="0" /></a></td>
+    <td width="100%">
+    <strong><a href="<?php echo $baseurl?>album/<?php echo $album['id']?>/<?php echo $album['pagename']?>"><?php echo $album['title']?></a></strong>
+    <?php echo $album['photos'];?> photos<br>
+    <input type="checkbox" name="hideAlbum[]" <?php echo (in_array($album['id'], $hideAlbums) ? 'checked="checked"' : '') ?> value="<?php echo $album['id']?>" id="album-hide-<?php echo $album['id']?>" /><label for="album-hide-<?php echo $album['id']?>">hide album</label><br>
+    <input type="checkbox" name="clearAlbum[]" value="<?php echo $album['id']?>" id="album-cache-<?php echo $album['id']?>" /><label for="album-cache-<?php echo $album['id']?>">clear cache</label><br>
+    order: <input type="text" size="2" name="albumOrder[<?php echo $album['id']?>]" value="<?php echo $albumOrder[$album['id']] ? $albumOrder[$album['id']] : '0'?>" />
+    
+    </td>
+    </tr>
+    
+    </table>
+    </div>
+    <?php
+} 
+?>

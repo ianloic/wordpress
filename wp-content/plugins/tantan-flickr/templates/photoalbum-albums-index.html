@@ -1,0 +1,21 @@
+<?php 
+/*
+Copy this file into your current active theme's directory to customize this template
+
+This template controls the front page of your gallery and displays a list of your albums / groups (optional).
+
+*/
+
+global $TanTanFlickrPlugin;
+
+$TanTanFlickrPlugin->config['numAlbumPreviews'] = 3; // how many album previews to show
+
+include($TanTanFlickrPlugin->getDisplayTemplate('photoalbum-albums-index-highlight.html'));
+
+include($TanTanFlickrPlugin->getDisplayTemplate('photoalbum-albums-index-tags.html'));
+
+include($TanTanFlickrPlugin->getDisplayTemplate('photoalbum-albums-index-other-albums.html'));
+
+
+if (TANTAN_FLICKR_DISPLAYGROUPS) include($TanTanFlickrPlugin->getDisplayTemplate('photoalbum-albums-index-groups.html'));
+?>

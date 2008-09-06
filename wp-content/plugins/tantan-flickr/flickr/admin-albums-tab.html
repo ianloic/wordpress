@@ -1,0 +1,61 @@
+<div class="tablenav">
+<form method="get" id="photos" action="<?php echo (ereg('media-upload.php', $_SERVER['REQUEST_URI']) ? 'media-upload.php' : 'upload.php');?>">
+<input type="hidden" name="tab" value="<?php echo $_GET['tab'];?>" />
+<input type="hidden" name="post_id" value="<?php echo $_GET['post_id'];?>" />
+<input type="hidden" name="action" value="<?php echo $_GET['action'];?>" />
+<input type="hidden" name="style" value="<?php echo $_GET['style'];?>" />
+<input type="hidden" name="_wpnonce" value="<?php echo $_GET['_wpnonce'];?>" />
+<input type="hidden" name="ID" value="<?php echo $_GET['ID'];?>" />
+
+<input type="submit" name="refresh" value="refresh albums" />
+</form>
+</div>
+
+<?php if (count($albums) == 0):?>
+Sorry, no albums found!
+<?php elseif (is_array($albums)):
+$baseurl = get_option('silas_flickr_baseurl');
+$linkoptions = get_option('silas_flickr_linkoptions');
+$parts = parse_url(get_bloginfo('home'));
+$home = 'http://'.$parts['host'];
+$json = new Services_JSON();
+?>
+<ul id='upload-files'>
+<?php 
+$id = 0;
+$hasShortCode = function_exists('add_shortcode');
+foreach ($albums as $album):
+if ($baseurl && !$everyone && ($linkoptions != 'flickr')) {
+    $album['targetURL'] = $home.$baseurl.'album/'.$album['id'].'/'.$album['pagename'];
+} else {
+	$album['targetURL'] = 'http://www.flickr.com/photos/'.$user['user']['nsid'].'/sets/'.$album['id'].'/';
+}
+$albumJSON = $json->encode($album);
+?>
+<li id='flickr-photo-<?php echo $id?>' class='alignleft'>
+<a id='file-link-3' href='<?php echo $photoURL?>' title='<?php echo htmlentities($album['title'], ENT_QUOTES, 'UTF-8');?>' class='file-link image' onclick="return tantan_showOptions(<?php echo $id?>);"><img 
+    id="image<?php echo $id?>" src="<?php echo $album['sizes']['Square']['source']?>" alt="<?php echo htmlentities($album['title'], ENT_QUOTES, 'UTF-8');?>" height="<?php echo $album['sizes']['Square']['height']?>" width="<?php echo $album['sizes']['Square']['width']?>" border="0" /></a>
+    <div class="photo-options" id="options-<?php echo $id?>">
+<?php if ($hasShortCode):?>
+	<strong>Insert:</strong><br />
+	<?php foreach(array(5,10,20,50) as $count): if ($count > $album['photos']) $count = $album['photos'];?>
+		<a href="#" onclick="return tantan_addShortCode('album=<?php echo $album['id'];?> num=<?php echo $count;?>');"><?php echo $count;?> photos</a>
+	<?php
+	if ($count == $album['photos']) break;
+	endforeach;?>
+<br /><br />
+<?php endif;?>
+	<strong>Insert Cover:</strong><br />
+    <?php foreach ($album['sizes'] as $k => $size):?>
+        <a href="<?php echo $size['source']?>" onclick='return tantan_addPhoto(<?php echo $albumJSON;?>, "<?php echo $k?>")' title="<?php echo $size['width']?>x<?php echo $size['height']?>"><?php echo $k?></a> 
+    <?php endforeach;?>
+    <div class="close"><a href="#" onclick="return tantan_hideOptions(<?php echo $id?>);">close</a></div>
+    </div>
+
+</li>
+<?php 
+$id++;
+endforeach;?>
+</ul>
+
+<?php endif; ?>

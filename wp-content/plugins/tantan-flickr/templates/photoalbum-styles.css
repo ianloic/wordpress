@@ -1,0 +1,265 @@
+/*
+Copy this file into your current active theme's directory to customize this template
+
+Photo
+*/
+div.meta img {
+    margin-right:5px;
+}
+div#photo {
+    position:relative;
+    margin:10px 0 0 0;
+}
+div#notes {
+    position:absolute;
+    top:0px;
+    left:0px;
+    width:100%;
+    height:100%;
+}
+div#notes div.note {
+    padding:1px;
+    margin:-4px 0px 0px -4px;
+    position:absolute;
+    cursor:pointer;
+}
+div#notes:hover div.note div.hover2 {
+    border:1px solid black;
+}
+div#notes:hover div.note div.hover {
+    border:1px solid white;
+}
+
+div#notes div.note:hover {
+    border:1px solid yellow;
+    padding:0;
+    z-index:2;
+}
+
+div.note div.text {
+    display:none;
+    position:absolute;
+    top:100%;
+    left:0px;
+    width:auto;
+    margin:10px 0 0 0 ;
+    padding:5px;
+    background:#FFFFD3;
+    color:black;
+    border:1px solid #555;
+    border-top:1px solid #eee;
+    border-left:1px solid #eee;
+    z-index:1;
+}
+div.note:hover div.text {
+    display:block;
+}
+
+div#context {
+    position:relative;
+    height:120px;
+    width:100%;
+    background:#eee;
+}
+div#context div.prev, div#context div.next {
+    position:absolute;
+    top:10px;
+    color:#ccc;
+    font-size:0.9em;
+    text-align:center;
+    text-transform:lowercase;
+}
+div#context div.prev {
+    left:10px;
+}
+div#context div.next {
+    right:10px;
+}
+div#context div.nomore {
+    top:20px;
+    width:100px;
+}
+div#context div.info {
+    position:absolute;
+    top:20px;
+    left:50%;
+    width:100px;
+    margin-left:-50px;
+    text-align:center;
+}
+div#context div.info a{
+    color:#ccc;
+    text-decoration:none;
+}
+div#context div.info strong a{
+    color:#aaa;
+}
+
+div.comment {
+    clear:both;
+    min-height:50px;
+    margin-bottom:1em;
+}
+div.comment p {
+    margin:0 0 1em 0;
+    padding:0;
+}
+div.comment img {
+    margin-right:5px;
+    margin-bottom:5px;
+}
+/*
+
+Album
+
+*/
+
+div#photos {
+    background:#eee;
+    padding:10px;
+    clear:both;
+    margin:20px 0 0 0;
+}
+div#highlight {
+    position:relative;
+    margin:15px 0 0 0;
+}
+div#highlight img {
+    float:left;
+    margin:0 10px 0 0 ;
+}
+div#highlight p {
+    font-size:1.3em;
+}
+div#highlight p.meta {
+    color:#888;
+    font-size:1em;
+}
+div#highlight p.meta a {
+    color:#888;
+}
+
+/*
+
+Albums-index
+
+*/
+
+div.albums {
+    clear:both;
+    padding-top:10px;
+}
+div.album {
+    background:#eee;
+    padding:10px 10px 10px 10px;
+    margin:0 0 15px 0;
+    position:relative;
+    min-height:95px;
+    clear:both;
+}
+div.album img.highlight {
+    float:left;
+    border:3px solid #888;
+    position:relative;
+    margin-right:10px;
+}
+div.album h2 {
+    font-size:1.4em;
+    text-decoration:none;
+    margin:0 0 10px 0;
+}
+div.album p {
+    font-size:0.9em;
+}
+div.album p.meta {
+    color:#888;
+}
+div.album p.meta a {
+    color:#888;
+}
+div.albums-small div.album {
+    clear: none;
+    width:90px;
+    height:115px;
+    float:left;
+    background: none;
+}
+div.albums-small div.album img.highlight {
+    float: none;
+    margin:0;
+}
+div.albums-small div.album strong {
+    font-size:0.9em;
+}
+
+div.group {
+    min-height:60px;
+}
+
+div#highlight {
+    position:relative;
+    margin:0 0 40px 0;
+}
+div#highlight h2 {
+    margin-bottom:5px;
+}
+div#highlight img.highlight {
+    float:left;
+    margin:0 10px 0px 0 ;
+    border:3px solid #888;
+}
+div#highlight p {
+    font-size:1.3em;
+}
+div#highlight p.meta {
+    color:#888;
+    font-size:0.9em;
+}
+div#highlight p.meta a {
+    color:#888;
+}
+
+div#highlight div.photos {
+    clear:both;
+    padding:10px 0;
+	background:none;
+}
+div#highlight div.photos img {
+    margin:0 10px 10px 0;
+}
+
+div#photoalbum-nav {
+    margin-bottom:15px;
+}
+
+/*
+
+Paging
+
+*/
+.navigation {
+	padding:1em 0;
+	font-size:1.5em;
+}
+
+/*
+
+Tags
+
+*/
+div.tags {
+    padding-top:10px;
+    clear:both;
+}
+div#cloud {
+    line-height:200%;
+}
+
+div.flickr-meta-links {
+	clear:both;
+    margin:10px 0 0 0;
+    font-size:10px;
+}
+div.flickr-meta-links a{
+    color:#555;
+}
