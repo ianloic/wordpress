@@ -90,7 +90,7 @@ var ImageDialog = {
 		if (el && el.nodeName == 'IMG') {
 			ed.dom.setAttribs(el, args);
 		} else {
-			ed.execCommand('mceInsertContent', false, '<img id="__mce_tmp" src="javascript:;" />', {skip_undo : 1});
+			ed.execCommand('mceInsertContent', false, '<img id="__mce_tmp" />', {skip_undo : 1});
 			ed.dom.setAttribs('__mce_tmp', args);
 			ed.dom.setAttrib('__mce_tmp', 'id', '');
 			ed.undoManager.add();
@@ -108,7 +108,7 @@ var ImageDialog = {
 			// Handle align
 			v = getSelectValue(f, 'align');
 			cls = f.class_name.value || '';
-			cls = cls ? cls.replace(/alignright\s*|alignleft\s*/g, '') : '';
+			cls = cls ? cls.replace(/alignright\s*|alignleft\s*|aligncenter\s*/g, '') : '';
 			cls = cls ? cls.replace(/^\s*(.+?)\s*$/, '$1') : '';
 			if (v) {
 				if (v == 'left' || v == 'right') {

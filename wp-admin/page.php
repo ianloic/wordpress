@@ -8,8 +8,10 @@ wp_reset_vars(array('action'));
 
 function redirect_page($page_ID) {
 	$referredby = '';
-	if ( !empty($_POST['referredby']) )
+	if ( !empty($_POST['referredby']) ) {
 		$referredby = preg_replace('|https?://[^/]+|i', '', $_POST['referredby']);
+		$referredby = remove_query_arg('_wp_original_http_referer', $referredby);
+	}
 	$referer = preg_replace('|https?://[^/]+|i', '', wp_get_referer());
 
 	if ( 'post' == $_POST['originalaction'] && !empty($_POST['mode']) && 'bookmarklet' == $_POST['mode'] ) {
@@ -31,9 +33,8 @@ function redirect_page($page_ID) {
 		$location = $location[0] . '#postcustom';
 	} elseif (!empty($referredby) && $referredby != $referer) {
 		$location = $_POST['referredby'];
-		if ( $_POST['referredby'] == 'redo' )
-			$location = get_permalink( $page_ID );
-		elseif ( false !== strpos($location, 'edit-pages.php') )
+		$location = remove_query_arg('_wp_original_http_referer', $location);
+		if ( false !== strpos($location, 'edit-pages.php') )
 			$location = add_query_arg('posted', $page_ID, $location);
 		elseif ( false !== strpos($location, 'wp-admin') )
 			$location = "page-new.php?posted=$page_ID";
@@ -70,25 +71,29 @@ case 'edit':
 
 	if ( empty($post->ID) ) wp_die( __("You attempted to edit a page that doesn't exist. Perhaps it was deleted?") );
 
-	if ( 'post' == $post->post_type ) {
-		wp_redirect("post.php?action=edit&post=$post_ID");
+	if ( 'page' != $post->post_type ) {
+		wp_redirect( get_edit_post_link( $post_ID, 'url' ) );
 		exit();
 	}
 
 	wp_enqueue_script('page');
 	if ( user_can_richedit() )
 		wp_enqueue_script('editor');
-	wp_enqueue_script('thickbox');
+	add_thickbox();
 	wp_enqueue_script('media-upload');
-	if ( $last = wp_check_post_lock( $post->ID ) ) {
-		$last_user = get_userdata( $last );
-		$last_user_name = $last_user ? $last_user->display_name : __('Somebody');
-		$message = sprintf( __( 'Warning: %s is currently editing this page' ), wp_specialchars( $last_user_name ) );
-		$message = str_replace( "'", "\'", "<div class='error'><p>$message</p></div>" );
-		add_action('admin_notices', create_function( '', "echo '$message';" ) );
-	} else {
-		wp_set_post_lock( $post->ID );
-		wp_enqueue_script('autosave');
+	wp_enqueue_script('word-count');
+
+	if ( current_user_can('edit_page', $page_ID) ) {
+		if ( $last = wp_check_post_lock( $post->ID ) ) {
+			$last_user = get_userdata( $last );
+			$last_user_name = $last_user ? $last_user->display_name : __('Somebody');
+			$message = sprintf( __( 'Warning: %s is currently editing this page' ), wp_specialchars( $last_user_name ) );
+			$message = str_replace( "'", "\'", "<div class='error'><p>$message</p></div>" );
+			add_action('admin_notices', create_function( '', "echo '$message';" ) );
+		} else {
+			wp_set_post_lock( $post->ID );
+			wp_enqueue_script('autosave');
+		}
 	}
 
 	require_once('admin-header.php');
@@ -142,8 +147,8 @@ case 'delete':
 	}
 
 	$sendback = wp_get_referer();
-	if (strpos($sendback, 'page.php') !== false) $sendback = get_option('siteurl') .'/wp-admin/page.php';
-	elseif (strpos($sendback, 'attachments.php') !== false) $sendback = get_option('siteurl') .'/wp-admin/attachments.php';
+	if (strpos($sendback, 'page.php') !== false) $sendback = admin_url('page.php');
+	elseif (strpos($sendback, 'attachments.php') !== false) $sendback = admin_url('attachments.php');
 	$sendback = preg_replace('|[^a-z0-9-~+_.?#=&;,/:]|i', '', $sendback);
 	wp_redirect($sendback);
 	exit();

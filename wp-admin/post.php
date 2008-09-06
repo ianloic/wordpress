@@ -10,8 +10,10 @@ function redirect_post($post_ID = '') {
 	global $action;
 
 	$referredby = '';
-	if ( !empty($_POST['referredby']) )
+	if ( !empty($_POST['referredby']) ) {
 		$referredby = preg_replace('|https?://[^/]+|i', '', $_POST['referredby']);
+		$referredby = remove_query_arg('_wp_original_http_referer', $referredby);
+	}
 	$referer = preg_replace('|https?://[^/]+|i', '', wp_get_referer());
 
 	if ( !empty($_POST['mode']) && 'bookmarklet' == $_POST['mode'] ) {
@@ -33,9 +35,8 @@ function redirect_post($post_ID = '') {
 		$location = $location[0] . '#postcustom';
 	} elseif (!empty($referredby) && $referredby != $referer) {
 		$location = $_POST['referredby'];
-		if ( $_POST['referredby'] == 'redo' )
-			$location = get_permalink( $post_ID );
-		elseif ( false !== strpos($location, 'edit.php') )
+		$location = remove_query_arg('_wp_original_http_referer', $location);
+		if ( false !== strpos($location, 'edit.php') )
 			$location = add_query_arg('posted', $post_ID, $location);		
 		elseif ( false !== strpos($location, 'wp-admin') )
 			$location = "post-new.php?posted=$post_ID";
@@ -77,25 +78,29 @@ case 'edit':
 
 	if ( empty($post->ID) ) wp_die( __("You attempted to edit a post that doesn't exist. Perhaps it was deleted?") );
 
-	if ( 'page' == $post->post_type ) {
-		wp_redirect("page.php?action=edit&post=$post_ID");
+	if ( 'post' != $post->post_type ) {
+		wp_redirect( get_edit_post_link( $post->ID, 'url' ) );
 		exit();
 	}
 
 	wp_enqueue_script('post');
 	if ( user_can_richedit() )
 		wp_enqueue_script('editor');
-	wp_enqueue_script('thickbox');
+	add_thickbox();
 	wp_enqueue_script('media-upload');
-	if ( $last = wp_check_post_lock( $post->ID ) ) {
-		$last_user = get_userdata( $last );
-		$last_user_name = $last_user ? $last_user->display_name : __('Somebody');
-		$message = sprintf( __( 'Warning: %s is currently editing this post' ), wp_specialchars( $last_user_name ) );
-		$message = str_replace( "'", "\'", "<div class='error'><p>$message</p></div>" );
-		add_action('admin_notices', create_function( '', "echo '$message';" ) );
-	} else {
-		wp_set_post_lock( $post->ID );
-		wp_enqueue_script('autosave');
+	wp_enqueue_script('word-count');
+
+	if ( current_user_can('edit_post', $post_ID) ) {
+		if ( $last = wp_check_post_lock( $post->ID ) ) {
+			$last_user = get_userdata( $last );
+			$last_user_name = $last_user ? $last_user->display_name : __('Somebody');
+			$message = sprintf( __( 'Warning: %s is currently editing this post' ), wp_specialchars( $last_user_name ) );
+			$message = str_replace( "'", "\'", "<div class='error'><p>$message</p></div>" );
+			add_action('admin_notices', create_function( '', "echo '$message';" ) );
+		} else {
+			wp_set_post_lock( $post->ID );
+			wp_enqueue_script('autosave');
+		}
 	}
 
 	require_once('admin-header.php');
@@ -153,8 +158,8 @@ case 'delete':
 	}
 
 	$sendback = wp_get_referer();
-	if (strpos($sendback, 'post.php') !== false) $sendback = get_option('siteurl') .'/wp-admin/post-new.php';
-	elseif (strpos($sendback, 'attachments.php') !== false) $sendback = get_option('siteurl') .'/wp-admin/attachments.php';
+	if (strpos($sendback, 'post.php') !== false) $sendback = admin_url('post-new.php');
+	elseif (strpos($sendback, 'attachments.php') !== false) $sendback = admin_url('attachments.php');
 	$sendback = preg_replace('|[^a-z0-9-~+_.?#=&;,/:]|i', '', $sendback);
 	wp_redirect($sendback);
 	exit();

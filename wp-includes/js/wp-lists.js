@@ -88,6 +88,8 @@ var wpList = {
 			var res = wpAjax.parseAjaxResponse(r, s.response, s.element);
 			if ( !res || res.errors ) { return false; }
 
+			if ( true === res ) { return true; }
+
 			jQuery.each( res.responses, function() {
 				wpList.add.call( list, this.data, $.extend( {}, s, { // this.firstChild.nodevalue
 					pos: this.position || 0,
@@ -313,11 +315,11 @@ var wpList = {
 				var addEl = this;
 				var c = wpList.parseClass(this,'add')[2] || addEl.id;
 				if ( !c ) { return; }
-				var forms = []; var ins = [];
+				var forms = []; var ins = []; // this is all really inefficient
 				$('#' + c + ' :input').focus( function() { currentFormEl = this; } ).blur( function() { currentFormEl = false; } ).each( function() {
 					ins.push(this);
-					$.merge(forms,$(this).parents('form'));
-					forms = $.unique(forms);
+					var f = $(this).parents('form:first').get(0);
+					if ( $.inArray(f,forms) < 0 ) { forms.push(f); }
 				} );
 				$(forms).submit( function() {
 					if ( 0 <= $.inArray(currentFormEl,ins) ) {

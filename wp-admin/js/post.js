@@ -18,6 +18,8 @@ function new_tag_remove_tag() {
 }
 
 function tag_update_quickclicks() {
+	if ( jQuery( '#tags-input' ).length == 0 )
+		return;
 	var current_tags = jQuery( '#tags-input' ).val().split(',');
 	jQuery( '#tagchecklist' ).empty();
 	shown = false;
@@ -96,7 +98,7 @@ jQuery(document).ready( function() {
 	jQuery('#title').blur( function() { if ( (jQuery("#post_ID").val() > 0) || (jQuery("#title").val().length == 0) ) return; autosave(); } );
 
 	// auto-suggest stuff
-	jQuery('#newtag').suggest( 'admin-ajax.php?action=ajax-tag-search', { delay: 500, minchars: 2 } );
+	jQuery('#newtag').suggest( 'admin-ajax.php?action=ajax-tag-search', { delay: 500, minchars: 2, multiple: true, multipleSep: ", " } );
 	jQuery('#newtag').keypress( tag_press_key );
 
 	// category tabs
@@ -118,6 +120,11 @@ jQuery(document).ready( function() {
 		jQuery('#in-category-' + id + ', #in-popular-category-' + id).attr( 'checked', c );
 		noSyncChecks = false;
 	};
+	var popularCats = jQuery('#categorychecklist-pop :checkbox').map( function() { return parseInt(jQuery(this).val(), 10); } ).get().join(',');
+	var catAddBefore = function( s ) {
+		s.data += '&popular_ids=' + popularCats + '&' + jQuery( '#categorychecklist :checked' ).serialize();
+		return s;
+	};
 	var catAddAfter = function( r, s ) {
 		if ( !newCatParent ) newCatParent = jQuery('#newcat_parent');
 		if ( !newCatParentOption ) newCatParentOption = newCatParent.find( 'option[value=-1]' );
@@ -127,7 +134,7 @@ jQuery(document).ready( function() {
 				var th = jQuery(this);
 				var val = th.find('input').val();
 				var id = th.find('input')[0].id
-				jQuery('#' + id).change( syncChecks );
+				jQuery('#' + id).change( syncChecks ).change();
 				if ( newCatParent.find( 'option[value=' + val + ']' ).size() )
 					return;
 				var name = jQuery.trim( th.text() );
@@ -140,15 +147,17 @@ jQuery(document).ready( function() {
 	jQuery('#categorychecklist').wpList( {
 		alt: '',
 		response: 'category-ajax-response',
+		addBefore: catAddBefore,
 		addAfter: catAddAfter
 	} );
 	jQuery('#category-add-toggle').click( function() {
 		jQuery(this).parents('div:first').toggleClass( 'wp-hidden-children' );
-		categoryTabs.tabsClick( 1 );
+		// categoryTabs.tabs( 'select', '#categories-all' ); // this is broken (in the UI beta?)
+		categoryTabs.find( 'a[href="#categories-all"]' ).click();
 		jQuery('#newcat').focus();
 		return false;
 	} );
-	jQuery('.categorychecklist :checkbox').change( syncChecks ).filter( ':checked' ).change();
+	jQuery('.categorychecklist .popular-category :checkbox').change( syncChecks ).filter( ':checked' ).change();
 
 	jQuery('.edit-timestamp').click(function () {
 		if (jQuery('#timestampdiv').is(":hidden")) {
@@ -172,5 +181,9 @@ jQuery(document).ready( function() {
 		if ( jQuery.isFunction( autosave_update_post_ID ) ) {
 			autosave_update_post_ID(s.parsed.responses[0].supplemental.postid);
 		}
-	} });
+	}, addBefore: function( s ) {
+		s.data += '&post_id=' + jQuery('#post_ID').val();
+		return s;
+	}
+	});
 });
