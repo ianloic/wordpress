@@ -4,16 +4,16 @@ Plugin Name: WordPress.com Stats
 Plugin URI: http://wordpress.org/extend/plugins/stats/
 Description: Tracks views, post/page views, referrers, and clicks. Requires a WordPress.com API key.
 Author: Andy Skelton
-Version: 1.2
+Version: 1.3.2
 
 Requires WordPress 2.1 or later. Not for use with WPMU.
 
-Looking for a way to hide the gif? Don't use "display:none"! Put this in your stylesheet:
-img#wpstats{width:0px;height:0px;overflow:hidden;}
+Looking for a way to hide the gif? Put this in your stylesheet:
+img#wpstats{display:none}
 
 */
 
-// If you hardcode a WP.com API key here, all key config screens will be hidden.
+// You can hardcode a WP.com API key here.
 $stats_wpcom_api_key = '';
 
 function stats_get_api_key() {
@@ -87,7 +87,7 @@ function stats_footer() {
 
 	$a['blog'] = $options['blog_id'];
 	$a['v'] = 'ext';
-	if ( ( $wp_the_query->is_single || $wp_the_query->is_page ) && !$wp_the_query->is_attachment )
+	if ( $wp_the_query->is_single || $wp_the_query->is_page )
 		$a['post'] = $wp_the_query->get_queried_object_id();
 	else
 		$a['post'] = '0';
@@ -146,22 +146,45 @@ function stats_reports_page() {
 function stats_admin_load() {
 	global $plugin_page;
 
-	if ( ! empty( $_POST['action'] ) ) {
+	if ( ! empty( $_POST['action'] ) && $_POST['_wpnonce'] == wp_create_nonce('stats') ) {
 		switch( $_POST['action'] ) {
-			case 'get_blog_id' :
-				if ( isset( $_POST['usesavedkey'] ) )
-					$key = get_option('wordpress_api_key');
-				else $key = $_POST['api_key'];
-				$blog_id = stats_get_blog_id( $key );
+			case 'reset' :
+				stats_set_options(array());
+				wp_redirect( "plugins.php?page=$plugin_page" );
+				exit;
+
+			case 'enter_key' :
+				stats_check_key( $_POST['api_key'] );
+				wp_redirect( "plugins.php?page=$plugin_page" );
+				exit;
+
+			case 'add_or_replace' :
+				$key_check = stats_get_option('key_check');
+				stats_set_api_key($key_check[0]);
+				if ( isset($_POST['add']) ) {
+					stats_get_blog_id($key_check[0]);
+				} else {
+					extract( parse_url( get_option( 'home' ) ) );
+					$path = rtrim( $path, '/' );
+					if ( empty( $path ) )
+						$path = '/';
+					$options = stats_get_options();
+					$options['blog_id'] = intval($_POST['blog_id']);
+					$options['api_key'] = $key_check[0];
+					$options['host'] = $host;
+					$options['path'] = $path;
+					stats_set_options($options);
+					stats_update_bloginfo();
+				}
+				stats_set_option('key_check', false);
 				wp_redirect( "plugins.php?page=$plugin_page" );
 				exit;
 		}
 	}
 
 	$options = stats_get_options();
-	$api_key = stats_get_api_key();
-	if ( empty( $options['blog_id'] ) && !empty( $api_key ) )
-		stats_get_blog_id( $api_key );
+	if ( empty( $options['blog_id']) && empty( $options['key_check'] ) && stats_get_api_key() )
+		stats_check_key( $stats_get_api_key );
 }
 
 function stats_admin_notices() {
@@ -197,14 +220,61 @@ function stats_admin_page() {
 			</div>
 <?php $options['error'] = false; stats_set_options($options); endif; ?>
 
-<?php if ( empty( $options['blog_id'] ) ) : ?>
+<?php if ( empty($options['blog_id']) && !empty($options['key_check']) ) : ?>
+			<p><?php printf(__('The API key "%1$s" belongs to the WordPress.com account of "%2$s". If this is not your account, please re-enter your API key.'), $options['key_check'][0], $options['key_check'][1]); ?></p>
+
+<?php	if ( !empty( $GLOBALS['stats_wpcom_api_key'] ) ) : ?>
+			<p><?php _e('Your API key is hard-coded in the plugin file. Please edit the plugin and then reload this page.'); ?></p>
+<?php	else : ?>
+			<p>
+			<form method="post">
+			<?php wp_nonce_field('stats'); ?>
+			<input type="hidden" name="action" value="reset" />
+			<input type="submit" value="<?php echo js_escape(__('Re-enter API key')); ?>" />
+			</form>
+			</p>
+<?php	endif; ?>
+
+<?php	if ( !empty($options['key_check'][2]) ) : ?>
+			<form method="post">
+			<?php wp_nonce_field('stats'); ?>
+			<input type="hidden" name="action" value="add_or_replace" />
+			<p><?php _e('According to the WordPress.com database, this API key is already associated with at least one self-hosted blog. You can <strong>add</strong> this as a new blog on your WordPress.com account or <strong>replace</strong> an existing blog and inherit its stats history.'); ?> </p>
+			<h3><?php _e('Add new blog to my account'); ?></h3>
+			<p><?php _e('Do this if this blog is new or has never been associated with your API key. This blog will be added to your WordPress.com account.'); ?></p>
+			<p><input type="submit" name="add" value="<?php echo js_escape(__('Add to WordPress.com account')); ?>" /></p>
+			<h3><?php _e('Replace an existing blog'); ?></h3>
+			<p><?php _e('Do this if you want this blog to take over the stats history of another blog associated with your WordPress.com account. This is appropriate if you have reinstalled WordPress, changed hosts, or restored your blog from an export file.'); ?></p>
+			<p>
+			<select name="blog_id">
+				<option selected="selected" value="0"><?php _e('Select a blog to replace'); ?></option>
+<?php		foreach ( $options['key_check'][2] as $blog ) : ?>
+				<option value="<?php echo $blog['userblog_id']; ?>"><?php echo $blog['siteurl']; ?></option>
+<?php		endforeach; ?>
+			</select>
+			<input type="submit" name="replace" value="<?php echo js_escape(__('Replace')); ?>" />
+			</p>
+			</form>
+<?php	else : ?>
+			<form method="post">
+			<?php wp_nonce_field('stats'); ?>
+			<input type="hidden" name="action" value="add_or_replace" />
+			<p><?php _e('According to the WordPress.com database, this API key is already associated with at least one self-hosted blog. You can <strong>add</strong> this as a new blog on your WordPress.com account or <strong>replace</strong> an existing blog and inherit its stats history.'); ?> </p>
+			<h3><?php _e('Add new blog to my account'); ?></h3>
+			<p><?php _e('Do this if this blog is new or has never been associated with your API key. This blog will be added to your WordPress.com account.'); ?></p>
+			<p><input type="submit" name="add" value="<?php echo js_escape(__('Add to WordPress.com account')); ?>" /></p>
+			</form>
+<?php	endif; ?>
+
+<?php elseif ( empty( $options['blog_id'] ) ) : ?>
 			<p><?php _e('The WordPress.com Stats Plugin is not working because it needs to be linked to a WordPress.com account.'); ?></p>
 
 <?php	if ( empty( $GLOBALS['stats_wpcom_api_key'] ) ) : ?>
 			<form action="plugins.php?page=<?php echo $plugin_page; ?>" method="post">
+				<?php wp_nonce_field('stats'); ?>
 				<p><?php _e('Enter your WordPress.com API key to link this blog to your WordPress.com account. Be sure to use your own API key! Using any other key will lock you out of your stats. (<a href="http://wordpress.com/profile/">Get your key here.</a>)'); ?></p>
 				<label for="api_key"><?php _e('API Key:'); ?> <input type="text" name="api_key" id="api_key" value="<?php echo $api_key; ?>" /></label>
-				<input type="hidden" name="action" value="get_blog_id" />
+				<input type="hidden" name="action" value="enter_key" />
 				<p class="submit"><input type="submit" value="<?php _e('Save &raquo;'); ?>" /></p>
 			</form>
 <?php	else : ?>
@@ -214,7 +284,7 @@ function stats_admin_page() {
 <?php else : ?>
 			<p><?php _e('The WordPress.com Stats Plugin is configured and working.'); ?></p>
 			<p><?php _e('Visitors who are logged in are not counted. (This means you.)'); ?></p>
-			<p><?php printf(__('Visit <a href="%s">your Dashboard</a> to see your blog stats.'), 'index.php?page=stats'); ?></p>
+			<p><?php printf(__('Visit <a href="%s">your Dashboard</a> to see your blog stats. If you are asked to log in, use your WordPress.com username and password.'), 'index.php?page=stats'); ?></p>
 <?php endif; ?>
 
 		</div>
@@ -274,6 +344,7 @@ function stats_get_post( $post_id ) {
 function stats_client() {
 	require_once( ABSPATH . WPINC . '/class-IXR.php' );
 	$client = new IXR_ClientMulticall( STATS_XMLRPC_SERVER );
+	$client->useragent = 'WordPress/' . $client->useragent;
 	return $client;
 }
 
@@ -335,6 +406,32 @@ function stats_activity() {
 		<p><?php printf(__('Visit %s to see your blog stats.'), '<a href="http://dashboard.wordpress.com/wp-admin/index.php?page=stats&blog=' . $options['blog_id'] . '">' . __('your Global Dashboard') . '</a>'); ?></p>
 		<?php
 	}
+}
+
+function stats_check_key($api_key) {
+	$options = stats_get_options();
+
+	require_once( ABSPATH . WPINC . '/class-IXR.php' );
+
+	$client = new IXR_Client( STATS_XMLRPC_SERVER );
+
+	$client->query( 'wpStats.check_key', $api_key, stats_get_blog() );
+
+	if ( $client->isError() ) {
+		if ( $client->getErrorCode() == -32300 )
+			$options['error'] = __('Your blog was unable to connect to WordPress.com. Please ask your host for help. (' . $client->getErrorMessage() . ')');
+		else
+			$options['error'] = $client->getErrorMessage();
+		stats_set_options( $options );
+		return false;
+	} else {
+		$options['error'] = false;
+	}
+
+	$options['key_check'] = $client->getResponse();
+	stats_set_options($options);
+
+	return true;
 }
 
 function stats_get_blog_id($api_key) {
@@ -540,7 +637,8 @@ function stats_get_csv( $table, $args = null ) {
 	$key = md5( $stats_csv_url );
 
 	// Get cache
-	if ( !$stats_cache = get_option( 'stats_cache' ) )
+	$stats_cache = get_option( 'stats_cache' );
+	if ( !$stats_cache || !is_array($stats_cache) )
 		$stats_cache = array();
 
 	// Return or expire this key
@@ -718,7 +816,7 @@ add_action( 'update_option_permalink_structure', 'stats_flush_posts' );
 // Teach the XMLRPC server how to dance properly
 add_filter( 'xmlrpc_methods', 'stats_xmlrpc_methods' );
 
-define( 'STATS_VERSION', '1' );
+define( 'STATS_VERSION', '2' );
 define( 'STATS_XMLRPC_SERVER', 'http://wordpress.com/xmlrpc.php' );
 
 ?>

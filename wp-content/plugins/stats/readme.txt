@@ -2,8 +2,8 @@
 Contributors: skeltoac, mdawaffe
 Tags: stats, statistics
 Requires at least: 2.1
-Tested up to: 2.3-alpha
-Stable tag: 1.2
+Tested up to: 2.6-alpha
+Stable tag: 1.3.2
 
 You can have simple, concise stats with no additional load on your server by plugging into WordPress.com's stat system.
 
@@ -54,9 +54,9 @@ Yes, your theme must have a call to `<?php wp_footer(); ?>` at the very bottom r
 
 = Can I hide the smiley? =
 
-Sure, just don't use `display:none`, try this code:
+Sure, just use `display:none`. Try this code in your stylesheet:
 
-`img#wpstats{width:0px;height:0px;padding:0px;border:none;overflow:hidden}`
+`img#wpstats{display:none}`
 
 = Is it compatible with WP-Cache? =
 
