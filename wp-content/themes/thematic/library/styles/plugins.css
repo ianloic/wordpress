@@ -1,0 +1,41 @@
+/* =Ajax Edit Comments
+-------------------------------------------------------------- */
+
+.edit-comment {
+    margin-bottom:18px;
+}
+
+/* =PageNavi
+-------------------------------------------------------------- */
+
+/* Use !important to override PageNavi CSS */
+
+.wp-pagenavi a, .wp-pagenavi a:link, .wp-pagenavi a:active {
+	color: blue !important;
+	background:transparent !important;
+	border:none !important;
+}
+.wp-pagenavi a:hover {	
+}
+.wp-pagenavi span.pages {
+	background:transparent !important;
+	border:none !important;
+}
+.wp-pagenavi span.current {
+	background:transparent !important;
+	border:none !important;
+}
+.wp-pagenavi span.extend {
+	background:transparent !important;
+	border:none !important;
+}
+
+/* =WordPress Stats
+-------------------------------------------------------------- */
+
+img#wpstats {   /* hide WordPress Stats smiley */
+    width:0px;
+    height:0px;
+    overflow:hidden
+}
+
