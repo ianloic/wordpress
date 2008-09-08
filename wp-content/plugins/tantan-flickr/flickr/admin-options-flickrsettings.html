@@ -57,15 +57,15 @@
 <input type="checkbox" name="showbadge" value="1" <?php echo ($showbadge ? 'checked="checked"' : '')?> id="showbadge" /><label for="showbadge"> Enable the Flickr Widget for your sidebar.</label><br>
 <small>This will show your recent photos in your site's sidebar. 
 <?php
-global $registered_sidebars;
-if (count($registered_sidebars) <= 0):?>
-<br /><strong>Note:</strong> Your theme is not configured for WordPress Widgets. Here are instructions on <a href="http://automattic.com/code/widgets/themes/">how to add WordPress Widgets</a> to your existing theme.
+global $wp_registered_sidebars;
+if (is_array($wp_registered_sidebars) && count($wp_registered_sidebars) <= 0):?>
+<br /><strong>Note:</strong> Your theme does not look it's properly configured for WordPress Widgets. Here are instructions on <a href="http://automattic.com/code/widgets/themes/">how to add WordPress Widgets</a> to your existing theme.
 <?php else:?>
 <a href="themes.php?page=widgets/widgets.php">Configure your sidebar &gt;</a></small>
 <?php endif;?>
 
 <?php else:?>
-Install the <a href="http://automattic.com/code/widgets/">WordPress Widgets plugin</a> if you want to show your recent Flickr photos in your WordPress sidebar.
+Install the <a href="http://www.wordpress.org/">latest version of WordPress</a> if you want to show your recent Flickr photos in your WordPress sidebar.
 
 <?php endif;?>
 
@@ -79,7 +79,6 @@ Install the <a href="http://automattic.com/code/widgets/">WordPress Widgets plug
 <input type="checkbox" name="hideprivate" value="1" <?php echo ($hideprivate ? 'checked="checked"' : '')?> id="hideprivate" /><label for="hideprivate"> Hide photos that have been marked <em>Private</em>.</label>
 </td>
 </tr>
-
 
 
 

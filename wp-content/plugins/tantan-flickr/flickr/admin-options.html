@@ -39,20 +39,28 @@ div.album td strong {
 
 <div class="wrap">
 <h2 id="write-post">Photo Album Configuration</h2>
+<div style="float:left;margin-right:270px">
 <p>
 This plugin will retrieve your Flickr photosets and display them as albums on a page within this site. 
 This plugin will also allow you to easily add your photos to your blog posts (or pages). 
 </p>
-<p><strong>Installation and Usage:</strong> Just follow the onscreen prompts to link your photo album to a Flickr account. 
-To insert photos into your posts, just click the <em>Photos</em> tab in the edit screen and then click on a thumbnail. </p>
-
-<p><em>Important:</em> After you have updated or created a new Flickr set, visit this page to update your photo album's cache with your latest photos.
-If you are logged in as an administrator, then you should also see a "refresh photos" button in the top right corner of your photo album which does the same thing.
-</p>
-
 <?php if (!is_object($Silas)):?>
+<p>
+This plugin is provided by <a href="http://www.tantannoodles.com">TanTanNoodles</a> 
+and licensed free of charge for you to use under the GPL.
+This plugin is <em>unsupported</em> and comes with no official technical support.
+However, you can check the following pages for the latest updates to this plugin, along with any unofficial technical support:<br>
+<br>
+<strong>Releases:</strong> <a href="http://tantannoodles.com/toolkit/photo-album/">tantannoodles.com/toolkit/photo-album/</a><br>
+<strong>Support Group:</strong> <a href="http://www.flickr.com/groups/tantannoodles/">flickr.com/groups/tantannoodles</a>
+</p>
+<p>
+<strong>RSS Updates:</strong> Subscribe to the <a href="http://feeds.feedburner.com/TanTanToolkit">TanTanToolkit feed</a> and get notified when there's an update to this plugin.
+</p>
+<?php endif;?>
+</div>
 
-<div  style="float:right;width:250px;background:#eee;padding:10px;font-size:0.9em;">
+<div  style="float:right;width:250px;margin:10px 0 0 -270px;background:#eee;padding:10px;font-size:0.9em;">
 	If you find this plugin helpful, please consider donating a few dollars to support this plugin. Thanks!
 	<br /><br />
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
@@ -82,22 +90,6 @@ Amount: $<input type="text" name="amount" value="" style="width:50px;" /> <br />
 </div>
 
 
-<p>
-This plugin is provided by <a href="http://www.tantannoodles.com">TanTanNoodles</a> 
-and licensed free of charge for you to use under the GPL.
-This plugin is <em>unsupported</em> and comes with no official technical support.
-</p>
-<p>
-However, you can check the following pages for the latest updates to this plugin, 
-along with any unofficial technical support:<br>
-<br>
-<strong>Releases:</strong> <a href="http://tantannoodles.com/toolkit/photo-album/">tantannoodles.com/toolkit/photo-album/</a><br>
-<strong>Support Group:</strong> <a href="http://www.flickr.com/groups/tantannoodles/">flickr.com/groups/tantannoodles</a>
-</p>
-<p>
-<strong>RSS Updates:</strong> Subscribe to the <a href="http://feeds.feedburner.com/TanTanToolkit">TanTanToolkit feed</a> and get notified when there's an update to this plugin.
-</p>
-<?php endif;?>
 
 <?php 
 if (!$flickr_apikey || !$flickr_sharedsecret) { // no api key
@@ -105,8 +97,25 @@ if (!$flickr_apikey || !$flickr_sharedsecret) { // no api key
 }elseif (!$flickrAuth) { // authenticate
     include(dirname(__FILE__).'/admin-options-auth.html');
 } else { // general flickr settings
-    include(dirname(__FILE__).'/admin-options-flickrsettings.html');
-    ?>
+?>
+	<fieldset class="options">
+    <legend>Customizations</legend>
+    <p>
+    	<strong>Popup Overlays:</strong> Add Lightbox style popup overlays to displays to your photos. <a href="http://tantannoodles.com/flickr-demo/">Demo</a> - <a href="http://code.google.com/p/photo-album/wiki/Documentation#Popup_Overlay_Support">Instructions</a>
+	</p>
+	<p>
+		<strong>Custom Comments:</strong> Allow visitors to comment on the photos displayed on your blog (without having to register with Flickr). <a href="http://code.google.com/p/photo-album/wiki/Documentation#Custom_Photo_Comments">Instructions</a>
+	</p>
+    <p>
+    	<strong>Look and Feel:</strong> Not all WordPress themes are created equal, and you may need to tweak a couple templates to match the look and feel of our own blog. Look inside the <code>wp-content/plugins/tantan-flickr/templates</code> directory for the template files. <a href="http://code.google.com/p/photo-album/wiki/Documentation#Look_and_Feel_Customization">Instructions</a>
+    </p>
+    </fieldset>
+    
+
+<?php include(dirname(__FILE__).'/admin-options-flickrsettings.html'); ?>
+    
+
+    
     <fieldset class="options">
     <legend>Photo Albums</legend>
     
@@ -116,7 +125,7 @@ if (!$flickr_apikey || !$flickr_sharedsecret) { // no api key
     
     <input type="button" value="Organize Albums" onclick="window.open('http://www.flickr.com/photos/organize/?start_tab=sets', '_blank');return false" />
     <input type="submit" value="Refresh All Albums" /><br>
-    <small>Your Flickr albums will be cached locally to help speed things up. Click <strong>refresh</strong> to synchronize and refresh all your albums.</small>
+    <small>Your Flickr albums will be cached locally to help speed things up. Click <strong>refresh</strong> to synchronize and refresh all your albums, or after you've created a new set.</small>
     </form>
     
     <hr />
@@ -168,6 +177,7 @@ if (!$flickr_apikey || !$flickr_sharedsecret) { // no api key
     </form>
     
     </fieldset>
+    
     
     <script type="text/javascript" src="../wp-includes/js/tw-sack.js"></script>
     <script>
