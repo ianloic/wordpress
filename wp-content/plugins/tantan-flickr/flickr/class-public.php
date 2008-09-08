@@ -1,7 +1,7 @@
 <?php
 /*
-$Revision: 216 $
-$Date: 2008-08-26 00:07:15 -0400 (Tue, 26 Aug 2008) $
+$Revision: 233 $
+$Date: 2008-09-04 16:19:41 -0400 (Thu, 04 Sep 2008) $
 $Author: joetan54 $
 */
 class TanTanFlickrPlugin {
@@ -317,6 +317,11 @@ class TanTanFlickrPlugin {
                 
                 $user = $flickr->auth_checkToken();
                 $nsid = $user['user']['nsid'];
+				if (count($photo['urls'])) {
+					$photourl = array_pop($photo['urls']);
+				} else {
+					$photourl = 'http://www.flickr.com/photos/'. $photo['owner']['nsid'].'/'.$photo['id'].'/';
+				}
 				if ($request['group'] && !TANTAN_FLICKR_DISPLAYGROUPS) {
 					$message = "Sorry, this feature is not enabled.";
                     $photoTemplate = 'error.html';
@@ -472,7 +477,7 @@ class TanTanFlickrPlugin {
     function rss_feed() {
         $user = get_option('silas_flickr_user');
         if ($this->request['album']) {
-            echo '<link rel="alternate" type="application/atom+xml" title="Flickr Album Feed" href="http://api.flickr.com/services/feeds/photoset.gne?set='.$this->request['album'].'&nsid='.$user['user']['nsid'].'" />';
+            echo '<link rel="alternate" type="application/atom+xml" title="Flickr Album Feed" href="http://api.flickr.com/services/feeds/photoset.gne?set='.$this->request['album'].'&amp;nsid='.$user['user']['nsid'].'" />';
         }
         if ($this->request['group']) {
             echo '<link rel="alternate" type="application/atom+xml" title="Flickr Group Feed" href="http://api.flickr.com/services/feeds/groups_discuss.gne?id='.$this->request['group'].'" />';

@@ -4,8 +4,57 @@ Copy this file into your current active theme's directory to customize this temp
 
 This template displays the comments for a photo
 */
-
+if (defined('TANTAN_FLICKR_COMMENTS')) {
+	$mode = TANTAN_FLICKR_COMMENTS;
+} else {
+	$mode = 'flickr';
+}
 ?>
+
+<?php 
+//
+// JS-Kit Comments
+// http://www.js-kit.com/
+//
+if ($mode == 'js-kit'):?>
+<h4 id="comments">Comments</h4>
+
+<div class="js-kit-comments" permalink="<?php echo $photourl;?>" label="Leave a comment" path=""></div><br style="clear:both;" />
+<script src="http://js-kit.com/comments.js"></script>
+
+
+<?php 
+//
+// Disqus Comments
+// http://www.disqus.com/
+//
+elseif ($mode == 'disqus'):
+if (!defined('DISQUS_SHORT_NAME')) define('DISQUS_SHORT_NAME', get_option('disqus_forum_url'));
+if (!DISQUS_SHORT_NAME): // is disqus properly installed
+?>
+<p>
+It doesn't look like the Disqus commenting service is properly configured. 
+Please install and configure the <a href="http://wordpress.org/extend/plugins/disqus-comment-system/">Disqus WordPress plugin</a> or
+follow the <a href="http://code.google.com/p/photo-album/wiki/Documentation#Custom_Photo_Comments">instructions outlined here</a>.
+
+
+</p>
+<?php else:?>
+<div id="disqus_thread"></div>
+<script type="text/javascript" src="http://disqus.com/forums/<?php echo DISQUS_SHORT_NAME;?>/embed.js"></script>
+<noscript><a href="http://<?php echo DISQUS_SHORT_NAME;?>.disqus.com/?url=ref">View the discussion thread.</a></noscript>
+<p><a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+</p>
+
+<?php 
+endif; // disqus is configured
+
+//
+// Default comments provided by the Flickr photo page
+//
+else:
+?>
+
 <h4 id="comments"><span class="num"><?php echo count($comments);?></span> comments</h4>
 
 <?php if (is_array($comments) && count($comments)): foreach($comments as $comment):?>
@@ -21,8 +70,11 @@ This template displays the comments for a photo
 </div>
 <?php endforeach;?>
 <br style="clear:both;" />
-<p><a href="http://www.flickr.com/photos/<?php echo $photo['owner']['nsid'];?>/<?php echo $photo['id'];?>/#reply">Add a comment &gt;</a></p>
+<p><a href="<?php echo $photourl;?>#reply">Add a comment &gt;</a></p>
 <?php else:?>
 <p>No comments for this photo. 
-<a href="http://www.flickr.com/photos/<?php echo $photo['owner']['nsid'];?>/<?php echo $photo['id'];?>/#reply">Add a comment &gt;</a></p>
+<a href="<?php echo $photourl;?>#reply">Add a comment &gt;</a></p>
 <?php endif;?>
+
+
+<?php endif; //flickr ?>

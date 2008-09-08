@@ -3,7 +3,7 @@ Contributors: joetan
 Tags: flickr, photo album, gallery, photos, images, post, widget, admin
 Requires at least: 2.3
 Tested up to: 2.6
-Stable tag: 0.98.4
+Stable tag: 0.99
 
 This Flickr plugin for WordPress will allow you to pull in your Flickr photosets and display them as albums on your WordPress site.
 

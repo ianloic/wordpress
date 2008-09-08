@@ -4,7 +4,7 @@ Plugin Name: Flickr Photo Album
 Plugin URI: http://www.tantannoodles.com/toolkit/photo-album/
 Description: This plugin will retrieve your Flickr photos and allow you to easily add your photos to your posts. <a href="options-general.php?page=tantan-flickr/flickr/class-admin.php">Configure...</a>
 Author: Joe Tan
-Version: 0.98.4
+Version: 0.99
 Author URI: http://www.tantannoodles.com/
 
 Copyright (C) 2008 Joe Tan
@@ -25,8 +25,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 Change Log: http://code.google.com/p/photo-album/wiki/ChangeLog
 
-$Revision: 225 $
-$Date: 2008-08-28 22:15:49 -0400 (Thu, 28 Aug 2008) $
+$Revision: 241 $
+$Date: 2008-09-07 10:04:09 -0400 (Sun, 07 Sep 2008) $
 $Author: joetan54 $
 
 */
@@ -44,6 +44,8 @@ if (!defined("TANTAN_FLICKR_CACHEMODE"))      define("TANTAN_FLICKR_CACHEMODE", 
 if (!defined("TANTAN_FLICKR_CACHE_TIMEOUT"))  define("TANTAN_FLICKR_CACHE_TIMEOUT", 30*86400); // 30 days default cache
 if (!defined("TANTAN_FLICKR_SEARCH_LICENSE")) define("TANTAN_FLICKR_PUBLIC_LICENSE", '4'); // license to use when searching public photos. more info for possible values: http://www.flickr.com/services/api/flickr.photos.licenses.getInfo.html
 if (!defined("TANTAN_FLICKR_BASEURL"))        define("TANTAN_FLICKR_BASEURL", get_option('silas_flickr_baseurl'));
+if (!defined("TANTAN_FLICKR_COMMENTS"))       define("TANTAN_FLICKR_COMMENTS", 'flickr'); // which commenting system to use
+
 //define('TANTAN_FLICKR_APIKEY', '');
 //define('TANTAN_FLICKR_SHAREDSECRET', '');
 
