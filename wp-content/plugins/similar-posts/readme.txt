@@ -3,8 +3,8 @@ Contributors: RobMarsh
 Donate link: http://rmarsh.com/donate/similar-posts/
 Tags: posts, related, similar, related posts, similar posts, tags, post-plugins
 Requires at least: 1.5
-Tested up to: 2.6.1
-Stable tag: 2.6.1.3
+Tested up to: 2.6.2
+Stable tag: 2.6.2.0
 Displays a list of posts similar to the current one based on content, title and/or tags.
 
 == Description ==
@@ -31,6 +31,14 @@ This plugin **requires** the latest version of the *Post-Plugin Library:* [downl
 
 == Version History ==
 
+* 2.6.2.0
+	* fixed a problem with the stemming algorithm and overused words
+	* introduced a first stab at fuzzy matching
+	* new {imagealt} output tag -- rather like {imagesrc}
+	* {excerpt} can now trim to whole sentences
+	* content filter can now take parameter string
+	* widget can now take parameter string
+	* output can be appended to posts & feeds
 * 2.6.1.3
 	* fix - german language stemmer was crashing if mb_string fucntions not available
 * 2.6.1.2

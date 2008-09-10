@@ -1,6 +1,6 @@
 <?php
 
-// Admin stuff for Similar Posts Plugin, Version 2.6.1.3
+// Admin stuff for Similar Posts Plugin, Version 2.6.2.0
 
 function similar_posts_option_menu() {
 	add_options_page(__('Similar Posts Options', 'similar_posts'), __('Similar Posts', 'similar_posts'), 8, 'similar-posts', 'similar_posts_options_page');
@@ -40,6 +40,7 @@ function similar_posts_options_page(){
 	$m->add_subpage('General', 'general', 'similar_posts_general_options_subpage');
 	$m->add_subpage('Output', 'output', 'similar_posts_output_options_subpage');
 	$m->add_subpage('Filter', 'filter', 'similar_posts_filter_options_subpage');
+	$m->add_subpage('Placement', 'placement', 'similar_posts_placement_options_subpage');
 	$m->add_subpage('Other', 'other', 'similar_posts_other_options_subpage');
 	$m->add_subpage('Manage the Index', 'index', 'similar_posts_index_options_subpage');
 	$m->add_subpage('Report a Bug', 'bug', 'similar_posts_bug_subpage');
@@ -172,6 +173,39 @@ function similar_posts_filter_options_subpage(){
 	<?php	
 }
 
+function similar_posts_placement_options_subpage(){
+	global $wpdb, $wp_version;
+	$options = get_option('similar-posts');
+	if (isset($_POST['update_options'])) {
+		check_admin_referer('similar-posts-update-options'); 
+		if (defined('POC_CACHE_4')) poc_cache_flush();
+		// Fill up the options with the values chosen...
+		$options = ppl_options_from_post($options, array('content_filter', 'widget_parameters', 'widget_condition', 'feed_on', 'feed_priority', 'feed_parameters', 'append_on', 'append_priority', 'append_parameters', 'append_condition'));
+		update_option('similar-posts', $options);
+		// Show a message to say we've done something
+		echo '<div class="updated fade"><p>' . __('Options saved', 'similar_posts') . '</p></div>';
+	} 
+	//now we drop into html to display the option page form
+	?>
+		<div class="wrap">
+		<h2><?php _e('Placement Settings', 'similar_posts'); ?></h2>
+		<form method="post" action="">
+		<div class="submit"><input type="submit" name="update_options" value="<?php _e('Save Placement Settings', 'similar_posts') ?>" /></div>
+		<table class="optiontable form-table">
+			<?php 
+				ppl_display_append($options); 
+				ppl_display_feed($options); 
+				ppl_display_widget($options); 
+				ppl_display_content_filter($options['content_filter']);
+			?>
+		</table>
+		<div class="submit"><input type="submit" name="update_options" value="<?php _e('Save Placement Settings', 'similar_posts') ?>" /></div>
+		<?php if (function_exists('wp_nonce_field')) wp_nonce_field('similar-posts-update-options'); ?>
+		</form>  
+	</div>
+	<?php	
+}
+
 function similar_posts_other_options_subpage(){
 	global $wpdb, $wp_version;
 	$options = get_option('similar-posts');
@@ -179,7 +213,7 @@ function similar_posts_other_options_subpage(){
 		check_admin_referer('similar-posts-update-options'); 
 		if (defined('POC_CACHE_4')) poc_cache_flush();
 		// Fill up the options with the values chosen...
-		$options = ppl_options_from_post($options, array('content_filter', 'stripcodes', 'feed_active', 'term_extraction', 'num_terms', 'weight_title', 'weight_content', 'weight_tags', 'hand_links'));
+		$options = ppl_options_from_post($options, array('stripcodes', 'feed_active', 'term_extraction', 'num_terms', 'weight_title', 'weight_content', 'weight_tags', 'hand_links'));
 		$wcontent = $options['weight_content'] + 0.0001; 
 		$wtitle = $options['weight_title'] + 0.0001;
 		$wtags = $options['weight_tags'] + 0.0001;
@@ -202,9 +236,8 @@ function similar_posts_other_options_subpage(){
 				ppl_display_weights($options); 
 				ppl_display_num_terms($options['num_terms']); 
 				ppl_display_term_extraction($options['term_extraction']); 
-				ppl_display_feed_active($options['feed_active']); 
 				ppl_display_hand_links($options['hand_links']);
-				ppl_display_content_filter($options['content_filter']);
+				ppl_display_feed_active($options['feed_active']);
 				ppl_display_stripcodes($options['stripcodes']); 
 			?>
 		</table>
@@ -233,7 +266,7 @@ function similar_posts_index_options_subpage(){
 		$options['batch'] = ppl_check_cardinal($_POST['batch']);
 		if ($options['batch'] === 0) $options['batch'] = 100;
 		flush();
-		$termcount = save_index_entries (($options['utf8']==='true'), ($options['use_stemmer']==='true'), $options['batch'], ($options['cjk']==='true'));
+		$termcount = save_index_entries (($options['utf8']==='true'), $options['use_stemmer'], $options['batch'], ($options['cjk']==='true'));
 		update_option('similar-posts', $options);
 		//show a message
 		printf('<div class="updated fade"><p>'.__('Indexed %d posts.').'</p></div>', $termcount);
@@ -248,7 +281,7 @@ function similar_posts_index_options_subpage(){
 		echo '<p>'.__('The options that affect the index can be set below.', 'similar_posts').'</p>';
 		echo '<p>'.__('If you are using a language other than english you may find that the plugin mangles some characters since PHP is normally blind to multibyte characters. You 	can force the plugin to interpret extended characters as UTF-8 at the expense of a little speed but this facility is only available if your installation of PHP supports the mbstring functions.', 'similar_posts').'</p>';
 		echo '<p>'.__('Languages like Chinese, Korean and Japanese pose a special difficulty for the full-text search algorithm. As an experiment I have introduced an option below to work around some of these issues. The text must be encoded as UTF-8. I would be very grateful for feedback from any users knowledgeable in these languages.', 'similar_posts').'</p>';
-		echo '<p>'.__('Some related word forms should really be counted together, e.g., "follow", "follows", and "following". The plugin can use a "stemming" algorithm to reduce related forms to their root stem. It is worth experimenting to see if this improves the similarity of posts in your particular circumstances. Stemming algorithms are provided for english, german, spanish, french and italian but stemmers for other languages can be created: see the help for instructions. Note: stemming slows down the indexing more than a little.', 'similar_posts').'</p>'; 
+		echo '<p>'.__('Some related word forms should really be counted together, e.g., "follow", "follows", and "following". By default, Similar Posts treats such differences strictly but has two other algorithms which are more relaxed: <em>stemming</em> and <em>fuzzy matching</em>. The stemming algorithm tries to reduce related forms to their root stem. Stemming algorithms are provided for english, german, spanish, french and italian but stemmers for other languages can be created: see the help for instructions. Fuzzy matching uses the "metaphone" algorithm to handle word variations. Note: both stemming and fuzzy matching slow down the indexing more than a little. It is worth experimenting with the three possibilities to see what improves the similarity of posts in your particular circumstances.', 'similar_posts').'</p>'; 
 		echo '<p>'.__('The indexing routine processes posts in batches of 100 by default. If you run into problems with limited memory you can opt to make the batches smaller.', 'similar_posts').'</p>'; 
 		echo '<p>'.__('Note: the process of indexing may take a little while. On my modest machine 500 posts take between 5 seconds and 20 seconds (with stemming and utf-8 support). Don\'t worry if the screen fails to update until finished.', 'similar_posts').'</p>'; 
 		?>
@@ -273,11 +306,12 @@ function similar_posts_index_options_subpage(){
 				</td> 
 			</tr>
 			<tr valign="top">
-				<th scope="row"><?php _e('Use a stemming algorithm?', 'similar_posts') ?></th>
+				<th scope="row"><?php _e('Treat Related Word Variations:', 'similar_posts') ?></th>
 				<td>
 					<select name="use_stemmer" id="use_stemmer">
-					<option <?php if($options['use_stemmer'] == 'false') { echo 'selected="selected"'; } ?> value="false">No</option>
-					<option <?php if($options['use_stemmer'] == 'true') { echo 'selected="selected"'; } ?> value="true">Yes</option>
+					<option <?php if($options['use_stemmer'] == 'false') { echo 'selected="selected"'; } ?> value="false">Strictly</option>
+					<option <?php if($options['use_stemmer'] == 'true') { echo 'selected="selected"'; } ?> value="true">By Stem</option>
+					<option <?php if($options['use_stemmer'] == 'fuzzy') { echo 'selected="selected"'; } ?> value="fuzzy">Fuzzily</option>
 					</select>
 				</td> 
 			</tr>
@@ -301,15 +335,7 @@ function similar_posts_bug_subpage(){
 }
 
 function similar_posts_remove_subpage(){
-	function eradicate() {
-		global $wpdb, $table_prefix;
-		delete_option('similar-posts');
-		delete_option('similar-posts-feed');
-		delete_option('widget_rrm_similar_posts');
-		$table_name = $table_prefix . 'similar_posts';
-		$wpdb->query("DROP TABLE `$table_name`");
-	}
-	ppl_plugin_eradicate_form('eradicate', str_replace('-admin', '', __FILE__)); 
+	ppl_plugin_eradicate_form(str_replace('-admin', '', __FILE__)); 
 }	
 
 function similar_posts_for_feed_options_page(){
@@ -505,7 +531,7 @@ function similar_posts_feed_remove_subpage(){
 }	
 
 // sets up the index for the blog
-function save_index_entries ($utf8=false, $use_stemmer=false, $batch=100, $cjk=false) {
+function save_index_entries ($utf8=false, $use_stemmer='false', $batch=100, $cjk=false) {
 	global $wpdb, $table_prefix;
 	//$t0 = microtime(true);
 	$table_name = $table_prefix.'similar_posts';
@@ -611,7 +637,16 @@ function similar_posts_install() {
 	$options = (array) get_option('similar-posts');
 	// check each of the option values and, if empty, assign a default (doing it this long way
 	// lets us add new options in later versions)
-	if (!isset($options['feed_active'])) $options['feed_active'] = 'false';
+	if (!isset($options['feed_active'])) $options['feed_active'] = 'false'; // deprecated
+	if (!isset($options['widget_condition'])) $options['widget_condition'] = '';
+	if (!isset($options['widget_parameters'])) $options['widget_parameters'] = '';
+	if (!isset($options['feed_on'])) $options['feed_on'] = 'false';
+	if (!isset($options['feed_priority'])) $options['feed_priority'] = '10';
+	if (!isset($options['feed_parameters'])) $options['feed_parameters'] = 'prefix=<strong>'.__('Similar Posts', 'similar-posts').':</strong><ul class="similar-posts">&suffix=</ul>';
+	if (!isset($options['append_on'])) $options['append_on'] = 'false';
+	if (!isset($options['append_priority'])) $options['append_priority'] = '10';
+	if (!isset($options['append_parameters'])) $options['append_parameters'] = 'prefix=<h3>'.__('Similar Posts', 'similar-posts').':</h3><ul class="similar-posts">&suffix=</ul>';
+	if (!isset($options['append_condition'])) $options['append_condition'] = 'is_single()';
 	if (!isset($options['limit'])) $options['limit'] = 5;
 	if (!isset($options['skip'])) $options['skip'] = 0;
 	if (!isset($options['age'])) {$options['age']['direction'] = 'none'; $options['age']['length'] = '0'; $options['age']['duration'] = 'month';}
@@ -665,7 +700,7 @@ function similar_posts_install() {
 
  	// initial creation of the index, if the table is empty
 	$num_index_posts = $wpdb->get_var("SELECT COUNT(*) FROM `$table_name`");
-	if ($num_index_posts == 0) save_index_entries (($options['utf8'] === 'true'), false, $options['batch'], ($options['cjk'] === 'true'));	
+	if ($num_index_posts == 0) save_index_entries (($options['utf8'] === 'true'), 'false', $options['batch'], ($options['cjk'] === 'true'));	
 
 	// deactivate legacy Similar Posts Feed if present
 	$current = get_option('active_plugins');

@@ -120,6 +120,9 @@ function otf_excerpt($option_key, $result, $ext) {
 					$more = '<a href="'.$url.'">'.$more.'</a>';
 				}	
 			}	
+			if (count($s) > 4) {
+				$numsent = $s[4];
+			}	
 		}
 	}
 	switch ($type) {
@@ -133,17 +136,20 @@ function otf_excerpt($option_key, $result, $ext) {
 		if ($value === '') {
 			$value = $result->post_content;
 			$value = convert_smilies($value);
-			$value = oth_trim_extract($value, $len, $more);
+			$value = oth_trim_extract($value, $len, $more, $numsent);
 			$value = apply_filters('get_the_content', $value);
-			remove_filter( 'the_content', 'ppl_content_filter', 5 );
+			remove_filter('the_content', 'ppl_content_filter', 5);
+			remove_filter('the_content', 'ppl_post_filter', 5);
 			$value = apply_filters('the_content', $value);
-			add_filter( 'the_content', 'ppl_content_filter', 5 );
+			add_filter('the_content', 'ppl_content_filter', 5);
+			add_filter('the_content', 'ppl_post_filter', 5);
+			
 		} else {
 			$value = convert_smilies($value);
 			$value = apply_filters('get_the_excerpt', $value);
-			remove_filter( 'the_excerpt', 'ppl_content_filter', 5 );
+			remove_filter('the_excerpt', 'ppl_content_filter', 5);
 			$value = apply_filters('the_excerpt', $value);
-			add_filter( 'the_excerpt', 'ppl_content_filter', 5 );
+			add_filter('the_excerpt', 'ppl_content_filter', 5);
 		}
 		break;
 	default:
@@ -193,8 +199,10 @@ function otf_snippetword($option_key, $result, $ext) {
 
 function otf_fullpost($option_key, $result, $ext) {
 	remove_filter( 'the_content', 'ppl_content_filter', 5 );
+	remove_filter( 'the_content', 'ppl_post_filter', 5 );
 	$value = apply_filters('the_content', $result->post_content);
 	add_filter( 'the_content', 'ppl_content_filter', 5 );
+	add_filter( 'the_content', 'ppl_post_filter', 5 );
 	return str_replace(']]>', ']]&gt;', $value);
 }
 
@@ -506,7 +514,7 @@ function otf_postviews($option_key, $result, $ext) {
 	// alex king's popularity contest
 	if (class_exists('ak_popularity_contest')) $count = $akpc->get_post_total($result->ID);
 	// my own post view count
-	else if (function_exists('pvc_view_count')) $count = pvc_view_count($result->ID);
+	else if (function_exists('popular_posts_views')) $count = popular_posts_views($result->ID);
 	// lester chan's postviews
 	else if (function_exists('the_views')) {
 		$count = get_post_custom($result->ID);
@@ -659,6 +667,23 @@ function otf_imagesrc($option_key, $result, $ext) {
 		$imgsrc = str_replace(".$extension", "$suffix.$extension", $imgsrc);
 	}
 	return $imgsrc;
+}
+
+function otf_imagealt($option_key, $result, $ext) {
+	// extract any image tags
+	$content = $result->post_content;
+	if ($ext) { 
+		$s = explode(':', $ext);
+		if ($s[1] === 'post') {
+			$content = apply_filters('the_content', $content);
+		}	
+		if ($s[2]) $suffix = $s[2];
+	}
+	$pattern = '/<img.+?alt\s*=\s*[\'|\"](.*?)[\'|\"].+?>/i';
+	if (!preg_match_all($pattern, $content, $matches)) return '';
+	$i = $s[0];
+	if (!$i) $i = 0;
+	return $matches[1][$i];
 }
 
 function otf_gravatar($option_key, $result, $ext) {
@@ -877,7 +902,7 @@ function oth_truncate_text($text, $ext) {
 	}
 }	
 
-function oth_trim_extract($text, $len, $more) {
+function oth_trim_extract($text, $len, $more, $numsent) {
 	$text = str_replace(']]>', ']]&gt;', $text);
 	if(strpos($text, '<!--more-->')) {
 		$parts = explode('<!--more-->', $text, 2);
@@ -892,7 +917,8 @@ function oth_trim_extract($text, $len, $more) {
 		$parts = preg_split('/([\s]+)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
 		$in_tag = false;
 		$num_words = 0;
-		$text = '';
+		$sentences = array();
+		$words = '';
 		foreach($parts as $part) {
 			if(0 < preg_match('/<[^>]*$/s', $part)) {
 				$in_tag = true;
@@ -902,8 +928,23 @@ function oth_trim_extract($text, $len, $more) {
 			if(!$in_tag && '' != trim($part) && substr($part, -1, 1) != '>') {
 				$num_words++;
 			}
-			$text .= $part;
+			if(!$in_tag && '' != trim($part) && false !== strpos('.?!', substr($part, -1, 1))) {
+				$sentences [] = $words . $part;
+				$words = '';
+			} else {
+				$words .= $part;
+			}
 			if($num_words >= $len && !$in_tag) break;
+		}
+		if (!isset($numsent)) {
+			$text = implode('', $sentences) . $words;
+		} else {
+			$numsent = abs($numsent);
+			if ($numsent == 0) {
+				$text = implode('', $sentences);
+			} else {
+				$text = implode('', array_slice($sentences, 0, $numsent));
+			}
 		}
 		// put back the missing html entities
 	    foreach ($ents[0] as $ent) $text = preg_replace("/\x06/", $ent, $text, 1);
@@ -934,7 +975,7 @@ function oth_format_snippet($content, $option_key, $trim, $len, $more) {
 				//if we can't get a single full word we use the full snippet
 				// (we use $matches[1] because we don't want the white-space)
 				if ($matches[1]) $snippet = $matches[1];
-			}
+			} 
 			$snippet .= $more;
 		} else {
 			$snippet = $content;
@@ -950,7 +991,7 @@ function oth_format_snippet($content, $option_key, $trim, $len, $more) {
 				//if we can't get a single full word we use the full snippet
 				// (we use $matches[1] because we don't want the white-space)
 				if ($matches[1]) $snippet = $matches[1];
-			}	
+			} 
 			$snippet .= $more;
 		} else {
 			$snippet = $content;
@@ -972,8 +1013,10 @@ function oth_strip_special_tags($text, $stripcodes) {
 function oth_trim_excerpt($content, $len) {
 	// taken from the wp_trim_excerpt filter
 	remove_filter( 'the_content', 'ppl_content_filter', 5 );
+	remove_filter( 'the_content', 'ppl_post_filter', 5 );
 	$text = apply_filters('the_content', $content);
 	add_filter( 'the_content', 'ppl_content_filter', 5 );
+	add_filter( 'the_content', 'ppl_post_filter', 5 );
 	$text = str_replace(']]>', ']]&gt;', $text);
 	$text = strip_tags($text);
 	if (!$len) $len = 55; 

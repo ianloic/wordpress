@@ -3,7 +3,7 @@
 Plugin Name:Similar Posts
 Plugin URI: http://rmarsh.com/plugins/similar-posts/
 Description: Displays a <a href="options-general.php?page=similar-posts.php">highly configurable</a> list of related posts. Similarity can be based on any combination of word usage in the content, title, or tags. Don't be disturbed if it takes a few moments to complete the installation -- the plugin is indexing your posts. <a href="http://rmarsh.com/plugins/post-options/">Instructions and help online</a>. Requires the latest version of the <a href="http://wordpress.org/extend/plugins/post-plugin-library/">Post-Plugin Library</a> to be installed.
-Version: 2.6.1.3
+Version: 2.6.2.0
 Author: Rob Marsh, SJ
 Author URI: http://rmarsh.com/
 */
@@ -22,7 +22,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details: http://www.gnu.org/licenses/gpl.txt
 */
 
-$similar_posts_version = $similar_posts_feed_version= '2.6.1.3';
+$similar_posts_version = $similar_posts_feed_version= '2.6.2.0';
 
 /*
 	Template Tag: Displays the posts most similar to the current post.
@@ -142,6 +142,7 @@ class SimilarPosts {
 			$sql .= "WHERE ".implode(' AND ', $where);
 			if ($check_custom) $sql .= " GROUP BY $wpdb->posts.ID";	
 			$sql .= " ORDER BY score DESC LIMIT $limit";
+			//echo $sql;
 			$results = $wpdb->get_results($sql);
 		} else {
 			$results = false;
@@ -274,11 +275,6 @@ function sp_terms_by_textrank($ID, $num_terms = 20) {
 	return $res;
 }
 
-// do not try and use this function directly -- it is automatically installed when the option is set to show similar posts in feeds
-function similar_posts_for_feed($content) {
-	return (is_feed()) ? $content . SimilarPosts::execute('', '<li>{link}</li>', 'similar-posts-feed') : $content;
-}
-
 function sp_save_index_entry($postID) {
 	global $wpdb, $table_prefix;
 	$table_name = $table_prefix . 'similar_posts';
@@ -288,9 +284,8 @@ function sp_save_index_entry($postID) {
 	$options = get_option('similar-posts');
 	$utf8 = ($options['utf8'] === 'true');
 	$cjk = ($options['cjk'] === 'true');
-	$use_stemmer = ($options['use_stemmer'] === 'true');
-	$content = sp_get_post_terms($post['post_content'], $utf8, $use_stemmer, $cjk);
-	$title = sp_get_title_terms($post['post_title'], $utf8, $use_stemmer, $cjk);
+	$content = sp_get_post_terms($post['post_content'], $utf8, $options['use_stemmer'], $cjk);
+	$title = sp_get_title_terms($post['post_title'], $utf8, $options['use_stemmer'], $cjk);
 	$tags = sp_get_tag_terms($postID, $utf8);
 	//check to see if the field is set
 	$pid = $wpdb->get_var("SELECT pID FROM $table_name WHERE pID=$postID limit 1");
@@ -366,55 +361,45 @@ function sp_cjk_digrams($string) {
 function sp_get_post_terms($text, $utf8, $use_stemmer, $cjk) {
 	global $overusedwords;
 	if ($utf8) {
-		if ($use_stemmer) {
-			mb_regex_encoding('UTF-8');
-			mb_internal_encoding('UTF-8');
-			$wordlist = mb_split("\W+", sp_mb_clean_words($text));
-			$words = '';
-			reset($wordlist);
-			while (list($n, $word) =  each($wordlist)) {
-				if ( mb_strlen($word) > 3) {
-					$stem = sp_mb_str_pad(stem($word), 4, '_');
-					if (!isset($overusedwords[$stem])) {
-						$words .= $stem . ' ';
-					}	
-				}	
+		mb_regex_encoding('UTF-8');
+		mb_internal_encoding('UTF-8');
+		$wordlist = mb_split("\W+", sp_mb_clean_words($text));
+		$words = '';
+		reset($wordlist);
+		while (list($n, $word) =  each($wordlist)) {
+			if ( mb_strlen($word) > 3 && !isset($overusedwords[$word])) {
+				switch ($use_stemmer) {
+				case 'true':
+					$words .= sp_mb_str_pad(stem($word), 4, '_') . ' ';
+					break;
+				case 'fuzzy':
+					$words .= sp_mb_str_pad(metaphone($word), 4, '_') . ' ';
+					break;
+				case 'false':
+				default:	
+					$words .= $word . ' ';		
+				} 
 			}	
-		} else {
-			mb_regex_encoding('UTF-8');
-			mb_internal_encoding('UTF-8');
-			$wordlist = mb_split("\W+", sp_mb_clean_words($text));
-			$words = ''; 
-			reset($wordlist);
-			while (list($n, $word) =  each($wordlist)) {
-				if ( mb_strlen($word) > 3 && !isset($overusedwords[$word])) {
-					$words .= $word . ' ';
-				}	
-			}	
-		}
+		}	
 	} else {
-		if ($use_stemmer) {
-			$wordlist = str_word_count(sp_clean_words($text), 1);
-			$words = ''; 
-			reset($wordlist);
-			while (list($n, $word) =  each($wordlist)) {
-				if ( strlen($word) > 3) {
-					$stem = str_pad(stem($word), 4, '_');
-					if (!isset($overusedwords[$stem])) {
-						$words .= $stem . ' ';
-					}	
-				}	
+		$wordlist = str_word_count(sp_clean_words($text), 1);
+		$words = ''; 
+		reset($wordlist);
+		while (list($n, $word) =  each($wordlist)) {
+			if ( strlen($word) > 3 && !isset($overusedwords[$word])) {
+				switch ($use_stemmer) {
+				case 'true':
+					$words .= str_pad(stem($word), 4, '_') . ' ';
+					break;
+				case 'fuzzy':
+					$words .= str_pad(metaphone($word), 4, '_') . ' ';
+					break;
+				case 'false':
+				default:	
+					$words .= $word . ' ';		
+				} 
 			}	
-		} else {
-			$wordlist = str_word_count(sp_clean_words($text), 1);
-			$words = '';
-			reset($wordlist);
-			while (list($n, $word) =  each($wordlist)) {
-				if (strlen($word) > 3 && !isset($overusedwords[$word])) {
-					$words .= $word . ' '; 
-				}	
-			}	
-		}
+		}	
 	}
 	if ($cjk) $words = sp_cjk_digrams($words);	
 	return $words;
@@ -425,43 +410,41 @@ $tinywords = array('the' => 1, 'and' => 1, 'of' => 1, 'a' => 1, 'for' => 1, 'on'
 function sp_get_title_terms($text, $utf8, $use_stemmer, $cjk) {
 	global $tinywords;
 	if ($utf8) {
-		if ($use_stemmer) {
-			mb_regex_encoding('UTF-8');
-			mb_internal_encoding('UTF-8');
-			$wordlist = mb_split("\W+", sp_mb_clean_words($text));
-			$words = '';
-			foreach ($wordlist as $word) {
-				if (!isset($tinywords[$word])) {
+		mb_regex_encoding('UTF-8');
+		mb_internal_encoding('UTF-8');
+		$wordlist = mb_split("\W+", sp_mb_clean_words($text));
+		$words = '';
+		foreach ($wordlist as $word) {
+			if (!isset($tinywords[$word])) {
+				switch ($use_stemmer) {
+				case 'true':
 					$words .= sp_mb_str_pad(stem($word), 4, '_') . ' ';
-				}	
-			}	
-		} else {
-			mb_regex_encoding('UTF-8');
-			mb_internal_encoding('UTF-8');
-			$wordlist = mb_split("\W+", sp_mb_clean_words($text));
-			$words = '';
-			foreach ($wordlist as $word) {
-				if (!isset($tinywords[$word])) {
+					break;
+				case 'fuzzy':
+					$words .= sp_mb_str_pad(metaphone($word), 4, '_') . ' ';
+					break;
+				case 'false':
+				default:	
 					$words .= sp_mb_str_pad($word, 4, '_') . ' ';
-				}
+				} 
 			}	
-		}
+		}	
 	} else {
-		if ($use_stemmer) {
-			$wordlist = str_word_count(sp_clean_words($text), 1);
-			$words = '';
-			foreach ($wordlist as $word) {
-				if (!isset($tinywords[$word])) {
+		$wordlist = str_word_count(sp_clean_words($text), 1);
+		$words = '';
+		foreach ($wordlist as $word) {
+			if (!isset($tinywords[$word])) {
+				switch ($use_stemmer) {
+				case 'true':
 					$words .= str_pad(stem($word), 4, '_') . ' ';
-				}
-			}
-		} else {
-			$wordlist = str_word_count(sp_clean_words($text), 1);
-			$words = '';
-			foreach ($wordlist as $word) {
-				if (!isset($tinywords[$word])) {
+					break;
+				case 'fuzzy':
+					$words .= str_pad(metaphone($word), 4, '_') . ' ';
+					break;
+				case 'false':
+				default:	
 					$words .= str_pad($word, 4, '_') . ' ';
-				}
+				} 
 			}
 		}
 	}
@@ -505,7 +488,18 @@ function widget_rrm_similar_posts_init() {
 	function widget_rrm_similar_posts($args) {
 		extract($args);
 		$options = get_option('widget_rrm_similar_posts');
-		$condition = ($options['condition']) ? $options['condition'] : 'true' ;
+		$opt = get_option('similar-posts');
+		$widget_condition = $opt['widget_condition'];
+		// the condition specified in the widget control overrides  the placement setting screen
+		if ($options['condition']) {
+			$condition = $options['condition'];
+		} else {
+			if ($widget_condition) {
+				$condition = $widget_condition;
+			} else {
+				$condition = 'true';
+			}
+		}
 		$condition = (stristr($condition, "return")) ? $condition : "return ".$condition;
 		$condition = rtrim($condition, '; ') . ' || is_admin();'; 
 		if (eval($condition)) {
@@ -516,7 +510,9 @@ function widget_rrm_similar_posts_init() {
 				$number = 1;
 			else if ( $number > 15 )
 				$number = 15;
-			$output = SimilarPosts::execute('limit='.$number);
+			$options = get_option('recent-posts');	
+			$widget_parameters = $options['widget_parameters'];
+			$output = SimilarPosts::execute('limit='.$number.'&'.$widget_parameters);
 			if ($output) {
 				echo $before_widget;
 				echo $before_title.$title.$after_title;
@@ -575,13 +571,27 @@ require_once($languagedir.'stopwords.php');
 global $overusedwords;
 $overusedwords = array_flip($overusedwords);
 
+// do not try and use this function directly -- it is automatically installed when the option is set to show similar posts in feeds  // moreover it is deprecated and going soon
+function similar_posts_for_feed($content) {
+	return (is_feed()) ? $content . SimilarPosts::execute('', '<li>{link}</li>', 'similar-posts-feed') : $content;
+}
+
 function similar_posts_init () {
 	global $overusedwords, $wp_db_version;
 	load_plugin_textdomain('similar_posts');
 	
 	$options = get_option('similar-posts');
-	if ($options['content_filter'] === 'true' && function_exists('ppl_register_content_filter')) ppl_register_content_filter('SimilarPosts');
 	if ($options['feed_active'] === 'true') add_filter('the_content', 'similar_posts_for_feed');
+	if ($options['content_filter'] === 'true' && function_exists('ppl_register_content_filter')) ppl_register_content_filter('SimilarPosts');
+	if ($options['feed_on'] === 'true' && function_exists('ppl_register_post_filter')) ppl_register_post_filter('feed', 'similar-posts', 'SimilarPosts');
+	if ($options['append_condition']) {
+		$condition = $options['append_condition'];
+	} else {
+		$condition = 'true';
+	}
+	$condition = (stristr($condition, "return")) ? $condition : "return ".$condition;
+	$condition = rtrim($condition, '; ') . ';'; 
+	if ($options['append_on'] === 'true' && function_exists('ppl_register_post_filter')) ppl_register_post_filter('append', 'similar-posts', 'SimilarPosts', $condition);
 
 	//install the actions to keep the index up to date
 	add_action('save_post', 'sp_save_index_entry', 1);
