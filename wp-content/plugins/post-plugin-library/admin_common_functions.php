@@ -285,6 +285,20 @@ function ppl_display_limit($limit) {
 	<?php
 }
 
+function ppl_display_unique($unique) {
+	?>
+	<tr valign="top">
+		<th scope="row"><?php _e('Show just one comment per post?', 'post_plugin_library') ?></th>
+		<td>
+		<select name="unique" id="unique" >
+		<option <?php if($unique == 'false') { echo 'selected="selected"'; } ?> value="false">No</option>
+		<option <?php if($unique == 'true') { echo 'selected="selected"'; } ?> value="true">Yes</option>
+		</select> 
+		</td>
+	</tr>
+	<?php
+}
+
 function ppl_display_skip($skip) {
 	?>
 	<tr valign="top">
@@ -851,14 +865,38 @@ function ppl_display_sort($sort) {
 
 function ppl_display_orderby($options) {
 	global $wpdb;
+	$limit = 30;
+	$keys = $wpdb->get_col( "
+		SELECT meta_key
+		FROM $wpdb->postmeta
+		WHERE meta_key NOT LIKE '\_%'
+		GROUP BY meta_key
+		ORDER BY meta_id DESC
+		LIMIT $limit" );
+	$metaselect = "<select id='orderby' name='orderby'>\n\t<option value=''></option>";
+	if ( $keys ) {
+		natcasesort($keys);
+		foreach ( $keys as $key ) {
+			$key = attribute_escape( $key );
+			if ($options['orderby'] == $key) {
+				$metaselect .= "\n\t<option selected='selected' value='$key'>$key</option>";
+			} else {
+				$metaselect .= "\n\t<option value='$key'>$key</option>";
+			}
+		}
+		$metaselect .= "</select>";
+	}
+
 	?>
 	<tr valign="top">
-		<th scope="row"><?php _e('Order Output By:<br />leave blank for date order', 'post_plugin_library') ?></th>
+		<th scope="row"><?php _e('Select output by custom field:', 'post_plugin_library') ?></th>
 		<td>
 			<table>
 			<tr><td style="border-bottom-width: 0">Field</td><td style="border-bottom-width: 0">Order</td><td style="border-bottom-width: 0">Case</td></tr>
 			<tr>
-			<td style="border-bottom-width: 0"><input name="orderby" type="text" id="orderby" value="<?php echo $options['orderby']; ?>" size="20" /></td>
+			<td style="border-bottom-width: 0">
+			<?php echo $metaselect;	?>	
+			</td>
 			<td style="border-bottom-width: 0">
 				<select name="orderby_order" id="orderby_order">
 				<option <?php if($options['orderby_order'] == 'ASC') { echo 'selected="selected"'; } ?> value="ASC">ascending</option>
@@ -869,6 +907,7 @@ function ppl_display_orderby($options) {
 				<select name="orderby_case" id="orderby_case">
 				<option <?php if($options['orderby_case'] == 'false') { echo 'selected="selected"'; } ?> value="false">case-sensitive</option>
 				<option <?php if($options['orderby_case'] == 'true') { echo 'selected="selected"'; } ?> value="true">case-insensitive</option>
+				<option <?php if($options['orderby_case'] == 'num') { echo 'selected="selected"'; } ?> value="num">numeric</option>
 				</select>
 			</td> 
 			</tr>
@@ -1027,7 +1066,7 @@ function ppl_get_plugin_data($plugin_file) {
 		$plugin_data = get_plugin_data($plugin_file);
 		if (!isset($plugin_data['Title'])) {
 			if ('' != $plugin_data['PluginURI'] && '' != $plugin_data['Name']) {
-				$plugin_data['Title'] = '<a href="' . $plugin_data['PluginURI'] . '" title="'. __( 'Visit plugin homepage' ) . '">' . $plugin_data['Name'] . '</a>';
+				$plugin_data['Title'] = '<a href="' . $plugin_data['PluginURI'] . '" title="'. __('Visit plugin homepage', 'post-plugin-library') . '">' . $plugin_data['Name'] . '</a>';
 			} else {
 				$plugin_data['Title'] = $name;
 			}
@@ -1043,7 +1082,7 @@ function ppl_admin_footer($plugin_file, $donate_key='') {
 	$output[] = 'Version ' . $plugin_data['Version'];
 	$output[] = 'by ' . $plugin_data['Author'];
 	if ($donate_key) {
-		$donate_url = get_bloginfo('siteurl') . '/donate/' . $donate_key . '/';
+		$donate_url = 'http://rmarsh.com/donate/' . $donate_key . '/';
 		// random shades of red, orange and yellow to attract attention -- subtly I hope
 		$colour = '#ff' . dechex(mt_rand(0, 255)) . '00';
 		$output[] = '<a href="' . $donate_url . '" style="font-weight: bold;color: '.$colour.';" rel="nofollow" title="If you like ' . $plugin_data['Name'] . ' plugin why not make a tiny/small/large donation towards its upkeep">All donations welcomed!</a>';

@@ -1,4 +1,9 @@
 <?php
+/*
+$Revision: 280 $
+$Date: 2008-09-17 10:57:40 -0400 (Wed, 17 Sep 2008) $
+$Author: joetan54 $
+*/
 $root = realpath(dirname(dirname(dirname(dirname(dirname(__FILE__))))));
 if (file_exists($root.'/wp-load.php')) {
 	// WP 2.6
@@ -17,7 +22,13 @@ $hideAlbums  = get_option('silas_flickr_hidealbums');
 $hideGroups  = get_option('silas_flickr_hidegroups');
 $groupOrder  = get_option('silas_flickr_grouporder');
 $albumOrder  = get_option('silas_flickr_albumorder');
-        
+$baseurl     = get_option('silas_flickr_baseurl');
+$linkoptions = get_option('silas_flickr_linkoptions');
+
+$linkToBlog = ($baseurl && ($linkoptions != 'flickr'));
+$parts = parse_url(get_bloginfo('home'));
+$home = 'http://'.$parts['host'];
+
 $flickr->setToken($auth_token);
 $flickr->setOption(array(
     'hidePrivatePhotos' => get_option('silas_flickr_hideprivate'),

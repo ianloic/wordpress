@@ -18,7 +18,7 @@ use this line instead if you customized the stylesheet
 function openSlideShow(id, gid) {
     username = "<?php echo $user['user']['nsid'];?>";
     var url = "http://flickr.com/";
-    if(!isNaN(parseInt(gid,10))) { url += 'groups/pool/'+gid+'/show/?no_back=1'; }
+    if(!isNaN(parseInt(gid,10))) { url += 'groups/'+gid+'/pool/show/?no_back=1'; }
     else if(!isNaN(parseInt(id,10))) { url += 'photos/'+username+'/sets/'+id+'/show/?no_back=1'; }
     else { return true; }
     var w = Math.max(screen.width-140, 750);

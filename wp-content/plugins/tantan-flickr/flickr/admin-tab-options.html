@@ -1,0 +1,81 @@
+<div class="photo-options">
+<form>
+<input type="hidden" name="photo-id" id="photo-id" value="" />
+<table class="describe photo">
+<?php if (isset($isAlbum)):?>
+<thead>
+<tr><td colspan="2">
+<strong>Insert Highlight Photo</strong>
+</td></tr>
+</thead>
+<?php endif;?>
+<tbody>
+<tr class="post_title form-required">
+    <th class="label" valign="top" scope="row"><label>Title</label></th>
+    <td class="field"><input type="text" value="" id="photo-title" /></td>
+</tr>
+<!--
+<tr class="post_excerpt">
+    <th class="label" valign="top" scope="row"><label>Caption</label></th>
+    <td class="field"><input type="text" value="" id="photo-caption" /></td>
+</tr>
+-->
+<tr class="url">
+    <th class="label" valign="top" scope="row"><label>Link URL</label></th>
+    <td class="field"><input type="text" value="" id="photo-url" /><br />
+		<button type="button" id="photo-url-none"   class="button photo-url-dest" value="">None</button>
+		<button type="button" id="photo-url-flickr" class="button photo-url-dest" value="" title="Link to the Flickr page for this photo">Flickr</button>
+		<?php if ($linkToBlog):?>
+		<button type="button" id="photo-url-blog"   class="button photo-url-dest" value="" title="Link to this blog's page">Blog</button>
+		<?php endif;?>
+<!--
+		<button type="button" class="button photo-url-dest" value="" title="Link to the image URL">File</button>
+		<button type="button" class="button photo-url-dest" value="" title="Link to this post">Post</button>
+-->
+		<p class="help">Enter a link URL or click above for presets.</p>
+    </td>
+</tr>
+<tr class="align">
+    <th class="label" valign="top" scope="row"><label>Alignment</label></th>
+    <td class="field">
+		<input name="image-align" id="image-align-none" value="none" checked="checked" type="radio">
+		<label for="image-align-none" class="align image-align-none-label">None</label>
+		<input name="image-align" id="image-align-left" value="left" type="radio">
+		<label for="image-align-left" class="align image-align-left-label">Left</label>
+		<input name="image-align" id="image-align-center" value="center" type="radio">
+		<label for="image-align-center" class="align image-align-center-label">Center</label>
+		<input name="image-align" id="image-align-right" value="right" type="radio">
+		<label for="image-align-right" class="align image-align-right-label">Right</label>
+    </td>
+</tr><tr class="image-size">
+    <th class="label" valign="top" scope="row"><label>Size</label></th>
+    <td class="field">
+		<input name="image-size" id="image-size-video" value="Video Player" type="radio">
+		<label for="image-size-video">Video Player</label>
+		<input name="image-size" id="image-size-square" value="Square" type="radio">
+		<label for="image-size-square">Square</label>
+		<input name="image-size" id="image-size-thumb" value="Thumbnail" type="radio">
+		<label for="image-size-thumb">Thumbnail</label>
+		<input name="image-size" id="image-size-small" value="Small" type="radio">
+		<label for="image-size-small">Small</label>
+		<input name="image-size" id="image-size-medium" value="Medium" type="radio">
+		<label for="image-size-medium">Medium</label>
+		<input name="image-size" id="image-size-large" value="Large" type="radio">
+		<label for="image-size-large">Large</label>
+		<input name="image-size" id="image-size-original" value="Original" type="radio">
+		<label for="image-size-original">Original</label>    
+    </td>
+</tr>
+<tr class="submit">
+    <td>&nbsp;</td>
+    <td class="savesend">
+        <input type="button" value="Insert into Post" name="send" class="button send"/> 
+        <input type="button" value="Cancel" name="cancel" class="button cancel"/> 
+        &nbsp; &nbsp;
+        <label for="image-close-check" id="image-close"><input type="checkbox" id="image-close-check" name="image-close-check" value="1" checked="checked" /> close after inserting photo</label> 
+        </td></tr>
+
+</tbody>
+</table>
+</form>
+</div>

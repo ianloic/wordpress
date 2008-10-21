@@ -16,8 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
-$Revision: 212 $
-$Date: 2008-08-25 23:26:02 -0400 (Mon, 25 Aug 2008) $
+$Revision: 266 $
+$Date: 2008-09-15 22:51:17 -0400 (Mon, 15 Sep 2008) $
 $Author: joetan54 $
 
 */
@@ -249,8 +249,10 @@ class TanTanFlickr extends tantan_phpFlickr {
             $row['pagename'] = $row['pagename2'] . '.html';
             $row['iconurl'] = ($group['iconserver'] > 0) ? 'http://static.flickr.com/'.$group['iconserver'].'/buddyicons/'.$group['id'].'.jpg'
                 : 'http://www.flickr.com/images/buddyicon.jpg';
-            
+
+			$this->doneClearCache();
             $info = $this->getGroup($group['id']);
+			$this->startClearCache();
             $row['description'] = $info['description'];
             $row['privacy'] = $info['privacy'];
             $row['members'] = $info['members'];
@@ -428,10 +430,13 @@ class TanTanFlickr extends tantan_phpFlickr {
         $this->_tantan_useCache = true;
     }
     function clearCache() {
+        global $wpdb;
         if (TANTAN_FLICKR_CACHEMODE == 'db') {
+            $result = $this->cache_db->query("DELETE FROM " . $wpdb->prefix . "postmeta WHERE meta_key LIKE 'flickr-%';");
             $result = $this->cache_db->query("DELETE FROM " . $this->cache_table . ";");
             return true;
         } elseif ($this->_clearCache($this->cache_dir)) {
+            $result = $this->cache_db->query("DELETE FROM " . $wpdb->prefix . "postmeta WHERE meta_key LIKE 'flickr-%';");
             return @mkdir($this->cache_dir, 0770);
         } else {
             return false;

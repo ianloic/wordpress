@@ -17,10 +17,11 @@ addLoadEvent (function () {
 });
 </script>
 <?php endif;?>
-<script type="text/javascript">
-
-</script>
-<script type="text/javascript" src="<?php echo $pluginRootURL;?>/admin-tab.js"></script>
+<?php
+wp_enqueue_script('jquery');
+wp_enqueue_script('tantan-flickr-admin', $pluginRootURL.'/admin-tab.js', 'jquery', '1.0.3'); // update version if admin-tab.js changes
+wp_print_scripts();
+?>
 <script type="text/javascript">
 <?php echo TanTanFlickrDisplay::js(); ?>
 </script>

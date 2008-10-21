@@ -19,7 +19,7 @@ global $TanTanFlickrPlugin;
     <?php foreach ($photo['notes']['note'] as $note):?>
     <div class="note" style="top:<?php echo $note['y']?>px;left:<?php echo $note['x']?>px;">
         <div class="hover2"><div class="hover" style="width:<?php echo $note['w']?>px;height:<?php echo $note['h']?>px;"></div></div>
-        <div class="text"><?php echo $note['_value']?></div>
+        <div class="text"><?php echo ($note['_content'] ? $note['_content'] : $note['_value'])?></div>
     </div>
     <?php endforeach;?>
 </div>

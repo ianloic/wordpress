@@ -3,7 +3,7 @@ Contributors: RobMarsh
 Tags: posts, comments, random, recent, similar, related, popular, post-plugins
 Requires at least: 1.5
 Tested up to: 2.6.2
-Stable tag: 2.6.2.0
+Stable tag: 2.6.2.1
 
 The shared code library for Similar posts, Recent Posts, Random Posts, Popular Posts and Recent Comments.
 
@@ -23,6 +23,9 @@ The Post-Plugin Library does nothing by itself but **must** be installed to prov
 
 == Version History ==
 
+* 2.6.2.1
+	* support for recent comments to only show one comment per post
+	* fix for donate link
 * 2.6.2.0
 	* new {imagealt} output tag -- rather like {imagesrc}
 	* {excerpt} can now trim to whole sentences

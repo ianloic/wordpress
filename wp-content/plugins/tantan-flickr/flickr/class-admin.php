@@ -1,7 +1,7 @@
 <?php
 /*
-$Revision: 224 $
-$Date: 2008-08-28 22:11:07 -0400 (Thu, 28 Aug 2008) $
+$Revision: 266 $
+$Date: 2008-09-15 22:51:17 -0400 (Mon, 15 Sep 2008) $
 $Author: joetan54 $
 */
 require_once(dirname(__FILE__).'/class-public.php');
@@ -31,6 +31,11 @@ class TanTanFlickrPluginAdmin extends TanTanFlickrPlugin {
     }
     function activate() {
 		if (!ereg('plugins.php', $_SERVER['REQUEST_URI'])) return;
+		if (function_exists('wp_schedule_event')) {
+		    wp_clear_scheduled_hook('tantan_flickr_clear_cache_event');
+		    wp_schedule_event(time(), 'daily', 'tantan_flickr_clear_cache_event');
+		}
+		
         wp_redirect('plugins.php?tantanActivate=photo-album');
         exit;
     }
@@ -92,7 +97,7 @@ class TanTanFlickrPluginAdmin extends TanTanFlickrPlugin {
                 CREATE TABLE IF NOT EXISTS `$flickr->cache_table` (
                     `command` CHAR( 255 ) NOT NULL ,
                     `request` CHAR( 35 ) NOT NULL ,
-                    `response` TEXT NOT NULL ,
+                    `response` MEDIUMTEXT NOT NULL ,
                     `created` DATETIME NOT NULL ,
                     `expiration` DATETIME NOT NULL ,
                     INDEX ( `request` ),
@@ -100,7 +105,11 @@ class TanTanFlickrPluginAdmin extends TanTanFlickrPlugin {
                 ) $charset_collate");//
 			$wpdb->query("CREATE INDEX commandCreated on $flickr->cache_table(command, created)");
 			$wpdb->show_errors();
-			
+			if (function_exists('wp_schedule_event')) {
+                wp_clear_scheduled_hook('tantan_flickr_clear_cache_event');
+                wp_schedule_event(time(), 'daily', 'tantan_flickr_clear_cache_event');
+			}
+
         }
         
         if ($_POST['action'] == 'save') {

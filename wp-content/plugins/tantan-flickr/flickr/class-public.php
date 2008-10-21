@@ -1,7 +1,7 @@
 <?php
 /*
-$Revision: 233 $
-$Date: 2008-09-04 16:19:41 -0400 (Thu, 04 Sep 2008) $
+$Revision: 263 $
+$Date: 2008-09-15 16:31:39 -0400 (Mon, 15 Sep 2008) $
 $Author: joetan54 $
 */
 class TanTanFlickrPlugin {
@@ -130,11 +130,9 @@ class TanTanFlickrPlugin {
             }
             //if (!$usecache) $flickr->doneClearCache();
             //$this->_silas_cacheExpire = -1;
-            if ($everyone || !$baseurl || $linkoptions) {
-                foreach ($photos as $k => $photo) {
-                    $photos[$k]['info'] = $flickr->getPhoto($photo['id']);
-                }
-            }
+			foreach ($photos as $k => $photo) {
+				$photos[$k]['info'] = $flickr->getPhoto($photo['id']);
+			}
             return $photos;
         } else {
             return array();
@@ -477,12 +475,13 @@ class TanTanFlickrPlugin {
     function rss_feed() {
         $user = get_option('silas_flickr_user');
         if ($this->request['album']) {
-            echo '<link rel="alternate" type="application/atom+xml" title="Flickr Album Feed" href="http://api.flickr.com/services/feeds/photoset.gne?set='.$this->request['album'].'&amp;nsid='.$user['user']['nsid'].'" />';
+            echo '<link rel="alternate" type="application/rss+xml" title="Flickr Album Feed" href="http://api.flickr.com/services/feeds/photoset.gne?format=rss_200&amp;set='.$this->request['album'].'&amp;nsid='.$user['user']['nsid'].'" />';
         }
         if ($this->request['group']) {
-            echo '<link rel="alternate" type="application/atom+xml" title="Flickr Group Feed" href="http://api.flickr.com/services/feeds/groups_discuss.gne?id='.$this->request['group'].'" />';
+            echo '<link rel="alternate" type="application/rss+xml" title="Flickr Group Feed" href="http://api.flickr.com/services/feeds/groups_discuss.gne?format=rss_200&amp;id='.$this->request['group'].'" />';
         }
         
+        //echo '<link rel="alternate" type="application/rss+xml" title="Flickr Photo Stream" href="http://api.flickr.com/services/feeds/photos_public.gne?format=rss_200&amp;id='.$user['user']['nsid'].'" />';
 
     }
     function meta_noindex() {

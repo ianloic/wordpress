@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/post-plugin-library\n"
-"POT-Creation-Date: 2008-09-09 13:54+0000\n"
+"POT-Creation-Date: 2008-09-13 11:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -194,51 +194,51 @@ msgstr ""
 msgid "Sort Output By:<br />leave blank for default order"
 msgstr ""
 
-#: admin_common_functions.php:856
-msgid "Order Output By:<br />leave blank for date order"
+#: admin_common_functions.php:878
+msgid "Select output by custom field:"
 msgstr ""
 
-#: admin_common_functions.php:886
+#: admin_common_functions.php:911
 msgid "Maximum number of words to use for match:"
 msgstr ""
 
-#: admin_common_functions.php:895
+#: admin_common_functions.php:920
 msgid "Extract terms to match by:"
 msgstr ""
 
-#: admin_common_functions.php:909
+#: admin_common_functions.php:934
 msgid "Relative importance of:"
 msgstr ""
 
-#: admin_common_functions.php:924
+#: admin_common_functions.php:949
 msgid "Look for manual links in custom field?"
 msgstr ""
 
-#: admin_common_functions.php:940
+#: admin_common_functions.php:965
 msgid "Type of comment to show:"
 msgstr ""
 
-#: admin_common_functions.php:955
+#: admin_common_functions.php:980
 msgid "Type of grouping:"
 msgstr ""
 
-#: admin_common_functions.php:971
+#: admin_common_functions.php:996
 msgid "Group title template:"
 msgstr ""
 
-#: admin_common_functions.php:980
+#: admin_common_functions.php:1005
 msgid "Omit comments by the post author?"
 msgstr ""
 
-#: admin_common_functions.php:994
+#: admin_common_functions.php:1019
 msgid "Omit comments by registered users?"
 msgstr ""
 
-#: admin_common_functions.php:1008
+#: admin_common_functions.php:1033
 msgid "Order by date of last edit rather than date of creation?"
 msgstr ""
 
-#: admin_common_functions.php:1030
+#: admin_common_functions.php:1055
 msgid "Visit plugin homepage"
 msgstr ""
 
@@ -256,7 +256,7 @@ msgid "Post-Plugin Library"
 msgstr ""
 
 #. Plugin URI of an extension
-msgid "http://rmarsh.com/plugins/"
+msgid "http://rmarsh.com/plugins/post-plugin-library/"
 msgstr ""
 
 #. Description of an extension
