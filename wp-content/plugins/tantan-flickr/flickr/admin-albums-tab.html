@@ -7,12 +7,12 @@
 <input type="hidden" name="_wpnonce" value="<?php echo $_GET['_wpnonce'];?>" />
 <input type="hidden" name="ID" value="<?php echo $_GET['ID'];?>" />
 
-<input type="submit" name="refresh" value="refresh albums" />
+<input type="submit" name="refresh" value="<?php _e('refresh albums', 'tantan-flickr');?>" />
 </form>
 </div>
 
 <?php if (count($albums) == 0):?>
-Sorry, no albums found!
+<?php _e('Sorry, no albums found!', 'tantan-flickr');?>
 <?php elseif (is_array($albums)):
 $baseurl = get_option('silas_flickr_baseurl');
 $linkoptions = get_option('silas_flickr_linkoptions');
@@ -66,39 +66,37 @@ endforeach;?>
 <table class="describe album">
 <tbody>
 <tr class="image-size album-insert-photos">
-    <th class="label" valign="top" scope="row"><label>Photos</label></th>
+    <th class="label" valign="top" scope="row"><label><?php _e('Photos');?></label></th>
     <td class="field">
-    <input type="radio" name="album-insert-photos" id="album-insert-cover"  value="cover" checked="checked"><label for="album-insert-cover"> Album cover</label>
-    
-	<input type="radio" name="album-insert-photos" id="album-insert-5"  value="5"><label for="album-insert-5"> 5 photos</label>
-	<input type="radio" name="album-insert-photos" id="album-insert-10" value="10"><label for="album-insert-10"> 10 photos</label>
-	<input type="radio" name="album-insert-photos" id="album-insert-20" value="20"><label for="album-insert-20"> 20 photos</label>
-	<input type="radio" name="album-insert-photos" id="album-insert-30" value="30"><label for="album-insert-30"> 30 photos</label>
-    </td>
+    <input type="radio" name="album-insert-photos" id="album-insert-cover"  value="cover" checked="checked"><label for="album-insert-cover"> <?php _e('Album cover', 'tantan-flickr');?></label>
+    <?php foreach (array(5,10,20,30) as $s):?>
+        <input type="radio" name="album-insert-photos" id="album-insert-<?php echo $s;?>"  value="<?php echo $s;?>"><label for="album-insert-<?php echo $s;?>"> <?php printf(__('%d photos', 'tantan-flickr'), $s);?></label>
+	<?php endforeach;?>
+	</td>
 </tr>
 <tr class="image-size">
-    <th class="label" valign="top" scope="row"><label>Size</label></th>
+    <th class="label" valign="top" scope="row"><label><?php _e('Size', 'tantan-flickr');?></label></th>
     <td class="field">
 		<input name="album-image-size" id="album-image-size-square" value="Square" type="radio">
-		<label for="album-image-size-square">Square</label>
+		<label for="album-image-size-square"><?php _e('Square', 'tantan-flickr');?></label>
 		<input name="album-image-size" id="album-image-size-thumb" value="Thumbnail" type="radio" checked="checked">
-		<label for="album-image-size-thumb">Thumbnail</label>
+		<label for="album-image-size-thumb"><?php _e('Thumbnail', 'tantan-flickr');?></label>
 		<input name="album-image-size" id="album-image-size-small" value="Small" type="radio">
-		<label for="album-image-size-small">Small</label>
+		<label for="album-image-size-small"><?php _e('Small', 'tantan-flickr');?></label>
 		<input name="album-image-size" id="album-image-size-medium" value="Medium" type="radio">
-		<label for="album-image-size-medium">Medium</label>
+		<label for="album-image-size-medium"><?php _e('Medium', 'tantan-flickr');?></label>
 		<input name="album-image-size" id="album-image-size-large" value="Large" type="radio">
-		<label for="album-image-size-large">Large</label>
+		<label for="album-image-size-large"><?php _e('Large', 'tantan-flickr');?></label>
 		<input name="album-image-size" id="album-image-size-original" value="Original" type="radio">
-		<label for="album-image-size-original">Original</label>    
+		<label for="album-image-size-original"><?php _e('Original', 'tantan-flickr');?></label>    
     </td></tr>
 <tr class="submit">
     <td>&nbsp;</td>
     <td class="savesend">
-        <input type="button" value="Insert into Post" name="send" class="button send"/> 
-        <input type="button" value="Cancel" name="cancel" class="button cancel"/> 
+        <input type="button" value="<?php _e('Insert into Post', 'tantan-flickr');?>" name="send" class="button send"/> 
+        <input type="button" value="<?php _e('Cancel', 'tantan-flickr');?>" name="cancel" class="button cancel"/> 
         &nbsp; &nbsp;
-        <label for="image-close-check" id="image-close"><input type="checkbox" id="image-close-check" name="image-close-check" value="1" checked="checked" /> close after inserting photo</label> 
+        <label for="image-close-check" id="image-close"><input type="checkbox" id="image-close-check" name="image-close-check" value="1" checked="checked" /> <?php _e('close after inserting photo', 'tantan-flickr');?></label> 
         </td></tr>
         
 </tbody>

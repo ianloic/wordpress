@@ -2,8 +2,7 @@
 $albums = $flickr->manualSort($flickr->getAlbumsActual(), $albumOrder);
 if (count($albums) <= 0):?>
 <p>
-    <strong>Error</strong>: Please create at least one Flickr photo set, and then click the "Refresh" button above
-    to see your photos.
+    <?php _e('<strong>Error</strong>: Please create at least one Flickr photo set, and then click the "Refresh" button above to see your photos.', 'tantan-flickr');?>
 </p>
 <?php endif; ?>
 
@@ -32,11 +31,11 @@ if ($linkToBlog) {
     <td><a href="<?php echo $album['targetURL'];?>"><img src="<?php echo $primaryPhoto['Square']['source'];?>" border="0" /></a></td>
     <td width="100%">
     <strong><a href="<?php echo $album['targetURL'];?>"><?php echo $album['title']?></a></strong>
-    <?php echo $album['photos'];?> photos<br>
+    <?php printf(__('%d Photos', 'tantan-flickr'), $album['photos']);?><br>
     <?php if ($linkToBlog):?>
-    <input type="checkbox" name="hideAlbum[]" <?php echo (in_array($album['id'], $hideAlbums) ? 'checked="checked"' : '') ?> value="<?php echo $album['id']?>" id="album-hide-<?php echo $album['id']?>" /><label for="album-hide-<?php echo $album['id']?>">hide album</label><br>
-    <input type="checkbox" name="clearAlbum[]" value="<?php echo $album['id']?>" id="album-cache-<?php echo $album['id']?>" /><label for="album-cache-<?php echo $album['id']?>">clear cache</label><br>
-    order: <input type="text" size="2" name="albumOrder[<?php echo $album['id']?>]" value="<?php echo $albumOrder[$album['id']] ? $albumOrder[$album['id']] : '0'?>" />
+    <input type="checkbox" name="hideAlbum[]" <?php echo (in_array($album['id'], $hideAlbums) ? 'checked="checked"' : '') ?> value="<?php echo $album['id']?>" id="album-hide-<?php echo $album['id']?>" /><label for="album-hide-<?php echo $album['id']?>"><?php _e('hide album', 'tantan-flickr');?></label><br>
+    <input type="checkbox" name="clearAlbum[]" value="<?php echo $album['id']?>" id="album-cache-<?php echo $album['id']?>" /><label for="album-cache-<?php echo $album['id']?>"><?php _e('clear cache', 'tantan-flickr');?></label><br>
+    <?php _e('order:', 'tantan-flickr');?> <input type="text" size="2" name="albumOrder[<?php echo $album['id']?>]" value="<?php echo $albumOrder[$album['id']] ? $albumOrder[$album['id']] : '0'?>" />
     <?php endif;?>
     
     </td>

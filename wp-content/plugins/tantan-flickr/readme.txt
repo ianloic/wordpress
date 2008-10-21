@@ -3,7 +3,7 @@ Contributors: joetan
 Tags: flickr, photo album, gallery, photos, images, post, widget, admin
 Requires at least: 2.5
 Tested up to: 2.6
-Stable tag: 1.0.3
+Stable tag: 1.1
 
 This Flickr plugin for WordPress will allow you to pull in your Flickr photosets and display them as albums on your WordPress site.
 
@@ -23,6 +23,16 @@ On the backend, this plugin will add a new Flickr icon to your WordPress edit sc
 
 ## Documentation
 If you need more help installing and customizing templates, [see here for more information](http://code.google.com/p/photo-album/wiki/Documentation). Feel free to [post your question into the support group](www.flickr.com/groups/tantannoodles/) if you get stuck.
+
+== Examples & Thanks ==
+
+Here's a couple sample installs from around the web.
+
+[Tan Tan Noodles](http://tantannoodles.com/photos/), [Felicia Day](http://feliciaday.com/photos/), [Making it Lovely](http://makingitlovely.com/photos/), [Slip Stream Sports](http://www.slipstreamsports.com/photos/), [Life of Justin](http://www.lifeofjustin.com/photos/), [72 Quadrat](http://72quadrat.de/blog/photos/), [Cake Journal](http://www.cakejournal.com/flickr/), [DCS Pride](http://www.dcspride.com/photos/).
+
+Special thanks to the awesome volunteers from around the Internet who helped translate this plugin:
+
+[Søren Siim Nielsen](http://www.bagkameraet.dk/), [Wilco Verdoold](http://www.linkedin.com/in/wilco), Thomas Sturm, Adrianus F. Tumewu, [Marco Balzerani](http://www.marcobalzerani.it/), Lindsey Yoo, [Hamid Reza](http://www.gozir.com/), [Jonathan Lumb](http://inchina.co.uk/), Guillermo Lopez, and [many others](https://translations.launchpad.net/tantan-flickr/trunk/+pots/tantan-flickr).
 
 == Screenshots ==
 

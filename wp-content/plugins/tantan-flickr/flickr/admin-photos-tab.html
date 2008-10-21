@@ -10,14 +10,14 @@
 <input type="hidden" name="ID" value="<?php echo $_GET['ID'];?>" />
 
 <?php if (!$interesting):?>
-Tags: <input type="text" name="tags" value="<?php echo $tags?>" size="15" />
+<?php _e('Tags:', 'tantan-flickr');?> <input type="text" name="tags" value="<?php echo $tags?>" size="15" />
 <?php if (!ereg('media-upload.php', $_SERVER['REQUEST_URI'])):?>
-<input type="radio" name="everyone" value="" <?php echo (!$everyone ? 'checked="checked"' : '')?> id="showmine" /><label for="showmine"> My Photos </label> &nbsp;
-<input type="radio" name="everyone" value="1" <?php echo ($everyone ? 'checked="checked"' : '')?> id="showeveryone" /><label for="showeveryone"> Everyone </label>
+<input type="radio" name="everyone" value="" <?php echo (!$everyone ? 'checked="checked"' : '')?> id="showmine" /><label for="showmine"> <?php _e('My Photos', 'tantan-flickr');?> </label> &nbsp;
+<input type="radio" name="everyone" value="1" <?php echo ($everyone ? 'checked="checked"' : '')?> id="showeveryone" /><label for="showeveryone"> <?php _e('Everyone', 'tantan-flickr');?> </label>
 <?php endif;?>
 
 &nbsp; &nbsp; 
-<input type="submit" name="refresh" value="search" />
+<input type="submit" name="refresh" value="<?php _e('search', 'tantan-flickr');?>" />
 <?php endif;?>
 
 <?php if (ereg('media-upload.php', $_SERVER['REQUEST_URI'])):?>
@@ -59,12 +59,12 @@ default:
 <?php if ($name):?>
 All photos are licensed as <a href="<?php echo $url;?>">Creative Commons <?php echo $name;?></a>
 <?php else:?>
-Make sure you have proper permissions before using any photos.
+<?php _e('Make sure you have proper permissions before using any photos.', 'tantan-flickr');?>
 <?php endif; /* licensed */ ?>
 </div>
 <?php elseif ($interesting):?>
 <div class="license">
-Make sure you have proper permissions before using any photos.
+<?php _e('Make sure you have proper permissions before using any photos.', 'tantan-flickr');?>
 </div>
 <?php endif; /* everyone */ ?>
 
@@ -73,7 +73,7 @@ Make sure you have proper permissions before using any photos.
 </div>
 
 <?php if (count($photos) == 0):?>
-Sorry, no photos found!
+<?php _e('Sorry, no photos found!', 'tantan-flickr');?>
 <?php elseif (is_array($photos)):
 $baseurl = get_option('silas_flickr_baseurl');
 $linkoptions = get_option('silas_flickr_linkoptions');

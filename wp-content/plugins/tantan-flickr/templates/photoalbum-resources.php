@@ -1,7 +1,7 @@
 <?php
 /*
-$Revision: 277 $
-$Date: 2008-09-16 23:36:54 -0400 (Tue, 16 Sep 2008) $
+$Revision: 321 $
+$Date: 2008-10-03 17:10:43 -0400 (Fri, 03 Oct 2008) $
 $Author: joetan54 $
 
 Copy this file into your current active theme's directory to customize this template
@@ -98,7 +98,7 @@ class TanTanFlickrDisplayBase {
 					return '[flickr video='+photo['id']+']'
 				} else {
 					var h = '';
-					if (photo['targetURL']) h += '<a href="'+photo['targetURL']+'" class="tt-flickr'+(size ? (' tt-flickr-'+size) : '')+'">';
+					if (photo['targetURL']) h += '<a href="'+photo['targetURL']+'" class="tt-flickr'+(size ? (' tt-flickr-'+size) : '')+'" title="'+photo['title']+'">';
 					h += '<img class="'+(opts['align'] ? ('align'+opts['align']) : '')+'" src="'+photo['sizes'][size]['source']+'" alt="'+photo['title']+'" width="'+photo['sizes'][size]['width']+'" height="'+photo['sizes'][size]['height']+'" />';
 					if (photo['targetURL']) h += '</a> ';
 					return h;
@@ -130,11 +130,11 @@ class TanTanFlickrPopUpOverlay extends TanTanFlickrDisplayBase {
 			"}\n".
 			"var imgTag = '<img src=\"'+photo['sizes'][size]['source']+'\" alt=\"'+photo['title']+'\" width=\"'+photo['sizes'][size]['width']+'\" height=\"'+photo['sizes'][size]['height']+'\" border=\"0\" />' \n".
 			"if (photo['photos']) { \n".
-				"return '<a href=\"'+photo['targetURL']+'\" class=\"tt-flickr'+(size ? (' tt-flickr-'+size) : '')+'\">' + \n".
+				"return '<a href=\"'+photo['targetURL']+'\" class=\"tt-flickr'+(size ? (' tt-flickr-'+size) : '')+'\" title=\"'+photo['title']+'\">' + \n".
 				"imgTag + \n".
 				"'</a>'\n".
 			"} else if (parseInt(photo['sizes'][size]['width']) < parseInt(photo['sizes']['".TANTAN_DISPLAY_POPUP_SIZE."']['width'])) { \n".
-			"	return '<a href=\"'+photo['sizes']['".TANTAN_DISPLAY_POPUP_SIZE."']['source']+'\" class=\"tt-flickr tt-flickr'+(size ? (' tt-flickr-'+size) : '')+'\">' + \n".
+			"	return '<a href=\"'+photo['sizes']['".TANTAN_DISPLAY_POPUP_SIZE."']['source']+'\" class=\"tt-flickr tt-flickr'+(size ? (' tt-flickr-'+size) : '')+'\" title=\"'+photo['title']+'\">' + \n".
 			"	imgTag + \n".
 			"		'</a> '; \n".
 			"} else { return imgTag } \n".

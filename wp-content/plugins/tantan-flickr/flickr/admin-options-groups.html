@@ -14,11 +14,11 @@ if ($linkToBlog) {
     <td><a href="<?php echo $group['targetURL'];?>"><img src="<?php echo $group['iconurl']?>" /></a></td>
     <td width="100%">
     <strong><a href="<?php echo $group['targetURL'];?>"><?php echo $group['name']?></a></strong><br>
-    <?php echo $group['photos'];?> photos<br>
+	<?php printf(__('%d Photos', 'tantan-flickr'), $group['photos']);?><br>
     <?php if ($linkToBlog):?>
-    <input type="checkbox" name="hideGroup[]" <?php echo (in_array($group['id'], $hideGroups) ? 'checked="checked"' : '') ?> value="<?php echo $group['id']?>" id="group-hide-<?php echo $group['id']?>" /><label for="group-hide-<?php echo $group['id']?>">hide group</label><br>
-    <input type="checkbox" name="clearGroup[]" value="<?php echo $group['id']?>" id="group-cache-<?php echo $group['id']?>" /><label for="group-cache-<?php echo $group['id']?>">clear cache</label><br>
-    order: <input type="text" size="2" name="groupOrder[<?php echo $group['id']?>]" value="<?php echo $groupOrder[$group['id']] ? $groupOrder[$group['id']] : '0'?>" />
+    <input type="checkbox" name="hideGroup[]" <?php echo (in_array($group['id'], $hideGroups) ? 'checked="checked"' : '') ?> value="<?php echo $group['id']?>" id="group-hide-<?php echo $group['id']?>" /><label for="group-hide-<?php echo $group['id']?>"><?php _e('hide group', 'tantan-flickr');?></label><br>
+    <input type="checkbox" name="clearGroup[]" value="<?php echo $group['id']?>" id="group-cache-<?php echo $group['id']?>" /><label for="group-cache-<?php echo $group['id']?>"><?php _e('clear cache', 'tantan-flickr');?></label><br>
+    <?php _e('order:', 'tantan-flickr');?> <input type="text" size="2" name="groupOrder[<?php echo $group['id']?>]" value="<?php echo $groupOrder[$group['id']] ? $groupOrder[$group['id']] : '0'?>" />
     <?php endif; ?>
     </td></tr>
 </table>

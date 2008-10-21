@@ -10,10 +10,10 @@ This template displays meta information for a photo
     <?php if ($owner['iconserver'] > 0):?>
     <img src="http://static.flickr.com/<?php echo $owner['iconserver']?>/buddyicons/<?php echo $owner['nsid']?>.jpg" align="left" />
     <?php endif;?>
-    <strong>Uploaded By:</strong> <a href="<?php echo $owner['photosurl'];?>"><?php echo $photo['owner']['username'] ?></a><br />
+    <strong><?php _e('Uploaded By:', 'tantan-flickr');?></strong> <a href="<?php echo $owner['photosurl'];?>"><?php echo $photo['owner']['username'] ?></a><br />
 <?php endif;?>
 <?php if (is_array($photo['tags']) && (($numTags = count($photo['tags'])) > 0)): ?>
-    <strong>Tags:</strong> 
+    <strong><?php _e('Tags:', 'tantan-flickr');?></strong> 
     <?php if ($album) {$albumPrefix = '../../';} else {$albumPrefix='';} ?>
     
     <?php foreach ($photo['tags'] as $k => $tag): ?>
@@ -22,8 +22,8 @@ This template displays meta information for a photo
     <br />
 <?php endif;?>
 
-<strong>Uploaded:</strong> <?php echo date('F j, Y', (int) $photo['dates']['posted'])?><br />
-<a href="http://www.flickr.com/photos/<?php echo $photo['owner']['nsid'];?>/<?php echo $photo['id'];?>/" target="_blank">View this photo on Flickr</a>
+<strong><?php _e('Uploaded:', 'tantan-flickr');?></strong> <?php echo date(__('F j, Y', 'tantan-flickr'), (int) $photo['dates']['posted'])?><br />
+<a href="http://www.flickr.com/photos/<?php echo $photo['owner']['nsid'];?>/<?php echo $photo['id'];?>/" target="_blank"><?php _e('View this photo on Flickr', 'tantan-flickr');?></a>
 
 
 </div>

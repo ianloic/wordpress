@@ -38,30 +38,28 @@ div.album td strong {
 
 
 <div class="wrap">
-<h2 id="write-post">Photo Album Configuration</h2>
+<h2 id="write-post"><?php _e('Photo Album Configuration', 'tantan-flickr');?></h2>
 <div style="float:left;margin-right:270px">
 <p>
-This plugin will retrieve your Flickr photosets and display them as albums on a page within this site. 
-This plugin will also allow you to easily add your photos to your blog posts (or pages). 
+<?php _e('This is the configuration screen for the <a href="http://tantannoodles.com/toolkit/photo-album/">Flickr Photo Album plugin for WordPress</a>.', 'tantan-flickr');?>
 </p>
 <?php if (!is_object($Silas)):?>
 <p>
-This plugin is provided by <a href="http://www.tantannoodles.com">TanTanNoodles</a> 
-and licensed free of charge for you to use under the GPL.
-This plugin is <em>unsupported</em> and comes with no official technical support.
-However, you can check the following pages for the latest updates to this plugin, along with any unofficial technical support:<br>
+<?php _e('This plugin is provided by <a href="http://www.tantannoodles.com">TanTanNoodles</a> and licensed free of charge for you to use under the GPL license. This plugin is <em>unsupported</em> and comes with no official technical support. However, you can check the following pages for the latest updates to this plugin, along with any unofficial technical support:', 'tantan-flickr');?>
+
 <br>
-<strong>Releases:</strong> <a href="http://tantannoodles.com/toolkit/photo-album/">tantannoodles.com/toolkit/photo-album/</a><br>
-<strong>Support Group:</strong> <a href="http://www.flickr.com/groups/tantannoodles/">flickr.com/groups/tantannoodles</a>
+<br>
+<strong><?php _e('Releases:', 'tantan-flickr');?></strong> <a href="http://tantannoodles.com/toolkit/photo-album/">tantannoodles.com/toolkit/photo-album/</a><br>
+<strong><?php _e('Support Group:', 'tantan-flickr');?></strong> <a href="http://www.flickr.com/groups/tantannoodles/">flickr.com/groups/tantannoodles</a>
 </p>
 <p>
-<strong>RSS Updates:</strong> Subscribe to the <a href="http://feeds.feedburner.com/TanTanToolkit">TanTanToolkit feed</a> and get notified when there's an update to this plugin.
+<strong><?php _e('RSS Updates:', 'tantan-flickr');?></strong> <?php _e('Subscribe to the <a href="http://feeds.feedburner.com/TanTanToolkit">TanTanToolkit feed</a> and get notified when there\'s an update to this plugin.', 'tantan-flickr');?>
 </p>
 <?php endif;?>
 </div>
 
 <div  style="float:right;width:250px;margin:10px 0 0 -270px;background:#eee;padding:10px;font-size:0.9em;">
-	If you find this plugin helpful, please consider donating a few dollars to support this plugin. Thanks!
+	<?php _e('If you find this plugin helpful, please consider donating a few dollars to support this plugin. Thanks!', 'tantan-flickr');?>
 	<br /><br />
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 <input type="hidden" name="cmd" value="_donations" />
@@ -79,7 +77,7 @@ However, you can check the following pages for the latest updates to this plugin
 <input type="hidden" name="lc" value="US" />
 <input type="hidden" name="bn" value="PP-DonationsBF" />
 <div style="float:left;width:150px;padding-top:10px">
-Amount: $<input type="text" name="amount" value="" style="width:50px;" /> <br />
+<?php _e('Amount:', 'tantan-flickr');?> $<input type="text" name="amount" value="" style="width:50px;" /> USD<br />
 </div>
 <div style="float:right;width:100px">
 <input type="image" src="https://www.paypal.com/en_US/i/btn/x-click-butcc-donate.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!" />
@@ -99,16 +97,23 @@ if (!$flickr_apikey || !$flickr_sharedsecret) { // no api key
 } else { // general flickr settings
 ?>
 	<fieldset class="options">
-    <legend>Customizations</legend>
+    <legend><?php _e('Customizations', 'tantan-flickr');?></legend>
+<form>
+<form>
     <p>
-    	<strong>Popup Overlays:</strong> Add Lightbox style popup overlays to displays to your photos. <a href="http://tantannoodles.com/flickr-demo/">Demo</a> - <a href="http://code.google.com/p/photo-album/wiki/Documentation#Popup_Overlay_Support">Instructions</a>
+    	<strong><?php _e('Popup Overlays:', 'tantan-flickr');?></strong> <?php _e('Add Lightbox style popup overlays to displays to your photos.', 'tantan-flickr');?> <a href="http://tantannoodles.com/flickr-demo/"><?php _e('Demo', 'tantan-flickr');?></a> - <a href="http://code.google.com/p/photo-album/wiki/Documentation#Popup_Overlay_Support"><?php _e('Instructions', 'tantan-flickr');?></a>
 	</p>
 	<p>
-		<strong>Custom Comments:</strong> Allow visitors to comment on the photos displayed on your blog (without having to register with Flickr). <a href="http://code.google.com/p/photo-album/wiki/Documentation#Custom_Photo_Comments">Instructions</a>
+		<strong><?php _e('Custom Comments:', 'tantan-flickr');?></strong> <?php _e('Allow visitors to comment on the photos displayed on your blog (without having to register with Flickr).', 'tantan-flickr');?> <a href="http://code.google.com/p/photo-album/wiki/Documentation#Custom_Photo_Comments"><?php _e('Instructions', 'tantan-flickr');?></a>
 	</p>
     <p>
-    	<strong>Look and Feel:</strong> Not all WordPress themes are created equal, and you may need to tweak a couple templates to match the look and feel of our own blog. Look inside the <code>wp-content/plugins/tantan-flickr/templates</code> directory for the template files. <a href="http://code.google.com/p/photo-album/wiki/Documentation#Look_and_Feel_Customization">Instructions</a>
+    	<strong><?php _e('Look and Feel:', 'tantan-flickr');?></strong> <?php _e('Not all WordPress themes are created equal, and you may need to tweak a couple templates to match the look and feel of our own blog. Look inside the <code>wp-content/plugins/tantan-flickr/templates</code> directory for the template files.', 'tantan-flickr');?> <a href="http://code.google.com/p/photo-album/wiki/Documentation#Look_and_Feel_Customization"><?php _e('Instructions', 'tantan-flickr');?></a>
     </p>
+    <?php
+    if (function_exists('wp_super_cache_enable')):?>
+	<p><strong>SuperCache</strong>: Looks like you have the SuperCache plugin enabled. <a href='http://code.google.com/p/photo-album/wiki/Documentation#Super_Cache_Compatibility'>Please see here for compatibility notes with SuperCache</a></p>
+	<?php endif?>
+</form>
     </fieldset>
     
 
@@ -117,48 +122,47 @@ if (!$flickr_apikey || !$flickr_sharedsecret) { // no api key
 
     
     <fieldset class="options">
-    <legend>Photo Albums</legend>
+    <legend><?php _e('Photo Albums', 'tantan-flickr');?></legend>
     
     <form method="post">
     <input type="hidden" name="action" value="clearcache" />
     <input type="hidden" name="album" value="all" />
     
-    <input type="button" value="Organize Albums" onclick="window.open('http://www.flickr.com/photos/organize/?start_tab=sets', '_blank');return false" />
-    <input type="submit" value="Refresh All Albums" /><br>
-    <small>Your Flickr albums will be cached locally to help speed things up. Click <strong>refresh</strong> to synchronize and refresh all your albums, or after you've created a new set.</small>
+    <input type="button" value="<?php _e('Organize Albums', 'tantan-flickr');?>" onclick="window.open('http://www.flickr.com/photos/organize/?start_tab=sets', '_blank');return false" />
+    <input type="submit" value="<?php _e('Refresh All Albums', 'tantan-flickr');?>" /><br>
+    <small><?php _e('Your Flickr albums will be cached locally to help speed things up. Click <strong>refresh</strong> to synchronize and refresh all your albums, or after you\'ve created a new set.', 'tantan-flickr');?></small>
     </form>
     
     <hr />
     <form method="post">
     <input type="hidden" name="action" value="savealbumsettings" />
-    <div id="options-albums">Please wait. Now loading your albums...</div>
-    <p class="submit" style="clear:both;"><input type="submit" value="save settings &gt;" /></p>
+    <div id="options-albums"><?php _e('Please wait. Now loading your albums...', 'tantan-flickr');?></div>
+    <p class="submit" style="clear:both;"><input type="submit" value="<?php _e('save settings &gt;', 'tantan-flickr');?>" /></p>
     </form>
    
     </fieldset>
     
     <fieldset class="options">
-    <legend>Group Photos</legend>
+    <legend><?php _e('Group Photos', 'tantan-flickr');?></legend>
     <form method="post">
 <?php if (TANTAN_FLICKR_DISPLAYGROUPS): ?>
     <input type="hidden" name="action" value="cleargroupcache" />
     <input type="hidden" name="group" value="all" />
     
-    <input type="button" value="Organize Groups" onclick="window.open('http://flickr.com/photos/organize/?start_tab=groups', '_blank');return false;" />
-    <input type="submit" value="Refresh All Groups" /><br>
-    <small>Your Flickr groups will be cached locally to help speed things up.
-    Click <strong>refresh</strong> to synchronize and refresh all your groups.</small>
+    <input type="button" value="<?php _e('Organize Groups', 'tantan-flickr');?>" onclick="window.open('http://flickr.com/photos/organize/?start_tab=groups', '_blank');return false;" />
+    <input type="submit" value="<?php _e('Refresh All Groups', 'tantan-flickr');?>" /><br>
+    <small><?php _e('Your Flickr groups will be cached locally to help speed things up. Click <strong>refresh</strong> to synchronize and refresh all your groups.', 'tantan-flickr');?></small>
     <hr />
     </form>
     
     <form method="post">
     <input type="hidden" name="action" value="savegroupsettings" />
 
-    <div id="options-groups">Please wait. Now loading your groups...</div>
+    <div id="options-groups"><?php _e('Please wait. Now loading your groups...', 'tantan-flickr');?></div>
     
-    <a href="#" onclick="return hideAllGroups()">toggle group hiding</a>
+    <a href="#" onclick="return hideAllGroups()"><?php _e('toggle group hiding', 'tantan-flickr');?></a>
     <p class="submit" style="clear:both;">
-    <input type="submit" value="save settings &gt;" />
+    <input type="submit" value="<?php _e('save settings &gt;', 'tantan-flickr');?>" />
     </p>
     <script>
     function hideAllGroups() {
@@ -172,7 +176,7 @@ if (!$flickr_apikey || !$flickr_sharedsecret) { // no api key
     }
     </script>
 <?php else:?>
-	Support for groups are not enabled. <a href="http://code.google.com/p/photo-album/wiki/GroupsSupport">Please see this page for instructions on how to configure the plugin to display photos from groups.</a>
+	<?php _e('Support for groups are not enabled. <a href="http://code.google.com/p/photo-album/wiki/GroupsSupport">Please see this page for instructions on how to configure the plugin to display photos from groups.</a>', 'tantan-flickr');?>
 <?php endif; ?>
     </form>
     

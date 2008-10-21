@@ -9,7 +9,7 @@ global $TanTanFlickrPlugin;
 
 <?php include($TanTanFlickrPlugin->getDisplayTemplate('photoalbum-nav.html'));?>
 
-<h2>Tag: <?php echo htmlentities($request['tags'], ENT_COMPAT, 'UTF-8')?></h2>
+<h2><?php printf(__('Tag: %s', 'tantan-flickr'), htmlentities($request['tags'], ENT_COMPAT, 'UTF-8'));?></h2>
 <?php
 ?>
 
@@ -23,5 +23,5 @@ foreach ($photos as $photo)
 ?>
 </div>
 <div class="flickr-meta-links">
-<a href="http://www.flickr.com/photos/tags/<?php echo urlencode($request['tags']);?>/" target="_blank">View this tag on Flickr</a>
+<a href="http://www.flickr.com/photos/tags/<?php echo urlencode($request['tags']);?>/" target="_blank"><?php _e('View this tag on Flickr', 'tantan-flickr');?></a>
 </div>
