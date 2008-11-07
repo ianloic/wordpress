@@ -1,9 +1,9 @@
 === OpenID ===
 Contributors: wnorris, factoryjoe
-Tags: openid, authentication
+Tags: openid, authentication, login, comments
 Requires at least: 2.2
 Tested up to: 2.6.2
-Stable tag: 3.1.1
+Stable tag: 3.1.4
 
 Allows WordPress to provide and consumer OpenIDs for authentication of users and comments.
 
@@ -21,7 +21,7 @@ their local WordPress account using an OpenID, as well as enabling commenters
 to leave authenticated comments with OpenID.  Version 3.0 includes an OpenID
 provider as well, enabling users to login to OpenID-enabled sites using their
 own personal WordPress account. [XRDS-Simple][] is required for the OpenID
-Provider.
+Provider and some features of the OpenID Consumer.
 
 Developer documention, which includes all of the public methods and hooks for
 integrating with and extending the plugin, can be found [here][dev-doc].
@@ -92,6 +92,19 @@ report at <http://code.google.com/p/diso/issues/list>.
 
 
 == Changelog ==
+
+= version 3.1.4 = 
+ - allow OP extensions to include XRDS Types in login service
+ - run OpenID comment processor after Akismet, and skip if Akismet marks comment as spam
+
+= version 3.1.3 =
+ - fix error message if /dev/urandom is not readable
+
+= version 3.1.2 =
+ - ensure source of randomness is set properly
+ - prevent duplicate cleanup_openid cron jobs
+ - prevent SQL errors on activation
+ - suppress verbose error logging with XML parsing
 
 = version 3.1.1 =
  - fix bug with OpenID Provider XRDS code that prevents ability to login to some sites (like plaxo.com)

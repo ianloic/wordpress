@@ -5,7 +5,7 @@
  Description: Allows the use of OpenID for account registration, authentication, and commenting.  Also includes an OpenID provider which can turn WordPress author URLs into OpenIDs.
  Author: DiSo Development Team
  Author URI: http://diso-project.org/
- Version: 3.1.1
+ Version: 3.1.4
  License: Dual GPL (http://www.fsf.org/licensing/licenses/info/GPLv2.html) and Modified BSD (http://www.fsf.org/licensing/licenses/index_html#ModifiedBSD)
  */
 
@@ -21,6 +21,9 @@ if (file_exists(dirname(__FILE__) . '/openid')) {
 	// for WPMU mu-plugins folder
 	$openid_include_path .= PATH_SEPARATOR . dirname(__FILE__) . '/openid';
 }
+
+// check source of randomness
+if (!@is_readable('/dev/urandom')) define( 'Auth_OpenID_RAND_SOURCE', null );
 
 set_include_path( $openid_include_path . PATH_SEPARATOR . get_include_path() );
 require_once 'common.php';

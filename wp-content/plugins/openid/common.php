@@ -92,12 +92,6 @@ function openid_getConsumer() {
 	static $consumer;
 
 	if (!$consumer) {
-		// setup source of randomness
-		$f = @fopen( '/dev/urandom', 'r');
-		if ($f === false) {
-			define( 'Auth_OpenID_RAND_SOURCE', null );
-		}
-
 		set_include_path( dirname(__FILE__) . PATH_SEPARATOR . get_include_path() );
 		require_once 'Auth/OpenID/Consumer.php';
 		restore_include_path();
@@ -153,6 +147,7 @@ function openid_activate_plugin() {
 	openid_create_tables();
 	openid_migrate_old_data();
 
+	wp_clear_scheduled_hook('cleanup_openid');
 	wp_schedule_event(time(), 'hourly', 'cleanup_openid');
 
 	// set current revision
@@ -193,6 +188,7 @@ function openid_cleanup() {
  * @see register_deactivation_hook
  */
 function openid_deactivate_plugin() {
+	wp_clear_scheduled_hook('cleanup_openid');
 	delete_option('openid_server_associations');
 	delete_option('openid_server_nonces');
 }
@@ -203,6 +199,7 @@ function openid_deactivate_plugin() {
  */
 function openid_customer_error_handler($errno, $errmsg, $filename, $linenum, $vars) {
 	if( (2048 & $errno) == 2048 ) return;
+	if (strpos($errmsg, 'DOMDocument::loadXML') === 0) return;
 	openid_error( "Library Error $errno: $errmsg in $filename :$linenum");
 }
 
@@ -215,24 +212,20 @@ function openid_customer_error_handler($errno, $errmsg, $filename, $linenum, $va
  * @param string $return_to URL where the OpenID provider should return the user
  */
 function openid_doRedirect($auth_request, $trust_root, $return_to) {
+	$message = $auth_request->getMessage($trust_root, $return_to, false);
+
+	if (Auth_OpenID::isFailure($message)) {
+		return openid_error('Could not redirect to server: '.$message->message);
+	}
+
+	$_SESSION['openid_return_to'] = $message->getArg(Auth_OpenID_OPENID_NS, 'return_to');
+
+	// send 302 redirect or POST
 	if ($auth_request->shouldSendRedirect()) {
-		$trust_root = trailingslashit($trust_root);
 		$redirect_url = $auth_request->redirectURL($trust_root, $return_to);
-
-		if (Auth_OpenID::isFailure($redirect_url)) {
-			openid_error('Could not redirect to server: '.$redirect_url->message);
-		} else {
-			wp_redirect( $redirect_url );
-		}
+		wp_redirect( $redirect_url );
 	} else {
-		// Generate form markup and render it
-		$request_message = $auth_request->getMessage($trust_root, $return_to, false);
-
-		if (Auth_OpenID::isFailure($request_message)) {
-			openid_error('Could not redirect to server: '.$request_message->message);
-		} else {
-			openid_repost($auth_request->endpoint->server_url, $request_message->toPostArgs());
-		}
+		openid_repost($auth_request->endpoint->server_url, $message->toPostArgs());
 	}
 }
 
@@ -247,6 +240,7 @@ function finish_openid_auth() {
 
 	$consumer = openid_getConsumer();
 	$response = $consumer->complete($_SESSION['openid_return_to']);
+	unset($_SESSION['openid_return_to']);
 	openid_response($response);
 		
 	switch( $response->status ) {
@@ -398,7 +392,6 @@ function openid_start_login( $claimed_url, $action, $arguments = null, $return_t
 		$trust_root = preg_replace('/^http\:/', 'https:', $trust_root);
 	}  
 		
-	$_SESSION['openid_return_to'] = $return_to;
 	openid_doRedirect($auth_request, $trust_root, $return_to);
 	exit(0);
 }
