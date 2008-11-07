@@ -6,26 +6,26 @@ function showFlickrPreview() {
 }
 </script>
 <p>
-<label for="tantan-flickr-title">Title:
+<label for="tantan-flickr-title"><?php _e('Title:', 'tantan-flickr');?>
 <input type="text" id="tantan-flickr-title" class="widefat" name="tantan-flickr-title" value="<?php echo htmlspecialchars($options['title']); ?>" />
 </label>
 </p>
 <p>
 <label for="tantan-flickr-tags">
-Tags:
+<?php _e('Tags:', 'tantan-flickr');?>
 <input type="text" id="tantan-flickr-tags" class="widefat" name="tantan-flickr-tags" value="<?php echo htmlspecialchars($options['tags']); ?>" /> 
 </label>
 </p>
 
 <p>
-<label for="tantan-flickr-count">Number of Photos:
+<label for="tantan-flickr-count"><?php _e('Number of Photos:', 'tantan-flickr');?>
 <input type="text" id="tantan-flickr-count" class="" name="tantan-flickr-count" size="4" value="<?php echo htmlspecialchars($options['count']); ?>" style="width:25px;text-align:center;" />
 <input type="button" value="preview" onclick="showFlickrPreview()" />
 </label>
 </p>
 <p>
 <label for="tantan-flickr-randomize">
-Randomize: <input type="checkbox" id="tantan-flickr-randomize" name="tantan-flickr-randomize" size="4" value="1" <?php echo (htmlspecialchars($options['randomize']) ? 'checked="checked"' : ''); ?>/>
+<?php _e('Randomize:', 'tantan-flickr');?> <input type="checkbox" id="tantan-flickr-randomize" name="tantan-flickr-randomize" size="4" value="1" <?php echo (htmlspecialchars($options['randomize']) ? 'checked="checked"' : ''); ?>/>
 </label>
 </p>
 <!--
@@ -35,7 +35,7 @@ Enable Animation: <input type="checkbox" id="tantan-flickr-animate" name="tantan
 <br>
 -->
 <p>
-<small>This widget displays your recent photos. Photos refresh automatically every hour. Don't forget to save your settings.</small>
+<small><?php _e('This widget displays your recent photos. Photos refresh automatically every hour. Don\'t forget to save your settings.', 'tantan-flickr');?></small>
 </p>
 <!--
 	<br>

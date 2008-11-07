@@ -1,0 +1,707 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tantan-flickr\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-09-22 14:51-0500\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Joe Tan <joetan54@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-Basepath: Z:\\WordPress Project\\Plugins Source Code\\Photo Album\\tantan-flickr\n"
+"X-Poedit-SearchPath-0: templates\n"
+"X-Poedit-SearchPath-1: flickr\n"
+"X-Poedit-SearchPath-2: .\n"
+
+#: flickr/class-admin.php:316
+msgid "Photo Stream"
+msgstr ""
+
+#: flickr/class-admin.php:317
+msgid "Albums"
+msgstr ""
+
+#: flickr/class-admin.php:318
+msgid "Everyone"
+msgstr ""
+
+#: flickr/class-admin.php:319
+msgid "Interesting"
+msgstr ""
+
+#: flickr/class-admin.php:384
+msgid "&laquo; Previous"
+msgstr ""
+
+#: flickr/class-admin.php:388
+msgid "Next &raquo;"
+msgstr ""
+
+#: flickr/class-public.php:225
+msgid "Error: Flickr plugin is not setup!"
+msgstr ""
+
+#: flickr/class-public.php:325
+#: flickr/class-public.php:374
+msgid "Sorry, this feature is not enabled."
+msgstr ""
+
+#: flickr/class-public.php:332
+msgid "This photo is not available. "
+msgstr ""
+
+#: flickr/class-public.php:333
+msgid "View this photo at Flickr"
+msgstr ""
+
+#: flickr/class-public.php:350
+msgid "This album is not available. "
+msgstr ""
+
+#: flickr/class-public.php:351
+msgid "View this album on Flickr"
+msgstr ""
+
+#: flickr/class-public.php:355
+#: flickr/class-public.php:359
+#: flickr/class-public.php:383
+msgid "Sorry, this feature is not supported"
+msgstr ""
+
+#: flickr/class-public.php:445
+msgid "The photo album has not been configured."
+msgstr ""
+
+#: templates/photoalbum-albums-index-groups.html:15
+msgid "Group Photos"
+msgstr ""
+
+#: templates/photoalbum-albums-index-groups.html:21
+#, php-format
+msgid "%d Photos"
+msgstr ""
+
+#: templates/photoalbum-albums-index-groups.html:22
+#: templates/photoalbum-nav.html:17
+#: templates/photoalbum-nav.html:42
+msgid "View slideshow &gt;"
+msgstr ""
+
+#: templates/photoalbum-paging.html:19
+msgid "Next Page &raquo;"
+msgstr ""
+
+#: templates/photoalbum-video.html:28
+msgid "View this video on Flickr"
+msgstr ""
+
+#: templates/photoalbum-nav.html:11
+#: templates/photoalbum-nav.html:15
+#: templates/photoalbum-nav.html:22
+#: templates/photoalbum-nav.html:26
+#: templates/photoalbum-nav.html:31
+#: templates/photoalbum-nav.html:35
+#: templates/photoalbum-nav.html:38
+#: templates/photoalbum-nav.html:41
+msgid "Back to Photo Album"
+msgstr ""
+
+#: templates/photoalbum-nav.html:23
+#: templates/photoalbum-nav.html:27
+#: templates/photoalbum-nav.html:31
+msgid "Tags"
+msgstr ""
+
+#: templates/photoalbum-context.html:12
+msgid "Previous Photo"
+msgstr ""
+
+#: templates/photoalbum-context.html:16
+msgid "you are on the first photo"
+msgstr ""
+
+#: templates/photoalbum-context.html:23
+#: templates/photoalbum-context.html:28
+msgid "slideshow"
+msgstr ""
+
+#: templates/photoalbum-context.html:35
+msgid "Next Photo"
+msgstr ""
+
+#: templates/photoalbum-context.html:39
+msgid "you are on the last photo"
+msgstr ""
+
+#: templates/photoalbum-albums-index-tags.html:12
+msgid "Popular Tags"
+msgstr ""
+
+#: templates/photoalbum-albums-index-tags.html:14
+#, php-format
+msgid "%d photos"
+msgstr ""
+
+#: templates/photoalbum-albums-index-tags.html:16
+msgid "more tags &raquo;"
+msgstr ""
+
+#: templates/photoalbum-comments.html:20
+msgid "Comments"
+msgstr ""
+
+#: templates/photoalbum-comments.html:22
+msgid "Leave a comment"
+msgstr ""
+
+#: templates/photoalbum-comments.html:58
+#, php-format
+msgid "%d comments"
+msgstr ""
+
+#: templates/photoalbum-comments.html:73
+#: templates/photoalbum-comments.html:76
+msgid "Add a comment &gt;"
+msgstr ""
+
+#: templates/photoalbum-comments.html:75
+msgid "No comments for this photo."
+msgstr ""
+
+#: templates/photoalbum-albums-index-other-albums.html:13
+msgid "Other Albums"
+msgstr ""
+
+#: templates/photoalbum-albums-index-other-albums.html:50
+#, php-format
+msgid "View all %d albums &gt;"
+msgstr ""
+
+#: templates/photoalbum-tags-group.html:20
+#, php-format
+msgid "Photos %1$d - %2$d tagged with <strong>%3$s</strong>"
+msgstr ""
+
+#: templates/photoalbum-tags-group.html:22
+#, php-format
+msgid "Photos tagged with <strong>%s</strong>"
+msgstr ""
+
+#: templates/photoalbum-tags-group.html:33
+msgid "Sorry, no photos found!"
+msgstr ""
+
+#: templates/photoalbum-tags-group.html:40
+#: templates/photoalbum-tags.html:26
+msgid "View this tag on Flickr"
+msgstr ""
+
+#: templates/photoalbum-photo.html:38
+#: templates/photoalbum-photometa.html:26
+msgid "View this photo on Flickr"
+msgstr ""
+
+#: templates/photoalbum-group.html:21
+#: templates/photoalbum-album.html:26
+#, php-format
+msgid "%1$d - %2$d of %3$d Photos"
+msgstr ""
+
+#: templates/photoalbum-group.html:38
+msgid "View this group on Flickr"
+msgstr ""
+
+#: templates/photoalbum-tags.html:12
+#, php-format
+msgid "Tag: %s"
+msgstr ""
+
+#: templates/photoalbum-photometa.html:13
+msgid "Uploaded By:"
+msgstr ""
+
+#: templates/photoalbum-photometa.html:16
+#: flickr/widget-options.html:15
+msgid "Tags:"
+msgstr ""
+
+#: templates/photoalbum-photometa.html:25
+msgid "Uploaded:"
+msgstr ""
+
+#: templates/photoalbum-photometa.html:25
+msgid "F j, Y"
+msgstr ""
+
+#: templates/photoalbum-tagcloud.html:16
+msgid "Tag Cloud"
+msgstr ""
+
+#: templates/photoalbum-tagcloud.html:22
+msgid "No tags found."
+msgstr ""
+
+#: templates/photoalbum-albums-index-all.html:8
+msgid "All Albums"
+msgstr ""
+
+#: flickr/widget-options.html:9
+msgid "Title:"
+msgstr ""
+
+#: flickr/widget-options.html:21
+msgid "Number of Photos:"
+msgstr ""
+
+#: flickr/widget-options.html:28
+msgid "Randomize:"
+msgstr ""
+
+#: flickr/widget-options.html:38
+msgid "This widget displays your recent photos. Photos refresh automatically every hour. Don't forget to save your settings."
+msgstr ""
+
+#: flickr/admin-albums-tab.html:10
+msgid "refresh albums"
+msgstr ""
+
+#: flickr/admin-albums-tab.html:15
+msgid "Sorry, no albums found!"
+msgstr ""
+
+#: flickr/admin-albums-tab.html:69
+msgid "Photos"
+msgstr ""
+
+#: flickr/admin-albums-tab.html:71
+msgid "Album cover"
+msgstr ""
+
+#: flickr/admin-albums-tab.html:78
+msgid "Size"
+msgstr ""
+
+#: flickr/admin-albums-tab.html:81
+msgid "Square"
+msgstr ""
+
+#: flickr/admin-albums-tab.html:83
+msgid "Thumbnail"
+msgstr ""
+
+#: flickr/admin-albums-tab.html:85
+msgid "Small"
+msgstr ""
+
+#: flickr/admin-albums-tab.html:87
+msgid "Medium"
+msgstr ""
+
+#: flickr/admin-albums-tab.html:89
+msgid "Large"
+msgstr ""
+
+#: flickr/admin-albums-tab.html:91
+msgid "Original"
+msgstr ""
+
+#: flickr/admin-albums-tab.html:96
+msgid "Insert into Post"
+msgstr ""
+
+#: flickr/admin-albums-tab.html:97
+msgid "Cancel"
+msgstr ""
+
+#: flickr/admin-albums-tab.html:99
+msgid "close after inserting photo"
+msgstr ""
+
+#: flickr/admin-options-auth.html:11
+#: flickr/admin-options-flickrsettings.html:3
+msgid "Flickr Settings"
+msgstr ""
+
+#: flickr/admin-options-auth.html:13
+msgid "Your Photo Album is not currently linked to a Flickr account."
+msgstr ""
+
+#: flickr/admin-options-auth.html:15
+msgid "Step 1:"
+msgstr ""
+
+#: flickr/admin-options-auth.html:17
+msgid "Login to Flickr and grant <em>read only</em> permissions to this photo album. Once you are done, close the popup window and click the button in Step 2."
+msgstr ""
+
+#: flickr/admin-options-auth.html:25
+msgid "Retrieve Flickr Permissions &gt;"
+msgstr ""
+
+#: flickr/admin-options-auth.html:28
+msgid "Step 2:"
+msgstr ""
+
+#: flickr/admin-options-auth.html:29
+msgid "Apply the permissions granted in Step 1 to this photo album. This step may take a couple minutes to complete (depending on how many albums you have), since it's also going to pull down your Flickr information."
+msgstr ""
+
+#: flickr/admin-options-auth.html:33
+msgid "Apply Permissions &gt;"
+msgstr ""
+
+#: flickr/admin-options-auth.html:38
+msgid "<strong>Note:</strong> You can revoke the permissions granted here in <a href=\"http://flickr.com/services/auth/list.gne\">your Flickr access control panel</a>."
+msgstr ""
+
+#: flickr/admin-options-auth.html:44
+msgid "&lt; Reset API Key"
+msgstr ""
+
+#: flickr/admin-options.html:41
+msgid "Photo Album Configuration"
+msgstr ""
+
+#: flickr/admin-options.html:44
+msgid "This is the configuration screen for the <a href=\"http://tantannoodles.com/toolkit/photo-album/\">Flickr Photo Album plugin for WordPress</a>."
+msgstr ""
+
+#: flickr/admin-options.html:48
+msgid "This plugin is provided by <a href=\"http://www.tantannoodles.com\">TanTanNoodles</a> and licensed free of charge for you to use under the GPL license. This plugin is <em>unsupported</em> and comes with no official technical support. However, you can check the following pages for the latest updates to this plugin, along with any unofficial technical support:"
+msgstr ""
+
+#: flickr/admin-options.html:52
+msgid "Releases:"
+msgstr ""
+
+#: flickr/admin-options.html:53
+msgid "Support Group:"
+msgstr ""
+
+#: flickr/admin-options.html:56
+msgid "RSS Updates:"
+msgstr ""
+
+#: flickr/admin-options.html:56
+msgid "Subscribe to the <a href=\"http://feeds.feedburner.com/TanTanToolkit\">TanTanToolkit feed</a> and get notified when there's an update to this plugin."
+msgstr ""
+
+#: flickr/admin-options.html:62
+msgid "If you find this plugin helpful, please consider donating a few dollars to support this plugin. Thanks!"
+msgstr ""
+
+#: flickr/admin-options.html:80
+msgid "Amount:"
+msgstr ""
+
+#: flickr/admin-options.html:100
+msgid "Customizations"
+msgstr ""
+
+#: flickr/admin-options.html:102
+msgid "Popup Overlays:"
+msgstr ""
+
+#: flickr/admin-options.html:102
+msgid "Add Lightbox style popup overlays to displays to your photos."
+msgstr ""
+
+#: flickr/admin-options.html:102
+msgid "Demo"
+msgstr ""
+
+#: flickr/admin-options.html:102
+#: flickr/admin-options.html:105
+#: flickr/admin-options.html:108
+msgid "Instructions"
+msgstr ""
+
+#: flickr/admin-options.html:105
+msgid "Custom Comments:"
+msgstr ""
+
+#: flickr/admin-options.html:105
+msgid "Allow visitors to comment on the photos displayed on your blog (without having to register with Flickr)."
+msgstr ""
+
+#: flickr/admin-options.html:108
+msgid "Look and Feel:"
+msgstr ""
+
+#: flickr/admin-options.html:108
+msgid "Not all WordPress themes are created equal, and you may need to tweak a couple templates to match the look and feel of our own blog. Look inside the <code>wp-content/plugins/tantan-flickr/templates</code> directory for the template files."
+msgstr ""
+
+#: flickr/admin-options.html:118
+msgid "Photo Albums"
+msgstr ""
+
+#: flickr/admin-options.html:124
+msgid "Organize Albums"
+msgstr ""
+
+#: flickr/admin-options.html:125
+msgid "Refresh All Albums"
+msgstr ""
+
+#: flickr/admin-options.html:126
+msgid "Your Flickr albums will be cached locally to help speed things up. Click <strong>refresh</strong> to synchronize and refresh all your albums, or after you've created a new set."
+msgstr ""
+
+#: flickr/admin-options.html:132
+msgid "Please wait. Now loading your albums..."
+msgstr ""
+
+#: flickr/admin-options.html:133
+#: flickr/admin-options.html:158
+#: flickr/admin-options-flickrsettings.html:87
+msgid "save settings &gt;"
+msgstr ""
+
+#: flickr/admin-options.html:145
+msgid "Organize Groups"
+msgstr ""
+
+#: flickr/admin-options.html:146
+msgid "Refresh All Groups"
+msgstr ""
+
+#: flickr/admin-options.html:147
+msgid "Your Flickr groups will be cached locally to help speed things up. Click <strong>refresh</strong> to synchronize and refresh all your groups."
+msgstr ""
+
+#: flickr/admin-options.html:154
+msgid "Please wait. Now loading your groups..."
+msgstr ""
+
+#: flickr/admin-options.html:156
+msgid "toggle group hiding"
+msgstr ""
+
+#: flickr/admin-options.html:172
+msgid "Support for groups are not enabled. <a href=\"http://code.google.com/p/photo-album/wiki/GroupsSupport\">Please see this page for instructions on how to configure the plugin to display photos from groups.</a>"
+msgstr ""
+
+#: flickr/widget-display.html:21
+#: flickr/widget-display-animate.html:34
+msgid "View more photos &gt;"
+msgstr ""
+
+#: flickr/admin-options-groups.html:19
+msgid "hide group"
+msgstr ""
+
+#: flickr/admin-options-groups.html:20
+#: flickr/admin-options-albums.html:37
+msgid "clear cache"
+msgstr ""
+
+#: flickr/admin-options-groups.html:21
+#: flickr/admin-options-albums.html:38
+msgid "order:"
+msgstr ""
+
+#: flickr/admin-options-apikey.html:2
+msgid "Flickr API Key"
+msgstr ""
+
+#: flickr/admin-options-apikey.html:4
+msgid "Before you can setup your blog to pull in your Flickr photos, you need to get your own Flickr API key. "
+msgstr ""
+
+#: flickr/admin-options-apikey.html:7
+msgid "Apply for your own <a href=\"http://www.flickr.com/services/api/key.gne\" target=\"_blank\">Flickr API key</a>. If you already have an API key setup, <a href=\"http://www.flickr.com/services/api/keys/\" target=\"_blank\">you can use that instead</a>."
+msgstr ""
+
+#: flickr/admin-options-apikey.html:8
+msgid "After you have your key, click the configuration link to view the details for your new key"
+msgstr ""
+
+#: flickr/admin-options-apikey.html:9
+msgid "Enter your blog's title and a short description."
+msgstr ""
+
+#: flickr/admin-options-apikey.html:10
+msgid "Change the authentication type to <b>Desktop Application</b>"
+msgstr ""
+
+#: flickr/admin-options-apikey.html:11
+msgid "Save"
+msgstr ""
+
+#: flickr/admin-options-apikey.html:12
+msgid "Now click \"edit configuration\" again to view the details for newly configured API key and copy and paste the <b>key</b> and <b>shared secret</b> fields into the form below.<br><br>Note that it may take a minute or two to get your key fully activated."
+msgstr ""
+
+#: flickr/admin-options-apikey.html:19
+msgid "Flickr API Key:"
+msgstr ""
+
+#: flickr/admin-options-apikey.html:24
+msgid "Shared Secret:"
+msgstr ""
+
+#: flickr/admin-options-albums.html:5
+msgid "<strong>Error</strong>: Please create at least one Flickr photo set, and then click the \"Refresh\" button above to see your photos."
+msgstr ""
+
+#: flickr/admin-options-albums.html:36
+msgid "hide album"
+msgstr ""
+
+#: flickr/admin-photos-tab.html:15
+msgid "My Photos"
+msgstr ""
+
+#: flickr/admin-photos-tab.html:20
+msgid "search"
+msgstr ""
+
+#: flickr/admin-photos-tab.html:62
+#: flickr/admin-photos-tab.html:67
+msgid "Make sure you have proper permissions before using any photos."
+msgstr ""
+
+#: flickr/admin-options-flickrsettings.html:9
+msgid "Flickr Account:"
+msgstr ""
+
+#: flickr/admin-options-flickrsettings.html:10
+msgid "Remove Link &gt;"
+msgstr ""
+
+#: flickr/admin-options-flickrsettings.html:11
+msgid "Your Photo Album has been granted <em>read only</em> permissions to this Flickr account"
+msgstr ""
+
+#: flickr/admin-options-flickrsettings.html:19
+msgid "Photo Album Syndication:"
+msgstr ""
+
+#: flickr/admin-options-flickrsettings.html:21
+msgid "<strong>Yes</strong>, display my Flickr Albums on this blog"
+msgstr ""
+
+#: flickr/admin-options-flickrsettings.html:25
+msgid "Enter the path where you want your photo album to be shown. "
+msgstr ""
+
+#: flickr/admin-options-flickrsettings.html:27
+msgid "View your album:"
+msgstr ""
+
+#: flickr/admin-options-flickrsettings.html:36
+msgid "<strong>No</strong>, don't display my Flickr Albums on this blog"
+msgstr ""
+
+#: flickr/admin-options-flickrsettings.html:41
+msgid "Media Bar:"
+msgstr ""
+
+#: flickr/admin-options-flickrsettings.html:42
+msgid "Add Flickr to the <a href=\"post-new.php\">write post</a> screen."
+msgstr ""
+
+#: flickr/admin-options-flickrsettings.html:45
+msgid "Photos should link to:"
+msgstr ""
+
+#: flickr/admin-options-flickrsettings.html:47
+msgid "The URL specified above"
+msgstr ""
+
+#: flickr/admin-options-flickrsettings.html:48
+msgid "Where you want your photos to link to, when inserted into a blog post or from the sidebar"
+msgstr ""
+
+#: flickr/admin-options-flickrsettings.html:53
+msgid "Flickr Sidebar Widget:"
+msgstr ""
+
+#: flickr/admin-options-flickrsettings.html:57
+msgid "Enable the Flickr Widget for your sidebar."
+msgstr ""
+
+#: flickr/admin-options-flickrsettings.html:58
+msgid "This will show your recent photos in your site's sidebar."
+msgstr ""
+
+#: flickr/admin-options-flickrsettings.html:62
+msgid "<strong>Note:</strong> Your theme does not look it's properly configured for WordPress Widgets. Here are instructions on <a href=\"http://automattic.com/code/widgets/themes/\">how to add WordPress Widgets</a> to your existing theme."
+msgstr ""
+
+#: flickr/admin-options-flickrsettings.html:64
+msgid "Configure your sidebar &gt;"
+msgstr ""
+
+#: flickr/admin-options-flickrsettings.html:68
+msgid "Install the <a href=\"http://www.wordpress.org/\">latest version of WordPress</a> if you want to show your recent Flickr photos in your WordPress sidebar."
+msgstr ""
+
+#: flickr/admin-options-flickrsettings.html:77
+msgid "Private Photos:"
+msgstr ""
+
+#: flickr/admin-options-flickrsettings.html:79
+msgid "Hide photos that have been marked <em>Private</em>"
+msgstr ""
+
+#: flickr/admin-tab-options.html:8
+msgid "Insert Highlight Photo"
+msgstr ""
+
+#: flickr/admin-tab-options.html:14
+msgid "Title"
+msgstr ""
+
+#: flickr/admin-tab-options.html:24
+msgid "Link URL"
+msgstr ""
+
+#: flickr/admin-tab-options.html:26
+#: flickr/admin-tab-options.html:42
+msgid "None"
+msgstr ""
+
+#: flickr/admin-tab-options.html:27
+msgid "Link to the Flickr page for this photo"
+msgstr ""
+
+#: flickr/admin-tab-options.html:27
+msgid "Flickr"
+msgstr ""
+
+#: flickr/admin-tab-options.html:29
+msgid "Link to this blog's page"
+msgstr ""
+
+#: flickr/admin-tab-options.html:29
+msgid "Blog"
+msgstr ""
+
+#: flickr/admin-tab-options.html:35
+msgid "Enter a link URL or click above for presets."
+msgstr ""
+
+#: flickr/admin-tab-options.html:39
+msgid "Alignment"
+msgstr ""
+
+#: flickr/admin-tab-options.html:44
+msgid "Left"
+msgstr ""
+
+#: flickr/admin-tab-options.html:46
+msgid "Center"
+msgstr ""
+
+#: flickr/admin-tab-options.html:48
+msgid "Right"
+msgstr ""
+
+#: flickr/admin-tab-options.html:54
+msgid "Video Player"
+msgstr ""
+

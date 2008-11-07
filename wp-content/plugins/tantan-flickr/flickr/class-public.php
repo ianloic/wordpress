@@ -1,7 +1,7 @@
 <?php
 /*
-$Revision: 233 $
-$Date: 2008-09-04 16:19:41 -0400 (Thu, 04 Sep 2008) $
+$Revision: 321 $
+$Date: 2008-10-03 17:10:43 -0400 (Fri, 03 Oct 2008) $
 $Author: joetan54 $
 */
 class TanTanFlickrPlugin {
@@ -10,6 +10,7 @@ class TanTanFlickrPlugin {
     var $request = array();
     
     function TanTanFlickrPlugin() {
+	    $this->load_plugin_textdomain();
     }
 
 	function getUser() {
@@ -113,13 +114,18 @@ class TanTanFlickrPlugin {
             ));
             $user = $flickr->auth_checkToken();
             $nsid = $user['user']['nsid'];
-			if (!$usecache) {
-				$flickr->clearCacheStale('search'); // should probably not blanket clear out everything in 'search'
-				$flickr->clearCacheStale('getRecent');
-			}
+				
             if (!$tags && $everyone) {
+                if (!$usecache) {
+                    $flickr->clearCacheStale('getRecent', true);
+    				$flickr->clearCacheStale('flickr.photos.getRecent', true);
+    			}
                 $photos = $flickr->getRecent(NULL, $max, $offsetpage);
             } else {
+    			if (!$usecache) {
+    				$flickr->clearCacheStale('search', true);
+    				$flickr->clearCacheStale('flickr.photos.search', true);
+    			}
                 $photos = $flickr->search(array(
                     'tags' => ($tags ? $tags : ''),
                     'user_id' => ($everyone ? '' : $nsid),
@@ -128,13 +134,10 @@ class TanTanFlickrPlugin {
                     'page' => $offsetpage,
                 ));
             }
-            //if (!$usecache) $flickr->doneClearCache();
-            //$this->_silas_cacheExpire = -1;
-            if ($everyone || !$baseurl || $linkoptions) {
-                foreach ($photos as $k => $photo) {
-                    $photos[$k]['info'] = $flickr->getPhoto($photo['id']);
-                }
-            }
+
+            foreach ($photos as $k => $photo) {
+				$photos[$k]['info'] = $flickr->getPhoto($photo['id']);
+			}
             return $photos;
         } else {
             return array();
@@ -223,7 +226,7 @@ class TanTanFlickrPlugin {
                 $photos = $flickr->getPhotosByTags($tag);
             }
         } else {
-            $html .= '<p class="error">Error: Flickr plugin is not setup!</p>';
+            $html .= '<p class="error">'.__('Error: Flickr plugin is not setup!', 'tantan-flickr').'</p>';
         }
 
     	if (count($photos)) {
@@ -273,7 +276,7 @@ class TanTanFlickrPlugin {
                 'hidePrivatePhotos' => get_option('silas_flickr_hideprivate'),
             ));
             
-            $parts = explode('/', substr($_SERVER['_TANTAN_FLICKR_REQUEST_URI'], strlen($_SERVER['REQUEST_URI'])));
+            $parts = explode('/', substr($_SERVER['_TANTAN_FLICKR_REQUEST_URI'], strlen(TANTAN_FLICKR_BASEURL)));
             $request = array();
             $title = '';
             $i = 0;
@@ -323,15 +326,15 @@ class TanTanFlickrPlugin {
 					$photourl = 'http://www.flickr.com/photos/'. $photo['owner']['nsid'].'/'.$photo['id'].'/';
 				}
 				if ($request['group'] && !TANTAN_FLICKR_DISPLAYGROUPS) {
-					$message = "Sorry, this feature is not enabled.";
+					$message = __("Sorry, this feature is not enabled.", 'tantan-flickr');
                     $photoTemplate = 'error.html';
 				} elseif ($photo['owner']['nsid'] != $nsid) {
  					if (((int) $photo['license'] > 0) && $photo['usage']['canblog']) {
                     	$owner = $flickr->people_getInfo($photo['owner']['nsid']);
 		                $photoTemplate = 'photoalbum-photo.html';
 					} else {
-						$message = "This photo is not available. ";
-						if (is_array($photo['urls'])) $message .= '<a href="'.array_pop($photo['urls']).'">View this photo at Flickr</a>';
+						$message = __("This photo is not available. ", 'tantan-flickr');
+						if (count($photo['urls'])) $message .= '<a href="'.array_pop($photo['urls']).'">'.__('View this photo at Flickr', 'tantan-flickr').'</a>';
 						
 						$photoTemplate = 'error.html';
 					}
@@ -348,16 +351,16 @@ class TanTanFlickrPlugin {
 				$user = $flickr->auth_checkToken();
                 $nsid = $user['user']['nsid'];
 				if ($album['owner'] != $nsid) {
-					$message = "This album is not available. ".
-						'<a href="http://www.flickr.com/photos/'.$album['owner'].'/sets/'.$album['id'].'/">View this album on Flickr</a>';
+					$message = __("This album is not available. ", 'tantan-flickr').
+						'<a href="http://www.flickr.com/photos/'.$album['owner'].'/sets/'.$album['id'].'/">'.__('View this album on Flickr', 'tantan-flickr').'</a>';
 
 					$photoTemplate = 'error.html';
 				} elseif (isset($request['tags'])) {
-                        $message = "Sorry, this feature is not supported";
+                        $message = __("Sorry, this feature is not supported", 'tantan-flickr');
                         $photoTemplate = 'error.html';
                     if ($request['tags']) {
                     } else { // return popular tags for an album
-                        $message = "Sorry, this feature is not supported";
+                        $message = __("Sorry, this feature is not supported", 'tantan-flickr');
                         $photoTemplate = 'error.html';
                     }
                 } else {
@@ -372,7 +375,7 @@ class TanTanFlickrPlugin {
                 }
             } elseif ($request['group']) {
 				if (!TANTAN_FLICKR_DISPLAYGROUPS) {
-                    $message = "Sorry, this feature is not enabled.";
+                    $message = __("Sorry, this feature is not enabled.", 'tantan-flickr');
                     $photoTemplate = 'error.html';
 				} else {
 	                $group = $flickr->getGroup($request['group']);
@@ -381,7 +384,7 @@ class TanTanFlickrPlugin {
 	                        $photos = $flickr->getPhotosByGroup($request['group'], $request['tags'], NULL, NULL, $per_page, $page);
 	                        $photoTemplate = 'photoalbum-tags-group.html';
 	                    } else { // return popular tags for a group
-	                        $message = "Sorry, this feature is not supported";
+	                        $message = __("Sorry, this feature is not supported", 'tantan-flickr');
 	                        $photoTemplate = 'error.html';
 	                    }
 	                } else {
@@ -443,7 +446,7 @@ class TanTanFlickrPlugin {
                 add_filter('wp_title', array(&$this, 'wp_title'));
             }
         } else {
-            $message = "The photo album has not been configured.";
+            $message = __("The photo album has not been configured.", 'tantan-flickr');
         }
         if (file_exists(TEMPLATEPATH  . '/photoalbum-resources.php')) {
 			require_once(TEMPLATEPATH . '/photoalbum-resources.php');
@@ -477,12 +480,13 @@ class TanTanFlickrPlugin {
     function rss_feed() {
         $user = get_option('silas_flickr_user');
         if ($this->request['album']) {
-            echo '<link rel="alternate" type="application/atom+xml" title="Flickr Album Feed" href="http://api.flickr.com/services/feeds/photoset.gne?set='.$this->request['album'].'&amp;nsid='.$user['user']['nsid'].'" />';
+            echo '<link rel="alternate" type="application/rss+xml" title="Flickr Album Feed" href="http://api.flickr.com/services/feeds/photoset.gne?format=rss_200&amp;set='.$this->request['album'].'&amp;nsid='.$user['user']['nsid'].'" />';
         }
         if ($this->request['group']) {
-            echo '<link rel="alternate" type="application/atom+xml" title="Flickr Group Feed" href="http://api.flickr.com/services/feeds/groups_discuss.gne?id='.$this->request['group'].'" />';
+            echo '<link rel="alternate" type="application/rss+xml" title="Flickr Group Feed" href="http://api.flickr.com/services/feeds/groups_discuss.gne?format=rss_200&amp;id='.$this->request['group'].'" />';
         }
         
+        //echo '<link rel="alternate" type="application/rss+xml" title="Flickr Photo Stream" href="http://api.flickr.com/services/feeds/photos_public.gne?format=rss_200&amp;id='.$user['user']['nsid'].'" />';
 
     }
     function meta_noindex() {
@@ -513,6 +517,15 @@ class TanTanFlickrPlugin {
         $query_vars['error'] = false;
         return $query_vars;
     }
+	function load_plugin_textdomain() {
+        global $wp_version;
+        if (version_compare($wp_version, '2.5', '<=')) {
+			load_plugin_textdomain('tantan-flickr', 'wp-content/plugins/tantan-flickr/languages');
+        } else {
+			load_plugin_textdomain('tantan-flickr', 'wp-content/plugins/tantan-flickr/languages', 'tantan-flickr/languages');
+        }
+	}
+
 }
 class SilasFlickrPlugin extends TanTanFlickrPlugin {}; // backwards compatibility
 ?>

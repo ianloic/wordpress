@@ -13,13 +13,13 @@ if (is_array($tags)) foreach ($tags as $tag => $count) {
 
 <?php include($TanTanFlickrPlugin->getDisplayTemplate('/photoalbum-nav.html'));?>
 
-<h2>Tag Cloud</h2>
+<h2><?php _e('Tag Cloud', 'tantan-flickr');?></h2>
 <div id="cloud">
 <?php if (is_array($tags)): ?>
 	<?php if (count($tags) > 0): foreach ($tags as $tag => $count):?>
 	<span style="font-size:<?php echo (round(($count / $max)*100, 0)+100)?>%;"><a href="<?php echo ereg_replace(' ', '', $tag);?>/"><?php echo $tag?></a></span> 
 	<?php endforeach; else:?>
-		No tags found.
+		<?php _e('No tags found.', 'tantan-flickr');?>
 	<?php endif;?>
 <?php endif;?>
 </div>

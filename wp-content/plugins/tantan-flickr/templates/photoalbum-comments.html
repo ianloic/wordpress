@@ -17,9 +17,9 @@ if (defined('TANTAN_FLICKR_COMMENTS')) {
 // http://www.js-kit.com/
 //
 if ($mode == 'js-kit'):?>
-<h4 id="comments">Comments</h4>
+<h4 id="comments"><?php _e('Comments', 'tantan-flickr');?></h4>
 
-<div class="js-kit-comments" permalink="<?php echo $photourl;?>" label="Leave a comment" path=""></div><br style="clear:both;" />
+<div class="js-kit-comments" permalink="<?php echo $photourl;?>" label="<?php _e('Leave a comment', 'tantan-flickr');?>" path=""></div><br style="clear:both;" />
 <script src="http://js-kit.com/comments.js"></script>
 
 
@@ -55,7 +55,7 @@ endif; // disqus is configured
 else:
 ?>
 
-<h4 id="comments"><span class="num"><?php echo count($comments);?></span> comments</h4>
+<h4 id="comments"><?php printf(__('%d comments', 'tantan-flickr'), count($comments));?></h4>
 
 <?php if (is_array($comments) && count($comments)): foreach($comments as $comment):?>
 <div class="comment">
@@ -70,10 +70,10 @@ else:
 </div>
 <?php endforeach;?>
 <br style="clear:both;" />
-<p><a href="<?php echo $photourl;?>#reply">Add a comment &gt;</a></p>
+<p><a href="<?php echo $photourl;?>#reply"><?php _e('Add a comment &gt;', 'tantan-flickr');?></a></p>
 <?php else:?>
-<p>No comments for this photo. 
-<a href="<?php echo $photourl;?>#reply">Add a comment &gt;</a></p>
+<p><?php _e('No comments for this photo.', 'tantan-flickr');?> 
+<a href="<?php echo $photourl;?>#reply"><?php _e('Add a comment &gt;', 'tantan-flickr');?></a></p>
 <?php endif;?>
 
 

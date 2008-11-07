@@ -1,7 +1,7 @@
 <?php
 /*
-$Revision: 224 $
-$Date: 2008-08-28 22:11:07 -0400 (Thu, 28 Aug 2008) $
+$Revision: 321 $
+$Date: 2008-10-03 17:10:43 -0400 (Fri, 03 Oct 2008) $
 $Author: joetan54 $
 */
 require_once(dirname(__FILE__).'/class-public.php');
@@ -11,7 +11,7 @@ class TanTanFlickrPluginAdmin extends TanTanFlickrPlugin {
     var $config = array();
     
     function TanTanFlickrPluginAdmin() {
-        //parent::TanTanFlickrPlugin();
+        parent::TanTanFlickrPlugin();
         add_action('admin_menu', array(&$this, 'addhooks'));
         add_action('activate_tantan-flickr/flickr.php', array(&$this, 'activate'));
         add_action('deactivate_tantan-flickr/flickr.php', array(&$this, 'deactivate'));
@@ -31,6 +31,11 @@ class TanTanFlickrPluginAdmin extends TanTanFlickrPlugin {
     }
     function activate() {
 		if (!ereg('plugins.php', $_SERVER['REQUEST_URI'])) return;
+		if (function_exists('wp_schedule_event')) {
+		    wp_clear_scheduled_hook('tantan_flickr_clear_cache_event');
+		    wp_schedule_event(time(), 'daily', 'tantan_flickr_clear_cache_event');
+		}
+		
         wp_redirect('plugins.php?tantanActivate=photo-album');
         exit;
     }
@@ -58,7 +63,7 @@ class TanTanFlickrPluginAdmin extends TanTanFlickrPlugin {
         } elseif (@constant('DB_CHARSET') === null) {
 			$error = "Your database character encoding does not seem to be set. It is <strong>strongly</strong> recommended that you set it to <em>utf8</em> for maximum compatibility. <a href=\"http://codex.wordpress.org/Editing_wp-config.php#Database_character_set\">Instructions are available here.</a> ".
 				"Once you have set your database encoding, please deactivate and reactivate this plugin.";
-		}
+		} 
 
         if ($_POST['action'] == 'savekey') {
             update_option('silas_flickr_apikey', $_POST['flickr_apikey']);
@@ -92,7 +97,7 @@ class TanTanFlickrPluginAdmin extends TanTanFlickrPlugin {
                 CREATE TABLE IF NOT EXISTS `$flickr->cache_table` (
                     `command` CHAR( 255 ) NOT NULL ,
                     `request` CHAR( 35 ) NOT NULL ,
-                    `response` TEXT NOT NULL ,
+                    `response` MEDIUMTEXT NOT NULL ,
                     `created` DATETIME NOT NULL ,
                     `expiration` DATETIME NOT NULL ,
                     INDEX ( `request` ),
@@ -100,7 +105,11 @@ class TanTanFlickrPluginAdmin extends TanTanFlickrPlugin {
                 ) $charset_collate");//
 			$wpdb->query("CREATE INDEX commandCreated on $flickr->cache_table(command, created)");
 			$wpdb->show_errors();
-			
+			if (function_exists('wp_schedule_event')) {
+                wp_clear_scheduled_hook('tantan_flickr_clear_cache_event');
+                wp_schedule_event(time(), 'daily', 'tantan_flickr_clear_cache_event');
+			}
+
         }
         
         if ($_POST['action'] == 'save') {
@@ -304,10 +313,10 @@ class TanTanFlickrPluginAdmin extends TanTanFlickrPlugin {
 	}
 	function media_upload_tabs($tabs) {
 		return array(
-			'tantan-flickr-photo-stream' => __('Photo Stream'), // handler action suffix => tab text
-			'tantan-flickr-photo-albums' => __('Albums'),
-			'tantan-flickr-photo-everyone' => __('Everyone'),
-			'tantan-flickr-photo-interesting' => __('Interesting'),
+			'tantan-flickr-photo-stream' => __('Photo Stream', 'tantan-flickr'), // handler action suffix => tab text
+			'tantan-flickr-photo-albums' => __('Albums', 'tantan-flickr'),
+			'tantan-flickr-photo-everyone' => __('Everyone', 'tantan-flickr'),
+			'tantan-flickr-photo-interesting' => __('Interesting', 'tantan-flickr'),
 		);
 	}
     function addPhotosTab() {
@@ -372,11 +381,11 @@ class TanTanFlickrPluginAdmin extends TanTanFlickrPlugin {
 				$page_links = '';
 				if ($offsetpage > 1) {
 					$link = add_query_arg( 'paged', $offsetpage - 1 );
-					$page_links = "<a class='prev page-numbers' href='" . clean_url($link) . "'>".__('&laquo; Previous')."</a>";
+					$page_links = "<a class='prev page-numbers' href='" . clean_url($link) . "'>".__('&laquo; Previous', 'tantan-flickr')."</a>";
 				}
 				if (count($photos) >= $perpage) {
 				$link = add_query_arg( 'paged', $offsetpage + 1 );
-				$page_links .= "<a class='next page-numbers' href='" . clean_url($link) . "'>".__('Next &raquo;')."</a>";
+				$page_links .= "<a class='next page-numbers' href='" . clean_url($link) . "'>".__('Next &raquo;', 'tantan-flickr')."</a>";
 				$count = -1;
 				}
 			}

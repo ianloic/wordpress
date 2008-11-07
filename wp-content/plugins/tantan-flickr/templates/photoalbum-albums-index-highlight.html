@@ -16,8 +16,8 @@ $photos = $flickr->getPhotos($album['id']);
 <?php echo TanTanFlickrDisplay::photo($photos[$album['primary']], array('size' => 'Small', 'scale' => 0.5, 'album' => $album, 'context' => 'gallery-index'));?>
 <p><?php echo html_entity_decode($album['description'])?></p>
 <p class="meta">
-    <?php echo $album['photos']?> Photos | 
-    <a href="album/<?php echo $album['id']?>/<?php echo $album['pagename']?>" onclick="return openSlideShow('<?php echo $album['id']?>')">View as slideshow &gt;</a>
+    <?php printf(__('%d Photos', 'tantan-flickr'), $album['photos']);?> | 
+    <a href="album/<?php echo $album['id']?>/<?php echo $album['pagename']?>" onclick="return openSlideShow('<?php echo $album['id']?>')"><?php _e('View slideshow &gt;', 'tantan-flickr');?></a>
 </p>
 
 <div id="photos" class="photos">

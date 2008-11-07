@@ -21,11 +21,14 @@ $count = count($photos);
 
 <p><?php echo html_entity_decode($album['description'])?></p>
 <p class="meta">
-<?php if ($hasPrev || $hasNext):?>
-<?php echo ((($page-1) * $per_page) + 1);?> -
-<?php echo ((($page-1) * $per_page) + $count);?> of
-<?php endif;?>
-<?php echo $album['photos'];?> Photos | <a href="album/<?php echo $album['id']?>/<?php echo $album['pagename']?>" onclick="return openSlideShow('<?php echo $album['id']?>')">View as slideshow &gt;</a>
+<?php
+if ($hasPrev || $hasNext) {
+    printf(__('%1$d - %2$d of %3$d Photos', 'tantan-flickr'), (($page-1) * $per_page) + 1, (($page-1) * $per_page) + $count, $album['photos']);
+} else {
+    printf(__('%d Photos', 'tantan-flickr'), $album['photos']);
+}
+?> 
+| <a href="album/<?php echo $album['id']?>/<?php echo $album['pagename']?>" onclick="return openSlideShow('<?php echo $album['id']?>')"><?php _e('View slideshow &gt;', 'tantan-flickr');?></a>
 </p>
 <br clear="all" />
 </div>
@@ -41,5 +44,5 @@ $count = count($photos);
 <?php include($TanTanFlickrPlugin->getDisplayTemplate('/photoalbum-paging.html'));?>
 
 <div class="flickr-meta-links">
-<a href="http://www.flickr.com/photos/<?php echo $album['owner'];?>/sets/<?php echo $album['id'];?>/" target="_blank">View this album on Flickr</a>
+<a href="http://www.flickr.com/photos/<?php echo $album['owner'];?>/sets/<?php echo $album['id'];?>/" target="_blank"><?php _e('View this album on Flickr', 'tantan-flickr');?></a>
 </div>

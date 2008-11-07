@@ -9,10 +9,10 @@ $tags = $flickr->getTags(25);
 
 if (count($tags) > 0): ?>
 <div class="tt-older-posts tags">
-<h4>Popular Tags</h4>
+<h4><?php _e('Popular Tags', 'tantan-flickr');?></h4>
 <?php foreach ($tags as $tag => $count): ?>
-    <a href="tags/<?php echo $tag?>/" title="<?php echo $count ?> photos"><?php echo $tag?></a>,
+    <a href="tags/<?php echo $tag?>/" title="<?php printf(__('%d photos', 'tantan-flickr'), $count);?>"><?php echo $tag?></a>,
 <?php endforeach?>
-<a href="tags/">more tags &raquo;</a>
+<a href="tags/"><?php _e('more tags &raquo;', 'tantan-flickr');?></a>
 </div>
 <?php endif; /*tags*/ ?>

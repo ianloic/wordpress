@@ -1,15 +1,15 @@
 === Post-Plugin Library ===
 Contributors: RobMarsh
-Tags: posts, comments, random, recent, similar, related, post-plugins
+Tags: posts, comments, random, recent, similar, related, popular, post-plugins
 Requires at least: 1.5
-Tested up to: 2.6.1
-Stable tag: 2.6.1.0
+Tested up to: 2.6.2
+Stable tag: 2.6.2.1
 
-The shared code library for Similar posts, Recent Posts, Random Posts and Recent Comments.
+The shared code library for Similar posts, Recent Posts, Random Posts, Popular Posts and Recent Comments.
 
 == Description ==
 
-The Post-Plugin Library does nothing by itself but **must** be installed to provide shared code for the [Similar Posts](http://wordpress.org/extend/plugins/similar-posts/), [Recent Posts](http://wordpress.org/extend/plugins/recent-posts-plugin/), [Random Posts](http://wordpress.org/extend/plugins/random-posts-plugin/)>, and [Recent Comments](http://wordpress.org/extend/plugins/recent-comments-plugin/) plugins.
+The Post-Plugin Library does nothing by itself but **must** be installed to provide shared code for the [Similar Posts](http://wordpress.org/extend/plugins/similar-posts/), [Recent Posts](http://wordpress.org/extend/plugins/recent-posts-plugin/), [Random Posts](http://wordpress.org/extend/plugins/random-posts-plugin/), [Popular Posts](http://wordpress.org/extend/plugins/popular-posts-plugin/), and [Recent Comments](http://wordpress.org/extend/plugins/recent-comments-plugin/) plugins.
 
 == Installation ==
 
@@ -23,6 +23,15 @@ The Post-Plugin Library does nothing by itself but **must** be installed to prov
 
 == Version History ==
 
+* 2.6.2.1
+	* support for recent comments to only show one comment per post
+	* fix for donate link
+* 2.6.2.0
+	* new {imagealt} output tag -- rather like {imagesrc}
+	* {excerpt} can now trim to whole sentences
+	* content filter can now take parameter string
+	* widget can now take parameter string
+	* output can be appended to posts & feeds
 * 2.6.1.0
 	* the current post can be marked manually
 	* widgets now honour the option to show no output if list is empty

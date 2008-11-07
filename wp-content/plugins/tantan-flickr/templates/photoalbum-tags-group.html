@@ -15,12 +15,13 @@ $hasNext = ($count > 0) && ($page * $per_page) < $group['photos'];
 <h2><?php echo $group['name']?> : <?php echo htmlentities($request['tags'], ENT_COMPAT, 'UTF-8')?></h2>
 <p><?php echo $group['description']?></p>
 <p class="meta">
-Photos 
-<?php if ($hasPrev || $hasNext):?>
-<?php echo ((($page-1) * $per_page) + 1);?> -
-<?php echo ((($page-1) * $per_page) + $count);?>
-<?php endif;?> 
-tagged with <strong><?php echo htmlentities($request['tags'], ENT_COMPAT, 'UTF-8')?></strong>
+<?php 
+if ($hasPrev || $hasNext) {
+    printf(__('Photos %1$d - %2$d tagged with <strong>%3$s</strong>', 'tantan-flickr'), (($page-1) * $per_page) + 1, (($page-1) * $per_page) + $count, htmlentities($request['tags'], ENT_COMPAT, 'UTF-8'));
+} else {
+    printf(__('Photos tagged with <strong>%s</strong>', 'tantan-flickr'), htmlentities($request['tags'], ENT_COMPAT, 'UTF-8'));
+}
+?>
 </p>
 <div id="photos">
 <?php if ($count > 0): foreach ($photos as $photo)
@@ -29,12 +30,12 @@ echo TanTanFlickrDisplay::photo($photo, array(
 	'prefix' => '../../'));
 ?>
 <?php else:?>
-Sorry, no photos found!
+<?php _e('Sorry, no photos found!', 'tantan-flickr');?>
 <?php endif;?>
 </div>
 
 <?php include($TanTanFlickrPlugin->getDisplayTemplate('/photoalbum-paging.html'));?>
 
 <div class="flickr-meta-links">
-<a href="http://www.flickr.com/photos/tags/<?php echo urlencode($request['tags']);?>/" target="_blank">View this tag on Flickr</a>
+<a href="http://www.flickr.com/photos/tags/<?php echo urlencode($request['tags']);?>/" target="_blank"><?php echo _e('View this tag on Flickr', 'tantan-flickr');?></a>
 </div>

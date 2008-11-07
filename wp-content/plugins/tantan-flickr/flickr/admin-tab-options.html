@@ -1,0 +1,81 @@
+<div class="photo-options">
+<form>
+<input type="hidden" name="photo-id" id="photo-id" value="" />
+<table class="describe photo">
+<?php if (isset($isAlbum)):?>
+<thead>
+<tr><td colspan="2">
+<strong><?php _e('Insert Highlight Photo', 'tantan-flickr');?></strong>
+</td></tr>
+</thead>
+<?php endif;?>
+<tbody>
+<tr class="post_title form-required">
+    <th class="label" valign="top" scope="row"><label><?php _e('Title', 'tantan-flickr');?></label></th>
+    <td class="field"><input type="text" value="" id="photo-title" /></td>
+</tr>
+<!--
+<tr class="post_excerpt">
+    <th class="label" valign="top" scope="row"><label>Caption</label></th>
+    <td class="field"><input type="text" value="" id="photo-caption" /></td>
+</tr>
+-->
+<tr class="url">
+    <th class="label" valign="top" scope="row"><label><?php _e('Link URL', 'tantan-flickr');?></label></th>
+    <td class="field"><input type="text" value="" id="photo-url" /><br />
+		<button type="button" id="photo-url-none"   class="button photo-url-dest" value=""><?php _e('None', 'tantan-flickr');?></button>
+		<button type="button" id="photo-url-flickr" class="button photo-url-dest" value="" title="<?php _e('Link to the Flickr page for this photo', 'tantan-flickr');?>"><?php _e('Flickr', 'tantan-flickr');?></button>
+		<?php if ($linkToBlog):?>
+		<button type="button" id="photo-url-blog"   class="button photo-url-dest" value="" title="<?php _e('Link to this blog\'s page', 'tantan-flickr');?>"><?php _e('Blog', 'tantan-flickr');?></button>
+		<?php endif;?>
+<!--
+		<button type="button" class="button photo-url-dest" value="" title="Link to the image URL">File</button>
+		<button type="button" class="button photo-url-dest" value="" title="Link to this post">Post</button>
+-->
+		<p class="help"><?php _e('Enter a link URL or click above for presets.', 'tantan-flickr');?></p>
+    </td>
+</tr>
+<tr class="align">
+    <th class="label" valign="top" scope="row"><label><?php _e('Alignment', 'tantan-flickr');?></label></th>
+    <td class="field">
+		<input name="image-align" id="image-align-none" value="none" checked="checked" type="radio">
+		<label for="image-align-none" class="align image-align-none-label"><?php _e('None', 'tantan-flickr');?></label>
+		<input name="image-align" id="image-align-left" value="left" type="radio">
+		<label for="image-align-left" class="align image-align-left-label"><?php _e('Left', 'tantan-flickr');?></label>
+		<input name="image-align" id="image-align-center" value="center" type="radio">
+		<label for="image-align-center" class="align image-align-center-label"><?php _e('Center', 'tantan-flickr');?></label>
+		<input name="image-align" id="image-align-right" value="right" type="radio">
+		<label for="image-align-right" class="align image-align-right-label"><?php _e('Right', 'tantan-flickr');?></label>
+    </td>
+</tr><tr class="image-size">
+    <th class="label" valign="top" scope="row"><label><?php _e('Size', 'tantan-flickr');?></label></th>
+    <td class="field">
+		<input name="image-size" id="image-size-video" value="Video Player" type="radio">
+		<label for="image-size-video"><?php _e('Video Player', 'tantan-flickr');?></label>
+		<input name="image-size" id="image-size-square" value="Square" type="radio">
+		<label for="image-size-square"><?php _e('Square', 'tantan-flickr');?></label>
+		<input name="image-size" id="image-size-thumb" value="Thumbnail" type="radio">
+		<label for="image-size-thumb"><?php _e('Thumbnail', 'tantan-flickr');?></label>
+		<input name="image-size" id="image-size-small" value="Small" type="radio">
+		<label for="image-size-small"><?php _e('Small', 'tantan-flickr');?></label>
+		<input name="image-size" id="image-size-medium" value="Medium" type="radio">
+		<label for="image-size-medium"><?php _e('Medium', 'tantan-flickr');?></label>
+		<input name="image-size" id="image-size-large" value="Large" type="radio">
+		<label for="image-size-large"><?php _e('Large', 'tantan-flickr');?></label>
+		<input name="image-size" id="image-size-original" value="Original" type="radio">
+		<label for="image-size-original"><?php _e('Original', 'tantan-flickr');?></label>    
+    </td>
+</tr>
+<tr class="submit">
+    <td>&nbsp;</td>
+    <td class="savesend">
+        <input type="button" value="<?php _e('Insert into Post', 'tantan-flickr');?>" name="send" class="button send"/> 
+        <input type="button" value="<?php _e('Cancel', 'tantan-flickr');?>" name="cancel" class="button cancel"/> 
+        &nbsp; &nbsp;
+        <label for="image-close-check" id="image-close"><input type="checkbox" id="image-close-check" name="image-close-check" value="1" checked="checked" /> <?php _e('close after inserting photo', 'tantan-flickr');?></label> 
+        </td></tr>
+
+</tbody>
+</table>
+</form>
+</div>

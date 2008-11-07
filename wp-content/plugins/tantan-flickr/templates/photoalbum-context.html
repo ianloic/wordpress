@@ -9,34 +9,34 @@ This template displays next / prev thumbnails in the context of an album, photos
 <?php if ($context['prevphoto']['thumb']):?>
 <div class="prev">
 <a href="../<?php echo $context['prevphoto']['id']?>/<?php echo ($album ? $album['pagename2'].'-' : '').$context['prevphoto']['pagename']?>"><img src="<?php echo $context['prevphoto']['thumb']?>" /></a>
-<div class="label">Previous Photo</div>
+<div class="label"><?php _e('Previous Photo', 'tantan-flickr');?></div>
 </div>
 <?php else:?>
 <div class="prev nomore">
-<div class="label">you are on the first photo</div>
+<div class="label"><?php _e('you are on the first photo', 'tantan-flickr');?></div>
 </div>
 <?php endif;?>
 
 <?php if ($album):?>
 <div class="info">
 <strong><a href="../../<?php echo $album['pagename']?>"><?php echo $album['title']?></a></strong><br><br>
-<a href="../../<?php echo $album['pagename']?>" onclick="return openSlideShow('<?php echo $album['id']?>')">slideshow</a>
+<a href="../../<?php echo $album['pagename']?>" onclick="return openSlideShow('<?php echo $album['id']?>')"><?php _e('slideshow', 'tantan-flickr');?></a>
 </div>
 <?php elseif ($group):?>
 <div class="info">
 <strong><a href="../../<?php echo $group['pagename']?>"><?php echo $group['name']?></a></strong><br><br>
-<a href="../../<?php echo $group['pagename']?>" onclick="return openSlideShow('', '<?php echo $group['id']?>')">slideshow</a>
+<a href="../../<?php echo $group['pagename']?>" onclick="return openSlideShow('', '<?php echo $group['id']?>')"><?php _e('slideshow', 'tantan-flickr');?></a>
 </div>
 <?php endif; ?>
 
 <?php if ($context['nextphoto']['thumb']):?>
 <div class="next">
 <a href="../<?php echo $context['nextphoto']['id']?>/<?php echo ($album ? $album['pagename2'].'-' : '').$context['nextphoto']['pagename']?>"><img src="<?php echo $context['nextphoto']['thumb']?>" /></a>
-<div class="label">Next Photo</div>
+<div class="label"><?php _e('Next Photo', 'tantan-flickr');?></div>
 </div>
 <?php else:?>
 <div class="next nomore">
-<div class="label">you are on the last photo</div>
+<div class="label"><?php _e('you are on the last photo', 'tantan-flickr');?></div>
 </div>
 <?php endif;?>
 </div>

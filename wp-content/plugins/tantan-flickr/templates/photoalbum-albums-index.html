@@ -8,14 +8,23 @@ This template controls the front page of your gallery and displays a list of you
 
 global $TanTanFlickrPlugin;
 
-$TanTanFlickrPlugin->config['numAlbumPreviews'] = 3; // how many album previews to show
+$numAlbums = count($albums);
 
+if (isset($_GET['view']) && ($_GET['view'] == 'all')) {
+	include($TanTanFlickrPlugin->getDisplayTemplate('photoalbum-albums-index-all.html'));
+	return;
+} 
+
+// this template displays a single album on the photo album homepage
 include($TanTanFlickrPlugin->getDisplayTemplate('photoalbum-albums-index-highlight.html'));
 
+// this displays used tags
 include($TanTanFlickrPlugin->getDisplayTemplate('photoalbum-albums-index-tags.html'));
 
+// this displays all the other albums in your flickr account
 include($TanTanFlickrPlugin->getDisplayTemplate('photoalbum-albums-index-other-albums.html'));
 
-
+// this displays groups
 if (TANTAN_FLICKR_DISPLAYGROUPS) include($TanTanFlickrPlugin->getDisplayTemplate('photoalbum-albums-index-groups.html'));
+
 ?>

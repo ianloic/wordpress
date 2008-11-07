@@ -1,0 +1,23 @@
+<?php
+/*
+Copy this file into your current active theme's directory to customize this template
+
+This template lists out all your albums as thumbnails
+*/
+if (count($albums)): ?>
+<h2><?php _e('All Albums', 'tantan-flickr');?></h2>
+
+<div class="tt-older-posts albums albums-small albums-all">
+<?php
+foreach ($albums as $album):?>
+    <?php  $primaryPhoto = $flickr->getPhotoSizes($album['primary']); ?>
+    <div class="album">
+    <a href="album/<?php echo $album['id']?>/<?php echo $album['pagename']?>"><img class="highlight" 
+        src="<?php echo $primaryPhoto['Square']['source']?>" width="<?php echo $primaryPhoto['Square']['width']?>" height="<?php echo $primaryPhoto['Square']['height']?>" alt="" /></a><br />
+    <strong><?php echo $album['title'];?></strong>
+    </div>
+<?php endforeach; ?>
+</div>
+<?php endif; /*albums*/ ?>
+
+

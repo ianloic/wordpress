@@ -13,10 +13,10 @@ $page    - current page number we're on
 ?>
 <div class="navigation">
 <?php if ($hasPrev):?>
-<div class="alignleft"><a href="?page=<?php echo ($page-1);?>">&lt; Previous</a></div>
+<div class="alignleft"><a href="?page=<?php echo ($page-1);?>"><?php _e('&laquo; Previous');?></a></div>
 <?php endif;?>
 <?php if ($hasNext):?>
-<div class="alignright"><a href="?page=<?php echo ($page+1);?>">Next Page &gt;</a></div>
+<div class="alignright"><a href="?page=<?php echo ($page+1);?>"><?php _e('Next Page &raquo;');?></a></div>
 <?php endif;?>
 <?php if ($hasPrev || $hasNext):?>
 	<br clear="all" />

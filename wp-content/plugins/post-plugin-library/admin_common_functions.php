@@ -104,7 +104,7 @@ function ppl_options_from_post($options, $args) {
 			if ($options['num_terms'] < 1) $options['num_terms'] = 20;
 			break;
 		default:
-			$options[$arg] = $_POST[$arg];
+			$options[$arg] = trim($_POST[$arg]);
 		}
 	}
 	return $options;
@@ -133,6 +133,7 @@ function ppl_display_available_tags($plugin_name) {
 		<li title="">{gravatar}</li>
 		<li title="">{if}</li>
 		<li title="">{image}</li>
+		<li title="">{imagealt}</li>
 		<li title="">{imagesrc}</li>
 		<li title="">{link}</li>
 		<li title="">{php}</li>
@@ -220,12 +221,16 @@ function ppl_bug_form($options_key) {
 	inserts a form button to completely remove the plugin and all its options etc.
 
 */
-function ppl_plugin_eradicate_form($eradicate_action, $plugin_file) {
+function ppl_plugin_eradicate_form($plugin_file) {
 	if (isset($_POST['eradicate-plugin'])) {
 		check_admin_referer('eradicate-plugin'); 
 		if (ppl_confirm_eradicate()) {
 			if (defined('POC_CACHE_4')) poc_cache_flush();
-			$eradicate_action();
+			$file = ppl_plugin_basename($plugin_file);
+			if (!defined('WP_PLUGIN_DIR')) define('WP_PLUGIN_DIR', ABSPATH . 'wp-content/plugins'); 			if ( file_exists( WP_PLUGIN_DIR . '/' . dirname($file) . '/uninstall.php' ) ) {
+				define('WP_UNINSTALL_PLUGIN', $file);
+				include WP_PLUGIN_DIR . '/' . dirname($file) . '/uninstall.php';
+			}
 			ppl_deactivate_plugin($plugin_file);
 			echo '<div class="updated fade"><p>' . __('The plugin and all its settings have been completely removed', 'post_plugin_library') . '</p></div>';
 			exit;
@@ -256,7 +261,7 @@ function ppl_confirm_eradicate() {
 
 function ppl_deactivate_plugin($plugin_file) {
 	$current = get_option('active_plugins');
-	$plugin_file = substr($plugin_file, strlen(ABSPATH.PLUGINDIR)+1);
+	$plugin_file = substr($plugin_file, strlen(WP_PLUGIN_DIR)+1);
 	$plugin_file = str_replace('\\', '/', $plugin_file);
 	if (in_array($plugin_file, $current)) {
 		array_splice($current, array_search($plugin_file, $current), 1); 
@@ -276,6 +281,20 @@ function ppl_display_limit($limit) {
 	<tr valign="top">
 		<th scope="row"><?php _e('Number of posts to show:', 'post_plugin_library') ?></th>
 		<td><input name="limit" type="text" id="limit" value="<?php echo $limit; ?>" size="2" /></td>
+	</tr>
+	<?php
+}
+
+function ppl_display_unique($unique) {
+	?>
+	<tr valign="top">
+		<th scope="row"><?php _e('Show just one comment per post?', 'post_plugin_library') ?></th>
+		<td>
+		<select name="unique" id="unique" >
+		<option <?php if($unique == 'false') { echo 'selected="selected"'; } ?> value="false">No</option>
+		<option <?php if($unique == 'true') { echo 'selected="selected"'; } ?> value="true">Yes</option>
+		</select> 
+		</td>
 	</tr>
 	<?php
 }
@@ -695,15 +714,104 @@ function ppl_display_custom($custom) {
 	<?php
 }
 
+function ppl_display_append($options) {
+	?>
+	<tr valign="top">
+		<th scope="row"><?php _e('Output after post:', 'post_plugin_library') ?></th>
+		<td>
+			<table>
+			<tr><td style="border-bottom-width: 0">Activate</td><td style="border-bottom-width: 0">Priority</td><td style="border-bottom-width: 0">Parameters</td><td style="border-bottom-width: 0">Condition</td></tr>
+			<tr>
+			<td style="border-bottom-width: 0">			
+				<select name="append_on" id="append_on">
+				<option <?php if($options['append_on'] == 'false') { echo 'selected="selected"'; } ?> value="false">No</option>
+				<option <?php if($options['append_on'] == 'true') { echo 'selected="selected"'; } ?> value="true">Yes</option>
+				</select>
+			</td>
+			<td style="border-bottom-width: 0"><input name="append_priority" type="text" id="append_priority" value="<?php echo $options['append_priority']; ?>" size="3" /></td>
+			<td style="border-bottom-width: 0"><textarea name="append_parameters" id="append_parameters" rows="4" cols="38"><?php echo htmlspecialchars(stripslashes($options['append_parameters'])); ?></textarea></td>
+			<td style="border-bottom-width: 0"><textarea name="append_condition" id="append_condition" rows="4" cols="20"><?php echo htmlspecialchars(stripslashes($options['append_condition'])); ?></textarea></td>
+			</tr></table>
+		</td> 
+	</tr>
+	<?php
+}
+
+function ppl_display_feed($options) {
+	?>
+	<tr valign="top">
+		<th scope="row"><?php _e('Output in RSS feeds:', 'post_plugin_library') ?></th>
+		<td>
+			<table>
+			<tr><td style="border-bottom-width: 0">Activate</td><td style="border-bottom-width: 0">Priority</td><td style="border-bottom-width: 0">Parameters</td></tr>
+			<tr>
+			<td style="border-bottom-width: 0">			
+				<select name="feed_on" id="feed_on">
+				<option <?php if($options['feed_on'] == 'false') { echo 'selected="selected"'; } ?> value="false">No</option>
+				<option <?php if($options['feed_on'] == 'true') { echo 'selected="selected"'; } ?> value="true">Yes</option>
+				</select>
+			</td>
+			<td style="border-bottom-width: 0"><input name="feed_priority" type="text" id="feed_priority" value="<?php echo $options['feed_priority']; ?>" size="3" /></td>
+			<td style="border-bottom-width: 0"><textarea name="feed_parameters" id="feed_parameters" rows="4" cols="38"><?php echo htmlspecialchars(stripslashes($options['feed_parameters'])); ?></textarea></td>
+			</tr></table>
+		</td> 
+	</tr>
+	<?php
+}
+
+function ppl_display_widget($options) {
+	?>
+	<tr valign="top">
+		<th scope="row"><?php _e('Output in widget:', 'post_plugin_library') ?></th>
+		<td>
+			<table>
+			<tr><td style="border-bottom-width: 0"></td><td style="border-bottom-width: 0"></td><td style="border-bottom-width: 0">Parameters</td><td style="border-bottom-width: 0">Condition</td></tr>
+			<tr>
+			<td style="border-bottom-width: 0;visibility: hidden;">			
+				<select name="dummy" id="dummy1">
+				<option value="false">No</option>
+				<option value="true">Yes</option>
+				</select>
+			</td>
+			<td style="border-bottom-width: 0;visibility: hidden;"><input name="dummy2" type="text" id="dummy2" value="" size="3" /></td>
+			<td style="border-bottom-width: 0"><textarea name="widget_parameters" id="widget_parameters" rows="4" cols="38"><?php echo htmlspecialchars(stripslashes($options['widget_parameters'])); ?></textarea></td>
+			<td style="border-bottom-width: 0"><textarea name="widget_condition" id="widget_condition" rows="4" cols="20"><?php echo htmlspecialchars(stripslashes($options['widget_condition'])); ?></textarea></td>
+			</tr></table>
+		</td> 
+	</tr>
+	<?php
+}
+
+function ppl_display_feed_active($feed_active) {
+	?>
+	<tr valign="top">
+		<th scope="row"><?php _e('Add Similar Posts to feeds? (DEPRECATED! This setting will be removed in the next major release - use the placement settings instead)', 'post_plugin_library') ?></th>
+		<td>
+		<select name="feed_active" id="feed_active">
+		<option <?php if($feed_active == 'false') { echo 'selected="selected"'; } ?> value="false">No</option>
+		<option <?php if($feed_active == 'true') { echo 'selected="selected"'; } ?> value="true">Yes</option>
+		</select> 
+		</td>
+	</tr>
+	<?php
+}
+
 function ppl_display_content_filter($content_filter) {
 	?>
 	<tr valign="top">
-		<th scope="row"><?php _e('Replace special tags in content?', 'post_plugin_library') ?></th>
+		<th scope="row"><?php _e('Output in content:<br />(<em>via</em> special tags)', 'post_plugin_library') ?></th>
 		<td>
+			<table>
+			<tr><td style="border-bottom-width: 0">Activate</td></tr>
+			<tr>
+			<td style="border-bottom-width: 0">			
 			<select name="content_filter" id="content_filter">
 			<option <?php if($content_filter == 'false') { echo 'selected="selected"'; } ?> value="false">No</option>
 			<option <?php if($content_filter == 'true') { echo 'selected="selected"'; } ?> value="true">Yes</option>
 			</select>
+			</td>
+			</tr>
+			</table>
 		</td> 
 	</tr>
 	<?php
@@ -755,6 +863,60 @@ function ppl_display_sort($sort) {
 	<?php
 }
 
+function ppl_display_orderby($options) {
+	global $wpdb;
+	$limit = 30;
+	$keys = $wpdb->get_col( "
+		SELECT meta_key
+		FROM $wpdb->postmeta
+		WHERE meta_key NOT LIKE '\_%'
+		GROUP BY meta_key
+		ORDER BY meta_id DESC
+		LIMIT $limit" );
+	$metaselect = "<select id='orderby' name='orderby'>\n\t<option value=''></option>";
+	if ( $keys ) {
+		natcasesort($keys);
+		foreach ( $keys as $key ) {
+			$key = attribute_escape( $key );
+			if ($options['orderby'] == $key) {
+				$metaselect .= "\n\t<option selected='selected' value='$key'>$key</option>";
+			} else {
+				$metaselect .= "\n\t<option value='$key'>$key</option>";
+			}
+		}
+		$metaselect .= "</select>";
+	}
+
+	?>
+	<tr valign="top">
+		<th scope="row"><?php _e('Select output by custom field:', 'post_plugin_library') ?></th>
+		<td>
+			<table>
+			<tr><td style="border-bottom-width: 0">Field</td><td style="border-bottom-width: 0">Order</td><td style="border-bottom-width: 0">Case</td></tr>
+			<tr>
+			<td style="border-bottom-width: 0">
+			<?php echo $metaselect;	?>	
+			</td>
+			<td style="border-bottom-width: 0">
+				<select name="orderby_order" id="orderby_order">
+				<option <?php if($options['orderby_order'] == 'ASC') { echo 'selected="selected"'; } ?> value="ASC">ascending</option>
+				<option <?php if($options['orderby_order'] == 'DESC') { echo 'selected="selected"'; } ?> value="DESC">descending</option>
+				</select>
+			</td> 
+			<td style="border-bottom-width: 0">
+				<select name="orderby_case" id="orderby_case">
+				<option <?php if($options['orderby_case'] == 'false') { echo 'selected="selected"'; } ?> value="false">case-sensitive</option>
+				<option <?php if($options['orderby_case'] == 'true') { echo 'selected="selected"'; } ?> value="true">case-insensitive</option>
+				<option <?php if($options['orderby_case'] == 'num') { echo 'selected="selected"'; } ?> value="num">numeric</option>
+				</select>
+			</td> 
+			</tr>
+			</table>
+		</td>
+	</tr>
+	<?php
+}
+
 // now for similar_posts
 
 function ppl_display_num_terms($num_terms) {
@@ -790,20 +952,6 @@ function ppl_display_weights($options) {
 			<td style="border-bottom-width: 0"><label for="weight_title" style="float:left;">title:  </label><input name="weight_title" type="text" id="weight_title" value="<?php echo round(100 * $options['weight_title']); ?>" size="3" /> % </td>
 			<td style="border-bottom-width: 0"><label for="weight_tags" style="float:left;">tags:  </label><input name="weight_tags" type="text" id="weight_tags" value="<?php echo round(100 * $options['weight_tags']); ?>" size="3" /> % ( adds up to 100% )</td>
 			</tr></table>
-		</td>
-	</tr>
-	<?php
-}
-
-function ppl_display_feed_active($feed_active) {
-	?>
-	<tr valign="top">
-		<th scope="row"><?php _e('Add Similar Posts to feeds? (configured from own options page)', 'post_plugin_library') ?></th>
-		<td>
-		<select name="feed_active" id="feed_active">
-		<option <?php if($feed_active == 'false') { echo 'selected="selected"'; } ?> value="false">No</option>
-		<option <?php if($feed_active == 'true') { echo 'selected="selected"'; } ?> value="true">Yes</option>
-		</select> 
 		</td>
 	</tr>
 	<?php
@@ -918,7 +1066,7 @@ function ppl_get_plugin_data($plugin_file) {
 		$plugin_data = get_plugin_data($plugin_file);
 		if (!isset($plugin_data['Title'])) {
 			if ('' != $plugin_data['PluginURI'] && '' != $plugin_data['Name']) {
-				$plugin_data['Title'] = '<a href="' . $plugin_data['PluginURI'] . '" title="'. __( 'Visit plugin homepage' ) . '">' . $plugin_data['Name'] . '</a>';
+				$plugin_data['Title'] = '<a href="' . $plugin_data['PluginURI'] . '" title="'. __('Visit plugin homepage', 'post-plugin-library') . '">' . $plugin_data['Name'] . '</a>';
 			} else {
 				$plugin_data['Title'] = $name;
 			}
@@ -934,8 +1082,10 @@ function ppl_admin_footer($plugin_file, $donate_key='') {
 	$output[] = 'Version ' . $plugin_data['Version'];
 	$output[] = 'by ' . $plugin_data['Author'];
 	if ($donate_key) {
-		$donate_url = get_bloginfo('siteurl') . '/donate/' . $donate_key . '/';
-		$output[] = '<a href="' . $donate_url . '" rel="nofollow" title="If you like ' . $plugin_data['Name'] . ' plugin why not make a tiny/small/large donation towards its upkeep">All donations welcomed!</a>';
+		$donate_url = 'http://rmarsh.com/donate/' . $donate_key . '/';
+		// random shades of red, orange and yellow to attract attention -- subtly I hope
+		$colour = '#ff' . dechex(mt_rand(0, 255)) . '00';
+		$output[] = '<a href="' . $donate_url . '" style="font-weight: bold;color: '.$colour.';" rel="nofollow" title="If you like ' . $plugin_data['Name'] . ' plugin why not make a tiny/small/large donation towards its upkeep">All donations welcomed!</a>';
 	}
 	echo implode(' | ', $output) . '<br />';
 }

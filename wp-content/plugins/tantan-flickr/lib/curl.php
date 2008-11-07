@@ -5,8 +5,8 @@ Should also work with the HTTPS protocol
 
 Important: Not every method has been ported, just the ones that were needed.
 
-$Revision: 196 $
-$Date: 2008-07-08 23:52:25 -0400 (Tue, 08 Jul 2008) $
+$Revision: 321 $
+$Date: 2008-10-03 17:10:43 -0400 (Fri, 03 Oct 2008) $
 $URL: https://photo-album.googlecode.com/svn/trunk/tantan-flickr/lib/curl.php $
 */
 
@@ -71,6 +71,9 @@ class TanTanHTTPRequestCurl {
             default:
             case 'GET':
                 curl_setopt($this->curl, CURLOPT_HTTPGET, true);
+            break;
+            case 'HEAD':
+                curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, 'HEAD');
             break;
         }
     }
