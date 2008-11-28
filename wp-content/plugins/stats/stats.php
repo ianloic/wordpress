@@ -4,12 +4,16 @@ Plugin Name: WordPress.com Stats
 Plugin URI: http://wordpress.org/extend/plugins/stats/
 Description: Tracks views, post/page views, referrers, and clicks. Requires a WordPress.com API key.
 Author: Andy Skelton
-Version: 1.3.2
+Version: 1.3.4
 
 Requires WordPress 2.1 or later. Not for use with WPMU.
 
 Looking for a way to hide the gif? Put this in your stylesheet:
 img#wpstats{display:none}
+
+Recent changes:
+1.3.4 - Compatibility with WordPress 2.7
+1.3.3 - wpStats.update_postinfo no longer triggered by revision saves (post_type test)
 
 */
 
@@ -259,7 +263,6 @@ function stats_admin_page() {
 			<form method="post">
 			<?php wp_nonce_field('stats'); ?>
 			<input type="hidden" name="action" value="add_or_replace" />
-			<p><?php _e('According to the WordPress.com database, this API key is already associated with at least one self-hosted blog. You can <strong>add</strong> this as a new blog on your WordPress.com account or <strong>replace</strong> an existing blog and inherit its stats history.'); ?> </p>
 			<h3><?php _e('Add new blog to my account'); ?></h3>
 			<p><?php _e('Do this if this blog is new or has never been associated with your API key. This blog will be added to your WordPress.com account.'); ?></p>
 			<p><input type="submit" name="add" value="<?php echo js_escape(__('Add to WordPress.com account')); ?>" /></p>
@@ -377,6 +380,9 @@ function stats_update_bloginfo() {
 }
 
 function stats_update_post( $post_id ) {
+	if ( !in_array( get_post_type($post_id), array('post', 'page', 'attachment') ) )
+		return;
+
 	stats_add_call(
 		'wpStats.update_postinfo',
 		stats_get_api_key(),
@@ -581,9 +587,20 @@ function stats_dashboard_head() { ?>
 <script type="text/javascript">
 /* <![CDATA[ */
 jQuery( function($) {
-	var dashStats = $('#dashboard_stats div.dashboard-widget-content');
-	var h = parseInt( dashStats.parent().height() ) - parseInt( dashStats.prev().height() );
-	dashStats.not( '.dashboard-widget-control' ).load('index.php?page=stats&noheader&width=' + dashStats.width() + '&height=' + h.toString() );
+	var dashStats = $('#dashboard_stats.postbox div.inside');
+	if ( dashStats.find( '.dashboard-widget-control-form' ).size() ) {
+		return;
+	}
+
+	if ( !dashStats.size() ) {
+		dashStats = $('#dashboard_stats div.dashboard-widget-content');
+		var h = parseInt( dashStats.parent().height() ) - parseInt( dashStats.prev().height() );
+		var args = 'width=' + dashStats.width() + '&height=' + h.toString();
+	} else {
+		var args = 'width=' + ( dashStats.prev().width() * 2 ).toString();
+	}
+
+	dashStats.not( '.dashboard-widget-control' ).load('index.php?page=stats&noheader&' + args );
 } );
 /* ]]> */
 </script>
@@ -592,6 +609,41 @@ jQuery( function($) {
 #dashboard_stats .dashboard-widget-content {
 	padding-top: 25px;
 }
+#stats-info h4 {
+	font-size: 1em;
+	margin: 0 0 .3em;
+}
+<?php if ( version_compare( '2.7-z', $GLOBALS['wp_version'], '<=' ) ) : ?>
+#dashboard_stats {
+	overflow-x: hidden;
+}
+#dashboard_stats #stats-graph {
+	margin: 0;
+}
+#stats-info {
+	border-top: 1px solid #ccc;
+}
+#stats-info .stats-section {
+	width: 50%;
+	float: left;
+}
+#stats-info .stats-section-inner {
+	margin: 1em 0;
+}
+#stats-info div#active {
+	border-top: 1px solid #ccc;
+}
+#stats-info p {
+	margin: 0 0 .25em;
+	color: #999;
+}
+#stats-info div#top-search p {
+	color: #333;
+}
+#stats-info p a {
+	display: block;
+}
+<?php else : ?>
 #stats-graph {
 	width: 50%;
 	float: left;
@@ -606,13 +658,11 @@ jQuery( function($) {
 #stats-info div#active {
 	margin-bottom: 0;
 }
-#stats-info h4 {
-	font-size: 1em;
-	margin: 0 0 .3em;
-}
 #stats-info p {
 	margin: 0;
+	color: #999;
 }
+<?php endif; ?>
 /* ]]> */
 </style>
 <?php
@@ -734,49 +784,63 @@ function stats_dashboard_widget_content() {
 
 	$src = clean_url( "http://dashboard.wordpress.com/wp-admin/index.php?page=estats&blog=$blog_id&noheader=true&chart&unit=$options[chart]&width=$_width&height=$_height" );
 
-	echo "<iframe id='stats-graph' frameborder='0' style='width: {$width}px; height: {$height}px; overflow: hidden' src='$src'></iframe>";
+	echo "<iframe id='stats-graph' class='stats-section' frameborder='0' style='width: {$width}px; height: {$height}px; overflow: hidden' src='$src'></iframe>";
 
 	$post_ids = array();
 
-	foreach ( $top_posts = stats_get_csv( 'postviews', "days=$options[top]" ) as $post )
+	if ( version_compare( '2.7-z', $GLOBALS['wp_version'], '<=' ) ) {
+		$csv_args = array( 'top' => '&limit=8', 'active' => '&limit=5', 'search' => '&limit=5' );
+		$printf = __( '%s %s Views' );
+	} else {
+		$csv_args = array( 'top' => '', 'active' => '', 'search' => '' );
+		$printf = __( '%s, %s views' );
+	}
+
+	foreach ( $top_posts = stats_get_csv( 'postviews', "days=$options[top]$csv_args[top]" ) as $post )
 		$post_ids[] = $post['post_id'];
-	foreach ( $active_posts = stats_get_csv( 'postviews', "days=$options[active]" ) as $post )
+	foreach ( $active_posts = stats_get_csv( 'postviews', "days=$options[active]$csv_args[active]" ) as $post )
 		$post_ids[] = $post['post_id'];
 
 	// cache
 	get_posts( array( 'include' => join( ',', array_unique($post_ids) ) ) );
 
 	$searches = array();
-	foreach ( $search_terms = stats_get_csv( 'searchterms', "days=$options[search]" ) as $search_term )
+	foreach ( $search_terms = stats_get_csv( 'searchterms', "days=$options[search]$csv_args[search]" ) as $search_term )
 		$searches[] = $search_term['searchterm'];
 
 ?>
 <div id="stats-info">
-	<div id="top-posts">
-		<h4><?php _e( 'Top Posts' ); ?></h4>
+	<div id="top-posts" class='stats-section'>
+		<div class="stats-section-inner">
+		<h4 class="heading"><?php _e( 'Top Posts' ); ?></h4>
 		<?php foreach ( $top_posts as $post ) : if ( !get_post( $post['post_id'] ) ) continue; ?>
 		<p><?php printf(
-			__( '%s, %s views' ),
+			$printf,
 			'<a href="' . get_permalink( $post['post_id'] ) . '">' . get_the_title( $post['post_id'] ) . '</a>',
 //			'<a href="' . $post['post_permalink'] . '">' . $post['post_title'] . '</a>',
 			number_format_i18n( $post['views'] )
 		); ?></p>
 		<?php endforeach; ?>
+		</div>
 	</div>
-	<div id="top-search">
-		<h4><?php _e( 'Top Searches' ); ?></h4>
+	<div id="top-search" class='stats-section'>
+		<div class="stats-section-inner">
+		<h4 class="heading"><?php _e( 'Top Searches' ); ?></h4>
 		<p><?php echo join( ',&nbsp; ', $searches );?></p>
+		</div>
 	</div>
-	<div id="active">
-		<h4><?php _e( 'Most Active' ); ?></h4>
+	<div id="active" class='stats-section'>
+		<div class="stats-section-inner">
+		<h4 class="heading"><?php _e( 'Most Active' ); ?></h4>
 		<?php foreach ( $active_posts as $post ) : if ( !get_post( $post['post_id'] ) ) continue; ?>
 		<p><?php printf(
-			__( '%s, %s views' ),
+			$printf,
 			'<a href="' . get_permalink( $post['post_id'] ) . '">' . get_the_title( $post['post_id'] ) . '</a>',
 //			'<a href="' . $post['post_permalink'] . '">' . $post['post_title'] . '</a>',
 			number_format_i18n( $post['views'] )
 		); ?></p>
 		<?php endforeach; ?>
+		</div>
 	</div>
 </div>
 <br class="clear" />
@@ -818,5 +882,3 @@ add_filter( 'xmlrpc_methods', 'stats_xmlrpc_methods' );
 
 define( 'STATS_VERSION', '2' );
 define( 'STATS_XMLRPC_SERVER', 'http://wordpress.com/xmlrpc.php' );
-
-?>
