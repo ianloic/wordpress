@@ -4,7 +4,7 @@ Plugin Name: Google Analytics for WordPress
 Plugin URI: http://yoast.com/wordpress/analytics/
 Description: This plugin makes it simple to add Google Analytics with extra search engines and automatic clickout and download tracking to your WordPress blog. 
 Author: Joost de Valk
-Version: 2.6.3
+Version: 2.6.7
 Author URI: http://yoast.com/
 License: GPL
 
@@ -35,9 +35,32 @@ if ( ! class_exists( 'GA_Admin' ) ) {
 			global $wpdb;
 			if ( function_exists('add_submenu_page') ) {
 				add_submenu_page('plugins.php', 'Google Analytics for WordPress Configuration', 'Google Analytics', 9, basename(__FILE__), array('GA_Admin','config_page'));
+				add_filter( 'plugin_action_links', array( 'GA_Admin', 'filter_plugin_actions'), 10, 2 );
+				add_filter( 'ozh_adminmenu_icon', array( 'GA_Admin', 'add_ozh_adminmenu_icon' ) );				
 			}
 		} // end add_GA_config_page()
 
+		function add_ozh_adminmenu_icon( $hook ) {
+			static $gawpicon;
+			if (!$gawpicon) {
+				$gawpicon = WP_CONTENT_URL . '/plugins/' . plugin_basename(dirname(__FILE__)). '/chart_curve.png';
+			}
+			if ($hook == 'googleanalytics.php') return $gawpicon;
+			return $hook;
+		}
+
+		function filter_plugin_actions( $links, $file ){
+			//Static so we don't call plugin_basename on every plugin row.
+			static $this_plugin;
+			if ( ! $this_plugin ) $this_plugin = plugin_basename(__FILE__);
+
+			if ( $file == $this_plugin ){
+				$settings_link = '<a href="plugins.php?page=googleanalytics.php">' . __('Settings') . '</a>';
+				array_unshift( $links, $settings_link ); // before other links
+			}
+			return $links;
+		}
+		
 		function config_page() {
 			global $dlextensions;
 			if ( $_GET['reset'] == "true") {
@@ -117,23 +140,11 @@ if ( ! class_exists( 'GA_Admin' ) ) {
 									Analytics code in your blog, so you don't have to
 									edit any PHP. If you don't have a Google Analytics
 									account yet, you can get one at 
-									<a href="https://www.google.com/analytics/home/">analytics.google.com</a>.</p>
+									<a href="https://www.google.com/analytics/">google.com/analyics</a>.</p>
 
 								<p>In the Google interface, when you "Add Website 
-									Profile" you are shown a piece of JavaScript that
-									you are told to insert into the page, in that script is a 
-									unique string that identifies the website you 
-									just defined, that is your User Account string
-									(it's shown in <strong>bold</strong> in the example below).</p>
-								<tt>&lt;script type="text/javascript"&gt;<br/>
-	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-	&lt;/script&gt;<br/>
-	&lt;script type="text/javascript"&gt;<br/>
-	var pageTracker = _gat._getTracker("<strong><?php echo($mulch);?></strong>");<br/>
-	pageTracker._initData();<br/>
-	pageTracker._trackPageview();<br/>
-	&lt;/script&gt;</tt>
+									Profile" you are shown a Web Property ID, a number that starts with "UA-". 
+									Copy paste that into the box above.</p>
 								<p>Once you have entered your User Account String in
 								   the box above your pages will be trackable by
 									Google Analytics.</p>
@@ -364,8 +375,10 @@ if ( ! class_exists( 'GA_Filter' ) ) {
 			preg_match($hostPattern, $uri, $matches);
 			$host = $matches[2];
 			preg_match($domainPattern, $host, $matches);
-			return array("domain"=>$matches[0],"host"=>$host);    
-
+			if (isset($matches[0]))
+				return array("domain"=>$matches[0],"host"=>$host);    
+			else
+				return array("domain"=>"","host"=>"");
 		}
 
 		function ga_parse_link($leaf, $matches){
@@ -374,7 +387,7 @@ if ( ! class_exists( 'GA_Filter' ) ) {
 			$options  = get_option('GoogleAnalyticsPP');
 			
 			$target = GA_Filter::ga_get_domain($matches[3]);
-			$coolbit = "";
+			$coolBit = "";
 			$extension = substr($matches[3],-3);
 			$dlextensions = split(",",$options['dlextensions']);
 			if ( $target["domain"] != $origin["domain"] ){
@@ -402,7 +415,7 @@ if ( ! class_exists( 'GA_Filter' ) ) {
 		}
 
 		function the_content($text) {
-			static $anchorPattern = '/<a (.*?)href="(.*?)\/\/(.*?)"(.*?)>(.*?)<\/a>/i';
+			static $anchorPattern = '/<a (.*?)href=[\'\"](.*?)\/\/([^\'\"]+?)[\'\"](.*?)>(.*?)<\/a>/i';
 			$text = preg_replace_callback($anchorPattern,array('GA_Filter','ga_parse_article_link'),$text);
 			return $text;
 		}
@@ -421,7 +434,7 @@ if ( ! class_exists( 'GA_Filter' ) ) {
 			if ($matches[2] == "") return $text;
 
 			$target = GA_Filter::ga_get_domain($matches[2]);
-			$coolbit = "";
+			$coolBit = "";
 			$origin = GA_Filter::ga_get_domain($_SERVER["HTTP_HOST"]);
 			if ( $target["domain"] != $origin["domain"]  ){
 				if ($options['domainorurl'] == "domain") {
@@ -453,13 +466,6 @@ if ( ! class_exists( 'GA_Filter' ) ) {
 
 $version = "0.61";
 $uakey = "analytics";
-
-if (function_exists("get_option")) {
-	if ($wp_uastring_takes_precedence) {
-		$options  = get_option('GoogleAnalyticsPP');
-		$uastring = $options['uastring'];
-	}
-} 
 
 $mulch = ($uastring=""?"##-#####-#":$uastring);
 $gaf = new GA_Filter();
