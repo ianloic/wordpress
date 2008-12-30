@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Google XML Sitemaps 3.1\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2008-05-23 21:08+0800\n"
+"PO-Revision-Date: 2008-12-22 02:51+0800\n"
 "Last-Translator: dupola <dupola.com@gmail.com>\n"
 "Language-Team: dupola <dupola.com@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -13,14 +13,6 @@ msgstr ""
 "X-Poedit-Basepath: D:\\usr\\www\\wp-content\\plugins\\google-sitemap-generator\n"
 "X-Poedit-KeywordsList: _e;__\n"
 "X-Poedit-SearchPath-0: D:\\usr\\www\\wp-content\\plugins\\google-sitemap-generator\n"
-
-# C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:2415
-msgid "XML-Sitemap Generator"
-msgstr "XML-Sitemap 生成器"
-
-# C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:2415
-msgid "XML-Sitemap"
-msgstr "XML-Sitemap"
 
 # C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:846
 msgid "Comment Count"
@@ -92,7 +84,7 @@ msgid "No thanks, please don't bug me anymore!"
 msgstr "不，请别再再骚扰我啦！"
 
 # D:\usr\www\wp-content\plugins\google-sitemap-generator/sitemap-ui.php:67
-msgid "Your sitemap is beeing refreshed at the moment. Depending on your blog size this might take some time!"
+msgid "Your sitemap is being refreshed at the moment. Depending on your blog size this might take some time!"
 msgstr "你的 sitemap 已经更新了。Blog 配置不同，它完全生效的时间也不同。"
 
 # D:\usr\www\wp-content\plugins\google-sitemap-generator/sitemap-ui.php:69
@@ -470,8 +462,8 @@ msgstr "你的 Application ID:"
 
 # C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:3155
 #, php-format
-msgid "Don't you have such a key? <a href=\"%s1\">Request one here</a>!</a> %s2"
-msgstr "没有 key？<a href=\"%s1\">点这里申请一个</a>!</a> %s2"
+msgid "Don't you have such a key? <a href=\"%s1\">Request one here</a>! %s2"
+msgstr "没有 key？<a href=\"%s1\">点这里申请一个</a>! %s2"
 
 # C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:3099
 #, php-format
@@ -545,14 +537,6 @@ msgstr "启用 MySQL 标准模式。仅在 MySQL 发生错误的时候使用。(
 # C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:3166
 msgid "Build the sitemap in a background process (You don't have to wait when you save a post)"
 msgstr "在后台建立 sitemap（你不需要在保存日志时等待）"
-
-# C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:3206
-msgid "Exclude the following posts or pages:"
-msgstr "不包括下面的日志或页面："
-
-# C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:3206
-msgid "List of IDs, separated by comma"
-msgstr "ID 列表，用英文逗号隔开"
 
 # C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:3144
 msgid "Additional pages"
@@ -652,7 +636,7 @@ msgstr "检查地址"
 
 # C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:3365
 msgid "Custom location"
-msgstr "自定义设置"
+msgstr "自定义路径"
 
 # C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:3369
 msgid "Absolute or relative path to the sitemap file, including name."
@@ -675,17 +659,17 @@ msgstr "sitemap 内容"
 msgid "Include homepage"
 msgstr "包含首页"
 
-# D:\usr\www\wp-content\plugins\google-sitemap-generator/sitemap-ui.php:1013
-msgid "Include all pages of multi-page posts (&lt;!--nextpage--&gt;)"
-msgstr "包括所有多重页面 (&lt;!--nextpage--&gt;)"
-
 # C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:3411
 msgid "Include posts"
 msgstr "包含日志"
 
+# D:\usr\www\wp-content\plugins\google-sitemap-generator/sitemap-ui.php:1013
+msgid "Include following pages of multi-page posts (&lt;!--nextpage--&gt;)"
+msgstr "包括所有多重页面 (&lt;!--nextpage--&gt;)"
+
 # C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:3417
 msgid "Include static pages"
-msgstr "包含统计页面"
+msgstr "包含独立页面"
 
 # C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:3423
 msgid "Include categories"
@@ -702,6 +686,39 @@ msgstr "包含 Tag 页面"
 # C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:3443
 msgid "Include author pages"
 msgstr "包含作者页面"
+
+# D:\usr\www\wp-content\plugins\google-sitemap-generator/sitemap-ui.php:981
+msgid "Excluded items"
+msgstr "不包含的项目"
+
+# C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:3423
+msgid "Excluded categories"
+msgstr "不包含分类"
+
+# D:\usr\www\wp-content\plugins\google-sitemap-generator/sitemap-ui.php:985
+msgid "Using this feature will increase build time and memory usage!"
+msgstr "使用这个特性将增大建立时间和使用内存！"
+
+# D:\usr\www\wp-content\plugins\google-sitemap-generator/sitemap-ui.php:992
+#, php-format
+msgid "This feature requires at least WordPress 2.5, you are using %s"
+msgstr "这个特性要求 WordPress 版本至少是 2.5，你正在使用  %s"
+
+# C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:3411
+msgid "Exclude posts"
+msgstr "不包含日志"
+
+# C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:3206
+msgid "Exclude the following posts or pages:"
+msgstr "不包括下面的日志或页面："
+
+# C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:3206
+msgid "List of IDs, separated by comma"
+msgstr "ID 列表，用英文逗号隔开"
+
+# D:\usr\www\wp-content\plugins\google-sitemap-generator/sitemap-ui.php:999
+msgid "Child posts will not automatically be excluded!"
+msgstr "子日志将自动排除，不包含在内！"
 
 # C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:3457
 msgid "Change frequencies"
@@ -723,7 +740,7 @@ msgstr "日志"
 # C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:3481
 # C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:3553
 msgid "Static pages"
-msgstr "统计页面"
+msgstr "独立页面"
 
 # C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:3487
 # C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:3559
@@ -771,4 +788,12 @@ msgstr "更新设置"
 # C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:3591
 msgid "Reset options"
 msgstr "重置设置"
+
+# C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:2415
+msgid "XML-Sitemap Generator"
+msgstr "XML-Sitemap 生成器"
+
+# C:\Inetpub\wwwroot\wp\wp-content\plugins\sitemap_beta/sitemap.php:2415
+msgid "XML-Sitemap"
+msgstr "XML-Sitemap"
 

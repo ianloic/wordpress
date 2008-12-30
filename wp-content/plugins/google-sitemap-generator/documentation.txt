@@ -180,8 +180,15 @@
  2008-05-27     3.1.0.1 Extracted UI JS to external file
                         Enabled the option to include following pages of multi-page posts
                         Script tries to raise memory and time limit if active
-
-                        
+ 2008-12-21     3.1.1   Fixed redirect issue if wp-admin is rewritten via mod_rewrite, thanks to macjoost
+                        Fixed wrong path to assets, thanks PozHonks
+                        Fixed wrong plugin URL if wp-content was renamed / redirected, thanks to wnorris
+                        Updated WP User Interface for 2.7
+                        Various other small things
+ 2008-12-26     3.1.2   Changed the way the stylesheet is saved (default / custom stylesheet)
+                        Sitemap is now build when page is published
+                        Removed support for static robots.txt files, this is now handled via WordPress
+                        Added compat. exceptions for WP 2.0 and WP 2.1
                         
 
 

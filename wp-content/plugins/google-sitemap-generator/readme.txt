@@ -3,7 +3,8 @@ Contributors: arnee
 Donate link: http://www.arnebrachhold.de/redir/sitemap-paypal
 Tags: google, sitemaps, google sitemaps, yahoo, msn, ask, live, xml sitemap, xml
 Requires at least: 2.1
-Stable tag: 3.1.0.1
+Tested up to: 2.7
+Stable tag: 3.1.1
 
 This plugin will create a Google sitemaps compliant XML-Sitemap of your WordPress blog.
 
@@ -11,7 +12,7 @@ This plugin will create a Google sitemaps compliant XML-Sitemap of your WordPres
 
 This plugin will create a Google sitemaps compliant XML-Sitemap of your WordPress blog. It supports all of the WordPress generated pages as well as custom ones. Everytime you edit or create a post, your sitemap is updated and all major search engines that support the sitemap protocol, like ASK.com, Google, MSN Search and YAHOO, are notified about the update.
 
-Plugin related Links:
+Related Links:
 
 * <a href="http://www.arnebrachhold.de/projects/wordpress-plugins/google-xml-sitemaps-generator/" title="Google XML Sitemaps Plugin for WordPress">Plugin Homepage</a>
 * <a href="http://www.arnebrachhold.de/projects/wordpress-plugins/google-xml-sitemaps-generator/changelog/" title="Changelog of the Google XML Sitemaps Plugin for WordPress">Changelog</a>
@@ -43,7 +44,7 @@ No, only if you want to. Default values should be ok!
 
 = Does this plugin work with all WordPress versions? =
 
-This version works with WordPress 2.1 and better. If you're using an older version, plese check the [Google Sitemaps Plugin Homepage](http://www.arnebrachhold.de/projects/wordpress-plugins/google-xml-sitemaps-generator/ "Google (XML) Sitemap Generator Plugin Homepage") for the legacy releases.
+This version works with WordPress 2.1 and better. If you're using an older version, plese check the [Google Sitemaps Plugin Homepage](http://www.arnebrachhold.de/projects/wordpress-plugins/google-xml-sitemaps-generator/ "Google (XML) Sitemap Generator Plugin Homepage") for the legacy releases. There is a working release for every WordPress version since 1.5
 
 = I get an fopen and / or permission denied error or my sitemap files could not be written =
 
@@ -63,7 +64,9 @@ The changelog is maintened on [here](http://www.arnebrachhold.de/projects/wordpr
 
 == Screenshots ==
 
-1. Administration interface in WordPress 2.
+1. Administration interface in WordPress 2.7
+2. Administration interface in WordPress 2.5
+3. Administration interface in WordPress 2.0
 
 == Licence ==
 
