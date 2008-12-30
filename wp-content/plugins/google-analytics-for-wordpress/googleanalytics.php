@@ -4,7 +4,7 @@ Plugin Name: Google Analytics for WordPress
 Plugin URI: http://yoast.com/wordpress/analytics/
 Description: This plugin makes it simple to add Google Analytics with extra search engines and automatic clickout and download tracking to your WordPress blog. 
 Author: Joost de Valk
-Version: 2.6.7
+Version: 2.7
 Author URI: http://yoast.com/
 License: GPL
 
@@ -63,7 +63,7 @@ if ( ! class_exists( 'GA_Admin' ) ) {
 		
 		function config_page() {
 			global $dlextensions;
-			if ( $_GET['reset'] == "true") {
+			if ( isset($_GET['reset']) && $_GET['reset'] == "true") {
 				$options['dlextensions'] = 'doc,exe,.js,pdf,ppt,tgz,zip,xls';
 				$options['dlprefix'] = '/downloads';
 				$options['artprefix'] = '/outbound/article';
@@ -82,7 +82,7 @@ if ( ! class_exists( 'GA_Admin' ) ) {
 				check_admin_referer('analyticspp-config');
 				$options['uastring'] = $_POST['uastring'];
 				
-				foreach (array('dlextensions', 'dlprefix', 'artprefix', 'comprefix', 'comautprefix', 'blogrollprefix', 'domainorurl') as $option_name) {
+				foreach (array('dlextensions', 'dlprefix', 'artprefix', 'comprefix', 'comautprefix', 'blogrollprefix', 'domainorurl','position') as $option_name) {
 					if (isset($_POST[$option_name])) {
 						$options[$option_name] = strtolower($_POST[$option_name]);
 					}
@@ -102,7 +102,6 @@ if ( ! class_exists( 'GA_Admin' ) ) {
 
 				update_option('GoogleAnalyticsPP', $options);
 			}
-			$mulch = ($uastring=""?"##-#####-#":$uastring);
 
 			$options  = get_option('GoogleAnalyticsPP');
 			?>
@@ -206,13 +205,24 @@ if ( ! class_exists( 'GA_Admin' ) ) {
 							<label for="domainorurl">Track full URL of outbound clicks or just the domain?</label>
 						</th>
 						<td>
-							<select name="domainorurl" id="domainorurl">
+							<select name="domainorurl" id="domainorurl" style="width:200px;">
 								<option value="domain"<?php if ($options['domainorurl'] == 'domain') { echo ' selected="selected"';} ?>>Just the domain</option>
 								<option value="url"<?php if ($options['domainorurl'] == 'url') { echo ' selected="selected"';} ?>>Track the complete URL</option>
 							</select>
 						</td>
 					</tr>
 						<?php } ?>
+					<tr>
+						<th scope="row" valign="top">
+							<label for="position">Track full URL of outbound clicks or just the domain?</label>
+						</th>
+						<td>
+							<select name="position" id="position" style="width:200px;">
+								<option value="footer"<?php if ($options['position'] == 'footer' || $options['position'] == "") { echo ' selected="selected"';} ?>>In the footer (default)</option>
+								<option value="header"<?php if ($options['position'] == 'header') { echo ' selected="selected"';} ?>>In the header</option>
+							</select>
+						</td>
+					</tr>						
 					<tr>
 						<th scope="row" valign="top">
 							<label for="trackoutbound">Track outbound clicks<br/>
@@ -224,10 +234,11 @@ if ( ! class_exists( 'GA_Admin' ) ) {
 					</tr>
 					<tr>
 						<th scope="row" valign="top">
-							<label for="trackadsense">Track AdSense clicks</label>
+							<label for="trackadsense">Track AdSense</label><br/>
+							<small>This requires integration of your Analytics and AdSense account, for help, <a href="https://www.google.com/adsense/support/bin/topic.py?topic=15007">look here</a>.</small>
 						</th>
 						<td>
-							<input type="checkbox" id="trackadsense" name="trackadsense" <?php if ($options['trackadsense']) echo ' checked="checked" '; ?>/> 
+							<input type="checkbox" id="trackadsense" name="trackadsense" <?php if ($options['trackadsense']) echo ' checked="checked" '; ?>/>
 						</td>
 					</tr>
 					<tr>
@@ -359,10 +370,20 @@ if ( ! class_exists( 'GA_Filter' ) ) {
 			}
 		}
 
-		function track_adsense() {
-			global $gapppluginpath;
-			echo("\t<script src=\"".$gapppluginpath."adsense-track.js\" type=\"text/javascript\"></script>\n");
-		}
+		/*
+		 * Insert the AdSense parameter code into the page. This'll go into the header per Google's instructions.
+		 */
+		function spool_adsense() {
+			$options  = get_option('GoogleAnalyticsPP');
+			if ($options["uastring"] != "" && (!current_user_can('edit_users') || $options["admintracking"]) && !is_preview() ) { ?>
+				
+	<script type="text/javascript">
+		window.google_analytics_uacct = "<?php echo $options["uastring"]; ?>";
+	</script>
+	<?php
+			}
+		}		
+
 		/* Create an array which contians:
 		 * "domain" e.g. boakes.org
 		 * "host" e.g. store.boakes.org
@@ -447,6 +468,8 @@ if ( ! class_exists( 'GA_Filter' ) ) {
 		}
 		
 		function bookmarks($bookmarks) {
+			$options  = get_option('GoogleAnalyticsPP');
+			
 			if (!is_admin() && (!current_user_can('edit_users') || $options['admintracking'] ) ) {
 				$options  = get_option('GoogleAnalyticsPP');
 
@@ -501,11 +524,14 @@ if ($options['trackoutbound']) {
 	add_filter('get_comment_author_link', array('GA_Filter','comment_author_link'), 99);
 }
 
-// adds the footer so the javascript is loaded
-add_action('wp_footer', array('GA_Filter','spool_analytics'));	
-
 if ($options['trackadsense']) {
-	add_action('wp_footer', array('GA_Filter','track_adsense'));	
+	add_action('wp_head', array('GA_Filter','spool_adsense'),10);	
+}
+
+if ($options['position'] == 'footer' || $options['position'] == "") {
+	add_action('wp_footer', array('GA_Filter','spool_analytics'));	
+} else {
+	add_action('wp_head', array('GA_Filter','spool_analytics'),20);	
 }
 
 ?>
