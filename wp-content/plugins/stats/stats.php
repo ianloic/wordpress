@@ -4,7 +4,8 @@ Plugin Name: WordPress.com Stats
 Plugin URI: http://wordpress.org/extend/plugins/stats/
 Description: Tracks views, post/page views, referrers, and clicks. Requires a WordPress.com API key.
 Author: Andy Skelton
-Version: 1.3.5
+Version: 1.3.7
+License: GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
 Requires WordPress 2.1 or later. Not for use with WPMU.
 
@@ -12,6 +13,8 @@ Looking for a way to hide the gif? Put this in your stylesheet:
 img#wpstats{display:none}
 
 Recent changes:
+1.3.7 - If blog dashboard is https, stats iframe should be https.
+1.3.6 - fopen v wp_remote_fopen CSV fix from A. Piccinelli
 1.3.5 - Compatibility with WordPress 2.7
 1.3.4 - Compatibility with WordPress 2.7
 1.3.3 - wpStats.update_postinfo no longer triggered by revision saves (post_type test)
@@ -736,15 +739,14 @@ function stats_get_remote_csv( $url ) {
 	// Yay!
 	if ( ini_get('allow_url_fopen') ) {
 		$fp = @fopen($url, 'r');
-		if ( !$fp )
-			return false;
-
-		//stream_set_timeout($fp, $timeout); // Requires php 4.3
-		$data = array();
-		while ( $remote_read = fgetcsv($fp, 1000) )
-			$data[] = $remote_read;
-		fclose($fp);
-		return $data;
+		if ( $fp ) {
+			//stream_set_timeout($fp, $timeout); // Requires php 4.3
+			$data = array();
+			while ( $remote_read = fgetcsv($fp, 1000) )
+				$data[] = $remote_read;
+			fclose($fp);
+			return $data;
+		}
 	}
 
 	// Boo - we need to use wp_remote_fopen for maximium compatibility
@@ -782,7 +784,9 @@ function stats_dashboard_widget_content() {
 
 	$options = stats_dashboard_widget_options();
 
-	$src = clean_url( "http://dashboard.wordpress.com/wp-admin/index.php?page=estats&blog=$blog_id&noheader=true&chart&unit=$options[chart]&width=$_width&height=$_height" );
+	$http = ( !empty( $_SERVER['HTTPS'] ) ) ? 'https' : 'http';
+
+	$src = clean_url( "$http://dashboard.wordpress.com/wp-admin/index.php?page=estats&blog=$blog_id&noheader=true&chart&unit=$options[chart]&width=$_width&height=$_height" );
 
 	echo "<iframe id='stats-graph' class='stats-section' frameborder='0' style='width: {$width}px; height: {$height}px; overflow: hidden' src='$src'></iframe>";
 
