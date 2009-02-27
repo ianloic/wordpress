@@ -5,12 +5,12 @@
  Description: Allows the use of OpenID for account registration, authentication, and commenting.  Also includes an OpenID provider which can turn WordPress author URLs into OpenIDs.
  Author: DiSo Development Team
  Author URI: http://diso-project.org/
- Version: 3.1.4
+ Version: 3.2.1
  License: Dual GPL (http://www.fsf.org/licensing/licenses/info/GPLv2.html) and Modified BSD (http://www.fsf.org/licensing/licenses/index_html#ModifiedBSD)
  */
 
 define ( 'OPENID_PLUGIN_REVISION', preg_replace( '/\$Rev: (.+) \$/', '\\1',
-	'$Rev: 518 $') ); // this needs to be on a separate line so that svn:keywords can work its magic
+	'$Rev: 519 $') ); // this needs to be on a separate line so that svn:keywords can work its magic
 
 // last plugin revision that required database schema changes
 define ( 'OPENID_DB_REVISION', 24426);
@@ -35,10 +35,19 @@ require_once 'server.php';
 require_once 'store.php';
 restore_include_path();
 
+// register activation (and similar) hooks
+register_activation_hook('openid/openid.php', 'openid_activate_plugin');
+register_deactivation_hook('openid/openid.php', 'openid_deactivate_plugin');
+if ( function_exists('register_uninstall_hook') ) {
+	register_uninstall_hook('openid/openid.php', 'openid_uninstall_plugin');
+}
+add_action( 'init', 'openid_activate_wpmu' ); // wpmu activation
+
 // run activation function if new revision of plugin
-if (get_option('openid_plugin_revision') !== false && OPENID_PLUGIN_REVISION != get_option('openid_plugin_revision')) {
+if (get_option('openid_plugin_revision') === false || OPENID_PLUGIN_REVISION != get_option('openid_plugin_revision')) {
 	openid_activate_plugin();
 }
+
 
 // -- public functions
 
@@ -137,5 +146,32 @@ function get_userdata_by_various($id_or_name = null) {
 	}
 }
 endif;
+
+// -- end of public functions
+
+/**
+ * Get the file for the plugin, including the path.  This method will handle the case where the 
+ * actual plugin files do not reside within the WordPress directory on the filesystem (such as 
+ * a symlink).  The standard value should be 'openid/openid.php' unless files or folders have
+ * been renamed.
+ *
+ * @return string plugin file
+ */
+function openid_plugin_file() {
+	static $file;
+
+	if (empty($file)) {
+		$path = 'openid';
+
+		$base = plugin_basename(__FILE__);
+		if ($base != __FILE__) {
+			$path = basename(dirname($base));
+		}
+
+		$file = $path . '/' . basename(__FILE__);
+	}
+
+	return $file;
+}
 
 ?>

@@ -6,10 +6,9 @@
 
 
 // -- WordPress Hooks
-add_action( 'parse_request', 'openid_parse_comment_request');
-add_action( 'preprocess_comment', 'openid_process_comment', -98);
-if (has_action('preprocess_comment', 'akismet_auto_check_comment')) {
-	// enseure akismet runs before OpenID
+add_action( 'preprocess_comment', 'openid_process_comment', -90);
+if (function_exists('has_action') && has_action('preprocess_comment', 'akismet_auto_check_comment')) {
+	// ensure akismet runs before OpenID
 	remove_action('preprocess_comment', 'akismet_auto_check_comment', 1);
 	add_action('preprocess_comment', 'akismet_auto_check_comment', -99);
 }
@@ -17,7 +16,7 @@ add_action( 'akismet_spam_caught', 'openid_akismet_spam_caught');
 add_action( 'comment_post', 'update_comment_openid', 5 );
 add_filter( 'option_require_name_email', 'openid_option_require_name_email' );
 add_action( 'sanitize_comment_cookies', 'openid_sanitize_comment_cookies', 15);
-add_action( 'openid_finish_auth', 'openid_finish_comment' );
+add_action( 'openid_finish_auth', 'openid_finish_comment', 10, 2 );
 if( get_option('openid_enable_approval') ) {
 	add_filter('pre_comment_approved', 'openid_comment_approval');
 }
@@ -27,10 +26,10 @@ if( get_option('openid_enable_commentform') ) {
 	add_action( 'wp_footer', 'openid_comment_profilelink', 10);
 	add_action( 'wp_footer', 'openid_comment_form', 10);
 }
-add_filter( 'openid_user_data', 'openid_get_user_data_form', 10, 2);
-add_filter( 'openid_consumer_return_urls', 'openid_comment_return_url' );
+add_filter( 'openid_user_data', 'openid_get_user_data_form', 6, 2);
 add_action( 'delete_comment', 'unset_comment_openid' );
 
+add_action( 'init', 'openid_recent_comments');
 
 /**
  * Akismet caught this comment as spam, so no need to do OpenID discovery on the URL.
@@ -60,7 +59,7 @@ function openid_process_comment( $comment ) {
 		$_SESSION['openid_comment_post']['comment_author_openid'] = $openid_url;
 		$_SESSION['openid_comment_post']['openid_skip'] = 1;
 
-		openid_start_login( $openid_url, 'comment');
+		openid_start_login($openid_url, 'comment');
 
 		// Failure to redirect at all, the URL is malformed or unreachable.
 
@@ -71,7 +70,28 @@ function openid_process_comment( $comment ) {
 		}
 	}
 
+	// duplicate name and email check from wp-comments-post.php
+	openid_require_name_email();
+
 	return $comment;
+}
+
+
+/**
+ * Duplicated code from wp-comments-post.php to check for presence of comment author name and email 
+ * address.
+ */
+function openid_require_name_email() {
+	$user = wp_get_current_user();
+	global $comment_author, $comment_author_email;
+	
+	if ( get_option('require_name_email') && !$user->ID ) { 
+		if ( 6 > strlen($comment_author_email) || '' == $comment_author ) {
+			wp_die( __('Error: please fill the required fields (name, email).') );
+		} elseif ( !is_email($comment_author_email)) {
+			wp_die( __('Error: please enter a valid email address.') );
+		}
+	}
 }
 
 
@@ -98,7 +118,7 @@ function openid_comment_approval($approved) {
  * @see get_user_data
  */
 function openid_option_require_name_email( $value ) {
-		
+	
 	$comment_page = (defined('OPENID_COMMENTS_POST_PAGE') ? OPENID_COMMENTS_POST_PAGE : 'wp-comments-post.php');
 
 	if ($GLOBALS['pagenow'] != $comment_page) {
@@ -108,19 +128,24 @@ function openid_option_require_name_email( $value ) {
 	if ($_REQUEST['openid_skip']) {
 		return get_option('openid_no_require_name') ? false : $value;
 	}
+	
+	// make sure we only process this once per request
+	static $bypass;
+	if ($bypass) {
+		return $value;
+	} else {
+		$bypass = true;
+	}
+
 
 	if (array_key_exists('openid_identifier', $_POST)) {
 		if( !empty( $_POST['openid_identifier'] ) ) {
 			return false;
 		}
 	} else {
-		if (!empty($_POST['url'])) {
-			// check if url is valid OpenID by forming an auth request
-			$auth_request = openid_begin_consumer($_POST['url']);
-
-			if (null !== $auth_request) {
-				return false;
-			}
+		global $comment_author_url;
+		if ( !empty($comment_author_url) ) {
+			return false;
 		}
 	}
 
@@ -192,6 +217,11 @@ function update_comment_openid($comment_ID) {
  **/
 function openid_comment_profilelink() {
 	global $wp_scripts;
+
+	if ( !is_a($wp_scripts, 'WP_Scripts') ) {
+		$wp_scripts = new WP_Scripts();
+	}
+
 	if ((is_single() || is_comments_popup()) && is_user_openid() && $wp_scripts->query('openid')) {
 		echo '<script type="text/javascript">stylize_profilelink()</script>';
 	}
@@ -205,6 +235,11 @@ function openid_comment_profilelink() {
  **/
 function openid_comment_form() {
 	global $wp_scripts;
+
+	if ( !is_a($wp_scripts, 'WP_Scripts') ) {
+		$wp_scripts = new WP_Scripts();
+	}
+
 	if (!is_user_logged_in() && (is_single() || is_comments_popup()) && isset($wp_scripts) && $wp_scripts->query('openid')) {
 		echo '<script type="text/javascript">add_openid_to_comment_form()</script>';
 	}
@@ -224,8 +259,7 @@ function openid_repost_comment_anonymously($post) {
 		<p>Email: <input name="email" value="'.$post['email'].'" /></p>
 		<p>URL: <input name="url" value="'.$post['url'].'" /></p>
 		<textarea name="comment" cols="80%" rows="10">'.stripslashes($post['comment']).'</textarea>
-		<input type="submit" name="submit" value="'.__('Submit Comment').'" />
-		<input type="hidden" name="openid_skip" value="1" />';
+		<input type="submit" name="submit" value="'.__('Submit Comment').'" />';
 	foreach ($post as $name => $value) {
 		if (!in_array($name, array('author', 'email', 'url', 'comment', 'submit'))) {
 			$html .= '
@@ -243,8 +277,8 @@ function openid_repost_comment_anonymously($post) {
  *
  * @param string $identity_url verified OpenID URL
  */
-function openid_finish_comment($identity_url) {
-	if ($_REQUEST['action'] != 'comment') return;
+function openid_finish_comment($identity_url, $action) {
+	if ($action != 'comment') return;
 
 	if (empty($identity_url)) {
 		openid_repost_comment_anonymously($_SESSION['openid_comment_post']);
@@ -344,23 +378,12 @@ function openid_get_user_data_form($data, $identity_url) {
 }
 
 
-/**
- * Parse the WordPress request.  If the pagename is 'openid_consumer', then the request
- * is an OpenID response and should be handled accordingly.
- *
- * @param WP $wp WP instance for the current request
- */
-function openid_parse_comment_request($wp) {
-	if (array_key_exists('openid_consumer', $_REQUEST) && $_REQUEST['action']) {
-		finish_openid($_REQUEST['action']);
+function openid_recent_comments() {
+	if (is_active_widget('wp_widget_recent_comments')) {
+		remove_action('wp_head', 'wp_widget_recent_comments_style');
+		// most themes seem to handle the recent comments widget okay, so I don't think the following style addition is necessary.  We'll leave it here just in case it's needed later.
+		//add_action('wp_head', create_function('', 'echo \'<style type="text/css">.recentcomments a{display:inline !important;padding: 0;margin: 0 !important;}</style>\';' ));
 	}
 }
-
-
-function openid_comment_return_url($urls) {
-	$urls[] = get_option('home');
-	return $urls;
-}
-
 
 ?>

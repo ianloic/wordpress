@@ -174,7 +174,6 @@ class WordPress_OpenID_OptionStore extends Auth_OpenID_OpenIDStore {
 		}
 
 		update_option('openid_nonces', $nonces);
-	
 	}
 
 	function cleanupAssociations() { 
@@ -267,6 +266,27 @@ function openid_create_tables()
 
 
 /**
+ * Undo any database changes made by the OpenID plugin.  Do not attempt to preserve any data.
+ */
+function openid_delete_tables() {
+	global $wpdb;
+	$wpdb->query('DROP TABLE IF EXISTS ' . openid_identity_table());
+	$wpdb->query(wpdb_prepare('DELETE FROM ' . $wpdb->postmeta . ' WHERE meta_key=%s', 'openid_comments'));
+	
+	// old database changes... just to make sure
+	$wpdb->query('DROP TABLE IF EXISTS ' . openid_table_prefix(true) . 'openid_nonces');
+	$wpdb->query('DROP TABLE IF EXISTS ' . openid_table_prefix(true) . 'openid_associations');
+
+	// clear old way of storing OpenID comments
+	$openid_column = $wpdb->get_row('SHOW COLUMNS FROM ' . openid_table_prefix(true) . 'comments LIKE "openid"');
+	if ($openid_column) {
+		$wpdb->query('ALTER table ' . $comments_table . ' DROP COLUMN openid');
+		$wpdb->query(wpdb_prepare('UPDATE ' . $comments_table . ' SET comment_type=%s WHERE comment_type=%s', '', 'openid'));
+	}
+}
+
+
+/**
  * Migrate old data to new locations.
  */
 function openid_migrate_old_data() {
@@ -292,13 +312,13 @@ function openid_migrate_old_data() {
 			}
 
 			foreach ($openid_comments as $post_id => $comments) {
-				$current = get_post_meta($comment->comment_post_ID, 'openid_comments', true);
+				$current = get_post_meta($post_id, 'openid_comments', true);
 				if (!empty($current)) $comments = array_merge($comments, $current);
 				update_post_meta($post_id, 'openid_comments', array_unique($comments));
 			}
 		}
 
-		@$wpdb->query('ALTER table ' . $comments_table . ' DROP COLUMN openid');
+		$wpdb->query('ALTER table ' . $comments_table . ' DROP COLUMN openid');
 		$wpdb->query(wpdb_prepare('UPDATE ' . $comments_table . ' SET comment_type=%s WHERE comment_type=%s', '', 'openid'));
 	}
 

@@ -4,7 +4,6 @@ require_once 'Auth/OpenID/Server.php';
 require_once 'server_ext.php';
 require_once 'server_eaut.php';
 
-add_action( 'parse_request', 'openid_server_parse_request');
 add_filter( 'xrds_simple', 'openid_provider_xrds_simple');
 add_action( 'wp_head', 'openid_provider_link_tags');
 
@@ -12,6 +11,8 @@ add_action( 'wp_head', 'openid_provider_link_tags');
 /**
  * Add XRDS entries for OpenID Server.  Entries added will be highly 
  * dependant on the requested URL and plugin configuration.
+ *
+ * @uses apply_filters() Calls 'openid_server_xrds_types' before returning XRDS Types for OpenID authentication services.
  */
 function openid_provider_xrds_simple($xrds) {
 	global $wp_roles;
@@ -34,9 +35,12 @@ function openid_provider_xrds_simple($xrds) {
 	
 	if (!$user && get_option('openid_blog_owner')) {
 		$url_parts = parse_url(get_option('home'));
-		$script = preg_replace('/index.php$/', '', $_SERVER['SCRIPT_NAME']);
+		$path = trailingslashit($url_parts['path']);
 
-		if ('/' . $url_parts['path'] != $script && !is_admin()) {
+		$script = preg_replace('/index.php$/', '', $_SERVER['SCRIPT_NAME']);
+		$script = trailingslashit($script);
+
+		if ($path != $script && !is_admin()) {
 			return $xrds;
 		}
 
@@ -62,7 +66,7 @@ function openid_provider_xrds_simple($xrds) {
 			}
 			$services[] = array(
 							'Type' => $types,
-							'URI' => trailingslashit(get_option('siteurl')) . '?openid_server=1',
+							'URI' => openid_service_url('openid', 'server', 'login_post'),
 							'LocalID' => get_author_posts_url($user->ID),
 						);
 
@@ -73,7 +77,7 @@ function openid_provider_xrds_simple($xrds) {
 			}
 			$services[] = array(
 							'Type' => $types,
-							'URI' => trailingslashit(get_option('siteurl')) . '?openid_server=1',
+							'URI' => openid_service_url('openid', 'server', 'login_post'),
 							'openid:Delegate' => get_author_posts_url($user->ID),
 						);
 		}
@@ -81,7 +85,7 @@ function openid_provider_xrds_simple($xrds) {
 		$services = array(
 			array(
 				'Type' => array(array('content' => 'http://specs.openid.net/auth/2.0/server')),
-				'URI' => trailingslashit(get_option('siteurl')) . '?openid_server=1',
+				'URI' => openid_service_url('openid', 'server', 'login_post'),
 				'LocalID' => 'http://specs.openid.net/auth/2.0/identifier_select',
 			)
 		);
@@ -132,12 +136,17 @@ function openid_server_request() {
 
 	// get OpenID request, either from session or HTTP request
 	$request = $server->decodeRequest();
-	if (Auth_OpenID_isError($request)) {
+	if (!$request || Auth_OpenID_isError($request)) {
 		@session_start();
 		if ($_SESSION['openid_server_request']) {
 			$request = $_SESSION['openid_server_request'];
 			unset($_SESSION['openid_server_request']);
 		}
+	}
+
+	if (!$request) {
+		echo "This is an OpenID Server.";
+		exit;
 	}
 
 	// process request
@@ -301,7 +310,7 @@ function openid_server() {
 	static $server;
 
 	if (!$server || !is_a($server, 'Auth_OpenID_Server')) {
-		$server = new Auth_OpenID_Server(openid_getStore(), trailingslashit(get_option('siteurl')) . '?openid_server=1');
+		$server = new Auth_OpenID_Server(openid_getStore(), openid_service_url('openid', 'server', 'login_post'));
 	}
 
 	return $server;
@@ -348,7 +357,7 @@ function openid_provider_link_tags() {
 				}
 			}
 		} else  {
-			$server = trailingslashit(get_option('siteurl')) . '?openid_server=1';
+			$server = openid_service_url('openid', 'server', 'login_post');
 			$identifier = get_author_posts_url($user->ID);
 
 			echo '
@@ -429,7 +438,7 @@ function openid_server_user_trust($request) {
 
 		if (is_user_logged_in()) {
 			$user = wp_get_current_user();
-			$logout_url = site_url('wp-login.php?action=logout&redirect_to=' . urlencode(site_url('?openid_server=1')), 'login');
+			$logout_url = site_url('wp-login.php?action=logout&redirect_to=' . urlencode(openid_service_url('openid', 'server', 'login_post')), 'login');
 			echo '
 				<div id="loggedin">' . sprintf(__('Logged in as %1$s (%2$s). <a href="%3$s">Use a different account?</a>', 'openid'), $user->display_name, $user->user_login, $logout_url ) . '</div>';
 		}
@@ -437,7 +446,7 @@ function openid_server_user_trust($request) {
 		echo '
 			</div>
 
-			<form action="' . trailingslashit(get_option('siteurl')) . '?openid_server=1" method="post">
+			<form action="' . openid_service_url('openid', 'server', 'login_post') . '" method="post">
 			<h1>'.__('Verify Your Identity', 'openid').'</h1>
 			<p style="margin: 1.5em 0 1em 0;">'
 				. sprintf(__('%s has asked to verify your identity.', 'openid'), '<strong>'.$request->trust_root.'</strong>')
@@ -451,7 +460,7 @@ function openid_server_user_trust($request) {
 
 		echo '
 			<p class="submit" style="text-align: center; margin-top: 2.4em;">
-				<a href="'.trailingslashit(get_option('site_url')) . '?openid_server=1&openid_trust=cancel">'.__('Cancel and go back', 'openid').'</a>
+				<a href="' . add_query_arg('openid_trust', 'cancel', openid_service_url('openid', 'server', 'login_post')) . '">'.__('Cancel and go back', 'openid').'</a>
 				<input type="submit" id="submit" name="openid_trust" value="'.__('Continue', 'openid').'" />
 			</p>
 
@@ -554,18 +563,5 @@ function openid_server_update_delegation_info($userid, $url = null) {
 	update_usermeta($userid, 'openid_delegate_services', $services);
 	return true;
 }
-
-
-/**
- * Parse the WordPress request.  
- *
- * @param WP $wp WP instance for the current request
- */
-function openid_server_parse_request($wp) {
-	if (array_key_exists('openid_server', $_REQUEST)) {
-		openid_server_request($_REQUEST['action']);
-	}
-}
-
 
 ?>

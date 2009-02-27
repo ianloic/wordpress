@@ -1,9 +1,9 @@
 === OpenID ===
 Contributors: wnorris, factoryjoe
 Tags: openid, authentication, login, comments
-Requires at least: 2.2
-Tested up to: 2.6.2
-Stable tag: 3.1.4
+Requires at least: 2.3
+Tested up to: 2.7
+Stable tag: 3.2.1
 
 Allows WordPress to provide and consumer OpenIDs for authentication of users and comments.
 
@@ -28,7 +28,7 @@ integrating with and extending the plugin, can be found [here][dev-doc].
 
 [open standard]: http://openid.net/
 [XRDS-Simple]: http://wordpress.org/extend/plugins/xrds-simple/
-[dev-doc]: http://wiki.diso-project.org/WordPress-OpenID
+[dev-doc]: http://wiki.diso-project.org/wordpress-openid-api
 
 == Installation ==
 
@@ -74,6 +74,31 @@ The input element MUST have the name "openid\_identifier".  Additionally, using
 "openid\_identifier" for the id causes the field to be styled with an OpenID logo.  To
 remove this, you can override the stylesheet or simply change the element id.
 
+= What version of WordPress does the OpenID plugin require? =
+
+While it should technically work with WordPress version 2.3 and up, the
+experience with the OpenID server is much better from 2.6 and up.  The OpenID
+plugin will always be optimized for the latest stable release of WordPress, so
+you should try and keep your blog up to date.  Future releases of the OpenID
+plugin can, and likely will, drop support for older versions of WordPress as
+necessary.
+
+= How do I use SSL for OpenID transactions? =
+
+First, be aware that this only works in WordPress 2.6 and up.  Make sure you've
+turned on SSL in WordPress by [defining either of the following][wp-ssl]
+globals as "true" in your `wp-config.php` file:
+ - FORCE_SSL_LOGIN
+ - FORCE_SSL_ADMIN
+
+Then, also define the following global as "true" in your `wp-config.php` file:
+ - OPENID_SSL
+
+Be aware that you will almost certainly have trouble with this if you are not
+using a certificate purchased from a well-known certificate authority.
+
+[wp-ssl]: http://codex.wordpress.org/Administration_Over_SSL
+
 = How do I get help if I have a problem? =
 
 Please direct support questions to the "Plugins and Hacks" section of the
@@ -91,7 +116,41 @@ report at <http://code.google.com/p/diso/issues/list>.
 3. Users can login with their OpenID in place of a traditional username and password.
 
 
+== Plugin History ==
+
+The original OpenID plugin for WordPress was a collaborative effort between Alan Castonguay and Hans Granqvist.
+
+Will Norris forked the plugin and has since become the maintainer.
+
+[Alan Castonguay]: http://verselogic.net/
+[Hans Granqvist]: http://commented.org/
+[Will Norris]: http://willnorris.com/
+
+
 == Changelog ==
+
+= version 3.2.1 =
+ - patch php-openid library to fix XRDS handling (thanks Mike Jones for helping find this)
+ - add default values for some openid vars -- necessary for OP-initiated login
+ - fix bug with OpenID server where OpenID request was sometimes lost
+ - add filter for openid_trust_root
+
+= version 3.2 =
+ - add uninstall hook for WordPress 2.7 -- this will remove all traces of the plugin from the database
+ - UI fixes for WordPress 2.7
+ - add settings link to plugins page
+ - silence XML parsing errors with PHP4
+ - ensure wp_scripts is set
+ - ensure openid comment processing occurs after akismet
+ - add ellipses to truncated OpenIDs (fixes #94)
+ - fix bug where Yahoo! OpenIDs weren't matching profile URL (fixes #98)
+ - don't return empty SREG values
+ - Add support for consuming Attribute Exchange
+ - use a single return_to URL for all OpenID actions
+ - cleaner OpenID service URLs when permalinks configured to do so (all path, no query string)
+ - fixed issue where OpenID Server would sometimes break depending on a users permalink structure (fixed #101)
+ - fixed issue where OpenID consumer would sometimes break if mod_encoding was enabled in Apache (used for WebDAV) (fixed #96)
+ - don't redirect when performing discovery on OpenID trust root
 
 = version 3.1.4 = 
  - allow OP extensions to include XRDS Types in login service
