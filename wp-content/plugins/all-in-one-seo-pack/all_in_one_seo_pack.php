@@ -4,7 +4,7 @@
 Plugin Name: All in One SEO Pack
 Plugin URI: http://semperfiwebdesign.com
 Description: Out-of-the-box SEO for your Wordpress blog.
-Version: 1.4.6.15
+Version: 1.4.7
 Author: Michael Torbert
 Author URI: http://semperfiwebdesign.com
 */
@@ -476,7 +476,7 @@ $UTF8_TABLES['strtoupper'] = array(
 
 class All_in_One_SEO_Pack {
 	
- 	var $version = "1.4.6.15";
+ 	var $version = "1.4.7";
  	
  	/** Max numbers of chars in auto-generated description */
  	var $maximum_description_length = 160;
@@ -1058,6 +1058,7 @@ class All_in_One_SEO_Pack {
 	
 	function trim_excerpt_without_filters($text) {
 		$text = str_replace(']]>', ']]&gt;', $text);
+                $text = preg_replace( '|\[(.+?)\](.+?\[/\\1\])?|s', '', $text );
 		$text = strip_tags($text);
 		$max = $this->maximum_description_length;
 		
@@ -1072,6 +1073,7 @@ class All_in_One_SEO_Pack {
 	
 	function trim_excerpt_without_filters_full_length($text) {
 		$text = str_replace(']]>', ']]&gt;', $text);
+                $text = preg_replace( '|\[(.+?)\](.+?\[/\\1\])?|s', '', $text );
 		$text = strip_tags($text);
 		return trim(stripcslashes($text));
 	}
