@@ -1,9 +1,9 @@
 === All in One SEO Pack ===
-Contributors: hallsofmontezuma, uberdose
+Contributors: hallsofmontezuma
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mrtorbert%40gmail%2ecom&item_name=All%20In%20One%20SEO%20Pack&item_number=Support%20Open%20Source&no_shipping=0&no_note=1&tax=0&currency_code=USD&lc=US&bn=PP%2dDonationsBF&charset=UTF%2d8
 Tags: post,google,seo,meta,meta keywords,meta description,title,posts,plugin, search engine optimization
 Requires at least: 1.5
-Tested up to: 2.7
+Tested up to: 2.7.1
 Stable tag: trunk
 
 Automatically optimizes your Wordpress blog for Search Engines (Search Engine Optimization).
@@ -24,7 +24,7 @@ Some features:
 * Automatically optimizes your **titles** for search engines
 * Generates **META tags automatically**
 * Avoids the typical duplicate content found on Wordpress blogs
-* For Wordpress 2.7 you don't even have to look at the options, it works out-of-the-box. Just install.
+* For Wordpress 2.7.1 you don't even have to look at the options, it works out-of-the-box. Just install.
 * You can override any title and set any META description and any META keywords you want.
 * You can fine-tune everything
 * Backward-Compatibility with many other plugins, like Auto Meta, Ultimate Tag Warrior and others.

@@ -3,14 +3,14 @@
 /*
 Plugin Name: All in One SEO Pack
 Plugin URI: http://semperfiwebdesign.com
-Description: Out-of-the-box SEO for your Wordpress blog.
-Version: 1.4.7
+Description: Out-of-the-box SEO for your Wordpress blog. <a href="options-general.php?page=all-in-one-seo-pack/all_in_one_seo_pack.php">Options configuration panel</a> | <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mrtorbert%40gmail%2ecom&item_name=All%20In%20One%20SEO%20Pack&item_number=Support%20Open%20Source&no_shipping=0&no_note=1&tax=0&currency_code=USD&lc=US&bn=PP%2dDonationsBF&charset=UTF%2d8">Donate</a> | <a href="http://semperfiwebdesign.com/documentation/all-in-one-seo-pack/all-in-one-seo-faq/" >Support</a> 
+Version: 1.4.7.4
 Author: Michael Torbert
 Author URI: http://semperfiwebdesign.com
 */
 
 /*
-Copyright (C) 2008 Michael Torbert, semperfiwebdesign.com (michael AT semperfiwebdesign DOT com)
+Copyright (C) 2008-2009 Michael Torbert, semperfiwebdesign.com (michael AT semperfiwebdesign DOT com)
 Original code by uberdose of uberdose.com
 
 This program is free software; you can redistribute it and/or modify
@@ -476,7 +476,7 @@ $UTF8_TABLES['strtoupper'] = array(
 
 class All_in_One_SEO_Pack {
 	
- 	var $version = "1.4.7";
+ 	var $version = "1.4.7.4";
  	
  	/** Max numbers of chars in auto-generated description */
  	var $maximum_description_length = 160;
@@ -1530,6 +1530,7 @@ class All_in_One_SEO_Pack {
 		// update options
 		if ($_POST['action'] && $_POST['action'] == 'aiosp_update') {
 			$message = $message_updated;
+			update_option('aiosp_donate', $_POST['aiosp_donate']);
 			update_option('aiosp_home_title', $_POST['aiosp_home_title']);
 			update_option('aiosp_home_description', $_POST['aiosp_home_description']);
 			update_option('aiosp_home_keywords', $_POST['aiosp_home_keywords']);
@@ -1625,6 +1626,24 @@ $canwrite = $this->is_upgrade_directory_writable();
 
 <form name="dofollow" action="" method="post">
 <table class="form-table">
+
+<?php if (!get_option('aiosp_donate')){?>
+<tr>
+<th scope="row" style="text-align:right; vertical-align:top;">
+<a style="cursor:pointer;" title="<?php _e('Click for Help!', 'all_in_one_seo_pack')?>" onclick="toggleVisibility('aiosp_donate_tip');">
+<?php _e('I enjoy this plugin and have made a donation:', 'all_in_one_seo_pack')?>
+</a>
+</td>
+<td>
+<input type="checkbox" name="aiosp_donate" <?php if (get_option('aiosp_donate')) echo "checked=\"1\""; ?>/>
+<div style="max-width:500px; text-align:left; display:none" id="aiosp_donate_tip">
+<?php
+_e('All donations support continued development of this free software.', 'all_in_one_seo_pack');
+ ?>
+</div>
+</td>
+</tr>
+<?php } ?>
 
 <tr>
 <th scope="row" style="text-align:right; vertical-align:top;">
@@ -2034,6 +2053,24 @@ _e('Check this and SEO pack will create a log of important events (all_in_one_se
 </td>
 </tr>
 
+<?php if (get_option('aiosp_donate')){?>
+<tr>
+<th scope="row" style="text-align:right; vertical-align:top;">
+<a style="cursor:pointer;" title="<?php _e('Click for Help!', 'all_in_one_seo_pack')?>" onclick="toggleVisibility('aiosp_donate_tip');">
+<?php _e('Thank you for your donation:', 'all_in_one_seo_pack')?>
+</a>
+</td>
+<td>
+<input type="checkbox" name="aiosp_donate" <?php if (get_option('aiosp_donate')) echo "checked=\"1\""; ?>/>
+<div style="max-width:500px; text-align:left; display:none" id="aiosp_donate_tip">
+<?php
+_e('All donations support continued development of this free software.', 'all_in_one_seo_pack');
+ ?>
+</div>
+</td>
+</tr>
+<?php } ?>
+
 </table>
 <p class="submit">
 <input type="hidden" name="action" value="aiosp_update" /> 
@@ -2055,6 +2092,7 @@ _e('Check this and SEO pack will create a log of important events (all_in_one_se
 
 add_option("aiosp_home_description", null, 'All in One SEO Plugin Home Description', 'yes');
 add_option("aiosp_home_title", null, 'All in One SEO Plugin Home Title', 'yes');
+add_option("aiosp_donate", 0, 'All in One SEO Pack Donate', 'no');
 add_option("aiosp_rewrite_titles", 1, 'All in One SEO Plugin Rewrite Titles', 'yes');
 add_option("aiosp_use_categories", 0, 'All in One SEO Plugin Use Categories', 'yes');
 add_option("aiosp_category_noindex", 1, 'All in One SEO Plugin Noindex for Categories', 'yes');
@@ -2081,13 +2119,11 @@ add_action('template_redirect', array($aiosp, 'template_redirect'));
 
 add_action('init', array($aiosp, 'init'));
 
-if (substr($aiosp->wp_version, 0, 3) >= '2.5') {
-	add_action('edit_form_advanced', array($aiosp, 'add_meta_tags_textinput'));
-	add_action('edit_page_form', array($aiosp, 'add_meta_tags_textinput'));
-} else {
-	add_action('dbx_post_advanced', array($aiosp, 'add_meta_tags_textinput'));
-	add_action('dbx_page_advanced', array($aiosp, 'add_meta_tags_textinput'));
+if (substr($aiosp->wp_version, 0, 3) < '2.5') {
+        add_action('dbx_post_advanced', array($aiosp, 'add_meta_tags_textinput'));
+        add_action('dbx_page_advanced', array($aiosp, 'add_meta_tags_textinput'));
 }
+
 
 add_action('edit_post', array($aiosp, 'post_meta_tags'));
 add_action('publish_post', array($aiosp, 'post_meta_tags'));
@@ -2095,4 +2131,81 @@ add_action('save_post', array($aiosp, 'post_meta_tags'));
 add_action('edit_page_form', array($aiosp, 'post_meta_tags'));
 
 add_action('admin_menu', array($aiosp, 'admin_menu'));
+
+
+add_action('admin_menu', 'aiosp_meta_box_add');
+
+function aiosp_meta_box_add() {
+	// Check whether the 2.5 function add_meta_box exists, and if it doesn't use 2.3 functions.
+	if ( function_exists('add_meta_box') ) {
+		add_meta_box('aiosp','All in One SEO Pack','aiosp_meta','post');
+		add_meta_box('aiosp','All in One SEO Pack','aiosp_meta','page');
+	} else {
+		add_action('dbx_post_advanced', array($aiosp, 'add_meta_tags_textinput'));
+		add_action('dbx_page_advanced', array($aiosp, 'add_meta_tags_textinput'));
+	}
+}
+
+function aiosp_meta() {
+
+	global $post;
+	
+	$post_id = $post;
+	if (is_object($post_id)){
+		$post_id = $post_id->ID;
+	}
+ 	$keywords = htmlspecialchars(stripcslashes(get_post_meta($post_id, 'keywords', true)));
+    $title = htmlspecialchars(stripcslashes(get_post_meta($post_id, 'title', true)));
+	$description = htmlspecialchars(stripcslashes(get_post_meta($post_id, 'description', true)));
+    $aiosp_meta = htmlspecialchars(stripcslashes(get_post_meta($post_id, 'aiosp_meta', true)));
+    $aiosp_disable = htmlspecialchars(stripcslashes(get_post_meta($post_id, 'aiosp_disable', true)));
+	
+	?>
+		<SCRIPT LANGUAGE="JavaScript">
+		<!-- Begin
+		function countChars(field,cntfield) {
+		cntfield.value = field.value.length;
+		}
+		//  End -->
+		</script>
+		<input value="aiosp_edit" type="hidden" name="aiosp_edit" />
+		
+		<a target="__blank" href="http://semperfiwebdesign.com/portfolio/wordpress/wordpress-plugins/all-in-one-seo-pack/"><?php _e('Click here for Support', 'all_in_one_seo_pack') ?></a>
+		<table style="margin-bottom:40px">
+		<tr>
+		<th style="text-align:left;" colspan="2">
+		</th>
+		</tr>
+		<tr>
+		<th scope="row" style="text-align:right;"><?php _e('Title:', 'all_in_one_seo_pack') ?></th>
+		<td><input value="<?php echo $title ?>" type="text" name="aiosp_title" size="62"/></td>
+		</tr>
+		<tr>
+		<th scope="row" style="text-align:right;"><?php _e('Description:', 'all_in_one_seo_pack') ?></th>
+		<td><textarea name="aiosp_description" rows="1" cols="60"
+		onKeyDown="countChars(document.post.aiosp_description,document.post.length1)"
+		onKeyUp="countChars(document.post.aiosp_description,document.post.length1)"><?php echo $description ?></textarea><br />
+		<input readonly type="text" name="length1" size="3" maxlength="3" value="<?php echo strlen($description);?>" />
+		<?php _e(' characters. Most search engines use a maximum of 160 chars for the description.', 'all_in_one_seo_pack') ?>
+		</td>
+		</tr>
+		<tr>
+		<th scope="row" style="text-align:right;"><?php _e('Keywords (comma separated):', 'all_in_one_seo_pack') ?></th>
+		<td><input value="<?php echo $keywords ?>" type="text" name="aiosp_keywords" size="62"/></td>
+		</tr>
+
+
+		<tr>
+		<th scope="row" style="text-align:right; vertical-align:top;">
+		<?php _e('Disable on this page/post:', 'all_in_one_seo_pack')?>
+		</th>
+		<td>
+		<input type="checkbox" name="aiosp_disable" <?php if ($aiosp_disable) echo "checked=\"1\""; ?>/>
+		</td>
+		</tr>
+
+
+		</table>
+	<?php
+}
 ?>
