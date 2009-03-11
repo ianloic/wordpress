@@ -4,7 +4,7 @@ Plugin Name: Google Analytics for WordPress
 Plugin URI: http://yoast.com/wordpress/analytics/
 Description: This plugin makes it simple to add Google Analytics with extra search engines and automatic clickout and download tracking to your WordPress blog. 
 Author: Joost de Valk
-Version: 2.7
+Version: 2.8
 Author URI: http://yoast.com/
 License: GPL
 
@@ -88,7 +88,7 @@ if ( ! class_exists( 'GA_Admin' ) ) {
 					}
 				}
 				
-				foreach (array('extrase', 'imagese', 'trackoutbound', 'admintracking', 'trackadsense', 'userv2') as $option_name) {
+				foreach (array('extrase', 'imagese', 'trackoutbound', 'admintracking', 'trackadsense', 'userv2', 'allowanchor') as $option_name) {
 					if (isset($_POST[$option_name])) {
 						$options[$option_name] = true;
 					} else {
@@ -106,6 +106,9 @@ if ( ! class_exists( 'GA_Admin' ) ) {
 			$options  = get_option('GoogleAnalyticsPP');
 			?>
 			<div class="wrap">
+				<h2>Google Analytics for WordPress Configuration</h2>
+				<iframe style="float: right; width: 200px; height: 250px" src="http://yoast.com/wp/google-analytics.php"></iframe>
+				
 				<script type="text/javascript">
 					function toggle_help(ele, ele2) {
 						var expl = document.getElementById(ele2);
@@ -118,15 +121,14 @@ if ( ! class_exists( 'GA_Admin' ) ) {
 						}
 					}
 				</script>
-				<h2>Google Analytics for WordPress Configuration</h2>
 				<form action="" method="post" id="analytics-conf">
-					<table class="form-table" style="width:100%;">
+					<table class="form-table" style="clear:none;">
 					<?php
 					if ( function_exists('wp_nonce_field') )
 						wp_nonce_field('analyticspp-config');
 					?>
 					<tr>
-						<th scope="row" style="width:400px;" valign="top">
+						<th scope="row" style="width:250px;" valign="top">
 							<label for="uastring">Analytics User Account</label> <small><a href="#" onclick="javascript:toggle_help(this, 'expl');">What's this?</a></small>
 						</th>
 						<td>
@@ -157,7 +159,7 @@ if ( ! class_exists( 'GA_Admin' ) ) {
 							<small>(If the extension is only two chars, prefix it with a dot, like '.js')</small>
 						</th>
 						<td>
-							<input type="text" name="dlextensions" size="40" value="<?php echo $options['dlextensions']; ?>" style="font-family: 'Courier New', Courier, mono; font-size: 1.5em;"/>
+							<input type="text" name="dlextensions" size="30" value="<?php echo $options['dlextensions']; ?>" style="font-family: 'Courier New', Courier, mono; font-size: 1.5em;"/>
 						</td>	
 					</tr>
 					<tr>
@@ -165,7 +167,7 @@ if ( ! class_exists( 'GA_Admin' ) ) {
 							<label for="dlprefix">Prefix for tracked downloads</label>
 						</th>
 						<td>
-							<input type="text" id="dlprefix" name="dlprefix" size="40" value="<?php echo $options['dlprefix']; ?>" style="font-family: 'Courier New', Courier, mono; font-size: 1.5em;"/>
+							<input type="text" id="dlprefix" name="dlprefix" size="30" value="<?php echo $options['dlprefix']; ?>" style="font-family: 'Courier New', Courier, mono; font-size: 1.5em;"/>
 						</td>
 					</tr>
 					<tr>
@@ -173,7 +175,7 @@ if ( ! class_exists( 'GA_Admin' ) ) {
 							<label for="artprefix">Prefix for outbound clicks from articles</label>
 						</th>
 						<td>
-							<input type="text" id="artprefix" name="artprefix" size="40" value="<?php echo $options['artprefix']; ?>" style="font-family: 'Courier New', Courier, mono; font-size: 1.5em;"/>
+							<input type="text" id="artprefix" name="artprefix" size="30" value="<?php echo $options['artprefix']; ?>" style="font-family: 'Courier New', Courier, mono; font-size: 1.5em;"/>
 						</td>
 					</tr>
 					<tr>
@@ -181,7 +183,7 @@ if ( ! class_exists( 'GA_Admin' ) ) {
 							<label for="comprefix">Prefix for outbound clicks from within comments</label>
 						</th>
 						<td>
-							<input type="text" id="comprefix" name="comprefix" size="40" value="<?php echo $options['comprefix']; ?>" style="font-family: 'Courier New', Courier, mono; font-size: 1.5em;"/>
+							<input type="text" id="comprefix" name="comprefix" size="30" value="<?php echo $options['comprefix']; ?>" style="font-family: 'Courier New', Courier, mono; font-size: 1.5em;"/>
 						</td>
 					</tr>
 					<tr>
@@ -189,7 +191,7 @@ if ( ! class_exists( 'GA_Admin' ) ) {
 							<label for="comautprefix">Prefix for outbound clicks from comment author links</label>
 						</th>
 						<td>
-							<input type="text" id="comautprefix" name="comautprefix" size="40" value="<?php echo $options['comautprefix']; ?>" style="font-family: 'Courier New', Courier, mono; font-size: 1.5em;"/>
+							<input type="text" id="comautprefix" name="comautprefix" size="30" value="<?php echo $options['comautprefix']; ?>" style="font-family: 'Courier New', Courier, mono; font-size: 1.5em;"/>
 						</td>
 					</tr>
 					<tr>
@@ -197,7 +199,7 @@ if ( ! class_exists( 'GA_Admin' ) ) {
 							<label for="blogrollprefix">Prefix for outbound clicks from blogroll links</label>
 						</th>
 						<td>
-							<input type="text" id="blogrollprefix" name="blogrollprefix" size="40" value="<?php echo $options['blogrollprefix']; ?>" style="font-family: 'Courier New', Courier, mono; font-size: 1.5em;"/>
+							<input type="text" id="blogrollprefix" name="blogrollprefix" size="30" value="<?php echo $options['blogrollprefix']; ?>" style="font-family: 'Courier New', Courier, mono; font-size: 1.5em;"/>
 						</td>
 					</tr>
 					<tr>
@@ -214,7 +216,7 @@ if ( ! class_exists( 'GA_Admin' ) ) {
 						<?php } ?>
 					<tr>
 						<th scope="row" valign="top">
-							<label for="position">Track full URL of outbound clicks or just the domain?</label>
+							<label for="position">Where should the tracking script be placed?</label>
 						</th>
 						<td>
 							<select name="position" id="position" style="width:200px;">
@@ -266,6 +268,15 @@ if ( ! class_exists( 'GA_Admin' ) ) {
 							<input type="checkbox" id="userv2" name="userv2" <?php if ($options['userv2']) echo ' checked="checked" '; ?>/>
 						</td>
 					</tr>
+					<tr>
+						<th scope="row" valign="top">
+							<label for="allowanchor">Use # instead of ? for Campaign tracking?</label><br/>
+							<small>This adds a <a href="http://code.google.com/apis/analytics/docs/gaJSApiCampaignTracking.html#_gat.GA_Tracker_._setAllowAnchor">setAllowAnchor</a> call to your tracking script.</small>
+						</th>
+						<td>
+							<input type="checkbox" id="allowanchor" name="allowanchor" <?php if ($options['allowanchor']) echo ' checked="checked" '; ?>/>
+						</td>
+					</tr>					
 					</table>
 					<p style="border:0;" class="submit"><input type="submit" name="submit" value="Update Settings &raquo;" /></p>
 					
@@ -355,7 +366,10 @@ if ( ! class_exists( 'GA_Filter' ) ) {
 } ?>
 	<script type="text/javascript">
 <?php if ( $options['userv2'] ) {
-		echo("\tpageTracker._setLocalRemoteServerMode();");
+		echo("\t\tpageTracker._setLocalRemoteServerMode();\n");
+} 
+if ( $options['allowanchor'] ) {
+		echo("\t\tpageTracker._setAllowAnchor(true);\n");
 } ?>
 		pageTracker._initData();
 <?php if (strpos($_SERVER['HTTP_REFERER'],"images.google") && strpos($_SERVER['HTTP_REFERER'],"&prev") && $options["imagese"]) { ?>
