@@ -24,7 +24,7 @@ require_once ('admin-header.php');
 
 <div class="wrap">
 <?php screen_icon(); ?>
-<h2><?php echo wp_specialchars( $title ); ?></h2>
+<h2><?php echo esc_html( $title ); ?></h2>
 
 <p><?php _e('When you click the button below WordPress will create an XML file for you to save to your computer.'); ?></p>
 <p><?php _e('This format, which we call WordPress eXtended RSS or WXR, will contain your posts, pages, comments, custom fields, categories, and tags.'); ?></p>
@@ -42,14 +42,14 @@ require_once ('admin-header.php');
 $authors = $wpdb->get_col( "SELECT post_author FROM $wpdb->posts GROUP BY post_author" );
 foreach ( $authors as $id ) {
 	$o = get_userdata( $id );
-	echo "<option value='$o->ID'>$o->display_name</option>";
+	echo "<option value='" . esc_attr($o->ID) . "'>$o->display_name</option>";
 }
 ?>
 </select>
 </td>
 </tr>
 </table>
-<p class="submit"><input type="submit" name="submit" class="button" value="<?php _e('Download Export File'); ?>" />
+<p class="submit"><input type="submit" name="submit" class="button" value="<?php esc_attr_e('Download Export File'); ?>" />
 <input type="hidden" name="download" value="true" />
 </p>
 </form>
